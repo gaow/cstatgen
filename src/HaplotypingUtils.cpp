@@ -280,3 +280,5 @@ void cstatgen::HaplotypeCoder::Print()
 	}
 	std::clog << std::endl;
 }
+
+

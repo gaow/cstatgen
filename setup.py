@@ -12,7 +12,6 @@ except ImportError:
 
 import sys, os, subprocess
 from glob import glob
-from itertools import chain
 from src import NAME, VERSION
 
 if sys.platform == "win32":
