@@ -115,6 +115,8 @@ void cstatgen::GeneticHaplotyper::Apply(Pedigree & ped)
 {
 	String chrom = __chrom.c_str();
 
+	data.resize(0);
+
 	if (chrom == "X") ped.chromosomeX = true;
 	//
 	ped.EstimateFrequencies(0, true);
@@ -208,8 +210,10 @@ void cstatgen::MendelianErrorChecker::Apply(Pedigree & ped)
 }
 
 
-void cstatgen::HaplotypeCoder::Apply(VecVecVecString & haploVecs)
+void cstatgen::HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst)
 {
+	data.resize(0);
+    VecVecVecString haploVecs = haploVecsConst;
 	// each element of haploVecsis a family's data
 	// each element of haploVecs[i] is a haplotype with the first 2 items being fid and sid
 	if (!haploVecs.size()) return;

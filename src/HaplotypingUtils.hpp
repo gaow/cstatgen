@@ -79,7 +79,7 @@ private:
 };
 
 
-inline bool hasEnding(std::string const & fullString, std::string const & ending)
+inline bool hasEnding(const std::string & fullString, const std::string & ending)
 {
 	if (fullString.length() >= ending.length()) {
 		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
@@ -99,7 +99,7 @@ inline unsigned adjustSize(unsigned n, unsigned a)
 }
 
 
-inline std::string collapse(VecString & haplotype, unsigned start, unsigned end, unsigned size)
+inline std::string collapse(const VecString & haplotype, unsigned start, unsigned end, unsigned size)
 {
 	if (end == 0) end = haplotype.size();
 	if (start == end) return "?";
@@ -133,7 +133,7 @@ public:
 	// [[familyid, sampleid, hap1, hap2] ...]
 	VecVecString data;
 	int recombCount;
-	void Apply(VecVecVecString & haploVecs);
+	void Execute(const VecVecVecString & haploVecsConst);
 
 	void Print();
 

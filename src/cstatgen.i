@@ -10,7 +10,7 @@
 #include "Exception.hpp"
 #include "VCFstream.hpp"
 #include "HaplotypingUtils.hpp"
-#include "HaploPatternCoder.hpp"
+#include "HaplotypingEngine.hpp"
 %}
 
 %include exception.i
@@ -58,4 +58,4 @@
 %include "Exception.hpp"
 %include "VCFstream.hpp"
 %include "HaplotypingUtils.hpp"
-%include "HaploPatternCoder.hpp"
+%include "HaplotypingEngine.hpp"
