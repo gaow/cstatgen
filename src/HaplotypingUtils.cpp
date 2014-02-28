@@ -113,10 +113,9 @@ void cstatgen::DataLoader::__AddPerson(Pedigree & ped, VecString & fam_info, Vec
 
 void cstatgen::GeneticHaplotyper::Apply(Pedigree & ped)
 {
-	String chrom = __chrom.c_str();
-
 	data.resize(0);
 
+	String chrom = __chrom.c_str();
 	if (chrom == "X") ped.chromosomeX = true;
 	//
 	ped.EstimateFrequencies(0, true);
@@ -202,7 +201,7 @@ void cstatgen::MendelianErrorChecker::Apply(Pedigree & ped)
 				continue;
 			// error found, make missing
 			else {
-				errorCount += 1;
+				__errorCount += 1;
 				ped[i].markers[m][0] = ped[i].markers[m][1] = 0;
 			}
 		}
@@ -213,8 +212,8 @@ void cstatgen::MendelianErrorChecker::Apply(Pedigree & ped)
 void cstatgen::HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst)
 {
 	data.resize(0);
-    VecVecVecString haploVecs = haploVecsConst;
-	// each element of haploVecsis a family's data
+	VecVecVecString haploVecs = haploVecsConst;
+	// each element of haploVecs is a family's data
 	// each element of haploVecs[i] is a haplotype with the first 2 items being fid and sid
 	if (!haploVecs.size()) return;
 	for (unsigned f = 0; f < haploVecs.size(); f++) {
@@ -226,7 +225,7 @@ void cstatgen::HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst)
 			for (unsigned i = 2; i < haploVecs[f][p].size(); i++) {
 				// recombination event detected
 				if (!cstatgen::hasEnding(haploVecs[f][p][i], ":") && !cstatgen::hasEnding(haploVecs[f][p][i], "|")) {
-					recombCount += 1;
+					__recombCount += 1;
 					if (std::find(recombPositions.begin(), recombPositions.end(), i) == recombPositions.end()) {
 						recombPositions.push_back(i);
 					}

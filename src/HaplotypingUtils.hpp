@@ -53,11 +53,15 @@ private:
 class MendelianErrorChecker
 {
 public:
-	MendelianErrorChecker() : errorCount(0) {};
+	MendelianErrorChecker() : __errorCount(0) {};
 	~MendelianErrorChecker() {};
 	MendelianErrorChecker * clone() const { return new MendelianErrorChecker(*this); }
-	int errorCount;
 	void Apply(Pedigree & ped);
+
+	int CountMendelianErrors() { return __errorCount; }
+
+private:
+	int __errorCount;
 
 };
 
@@ -127,17 +131,19 @@ inline std::string collapse(const VecString & haplotype, unsigned start, unsigne
 class HaplotypeCoder
 {
 public:
-	HaplotypeCoder(const int size) : data(0), recombCount(0), __size(size) {}
+	HaplotypeCoder(const int size) : data(0), __recombCount(0), __size(size) {}
 	~HaplotypeCoder() {};
 	HaplotypeCoder * clone() const { return new HaplotypeCoder(*this); }
 	// [[familyid, sampleid, hap1, hap2] ...]
 	VecVecString data;
-	int recombCount;
 	void Execute(const VecVecVecString & haploVecsConst);
 
 	void Print();
 
+	int CountRecombinations() { return __recombCount; }
+
 private:
+	int __recombCount;
 	int __size;
 };
 }

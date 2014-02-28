@@ -26,8 +26,8 @@ public:
 	// (1/2 coding, 0 for missing)
 	// positionAdjustment: adjust physical distance to map distance, 1 / 100 million
 	VecVecVecString Execute(const std::string & chrom, const VecString & marker_names,
-	                    const VecInt & marker_positions, const VecVecString & samples,
-	                    double positionAdjustment = 1E-8)
+	                        const VecInt & marker_positions, const VecVecString & samples,
+	                        double positionAdjustment = 1E-8)
 	{
 		Pedigree ped;
 
@@ -39,7 +39,7 @@ public:
 			dl.LoadSamples(ped, samples);
 			MendelianErrorChecker mc;
 			mc.Apply(ped);
-			__mendelianErrorCount += mc.errorCount;
+			__mendelianErrorCount += mc.CountMendelianErrors();
 			GeneticHaplotyper gh(chrom);
 			gh.Apply(ped);
 			if (__verbose) gh.Print();
@@ -53,7 +53,7 @@ public:
 	}
 
 
-	int countMendelianErrors() { return __mendelianErrorCount; }
+	int CountMendelianErrors() { return __mendelianErrorCount; }
 
 private:
 	int __verbose;
