@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+#include <map>
 #include <iterator>
 
 #include "Exception.hpp"
@@ -25,6 +26,9 @@ typedef std::vector<int> VecInt;
 typedef std::vector<std::string> VecString;
 typedef std::vector<std::vector<std::string> > VecVecString;
 typedef std::vector<std::vector<std::vector<std::string> > > VecVecVecString;
+typedef std::vector<std::vector<double> > VecVecDouble;
+typedef std::map<std::string, std::vector<double> > VecDoubleDict;
+typedef std::map<std::string, std::vector<std::vector<double> > > VecVecDoubleDict;
 
 void reset_ped(Pedigree & ped);
 
@@ -83,68 +87,30 @@ private:
 };
 
 
-inline bool hasEnding(const std::string & fullString, const std::string & ending)
-{
-	if (fullString.length() >= ending.length()) {
-		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
-	} else {
-		return false;
-	}
-}
-
-
-inline unsigned adjustSize(unsigned n, unsigned a)
-{
-	if (a <= 0) return n;
-	if (a == 1) return a;
-	div_t divresult = div(n, a);
-	// reduce size by x such that rem + res * x = a - x
-	return (unsigned)(a - ((a - divresult.rem) / (divresult.quot + 1)));
-}
-
-
-inline std::string collapse(const VecString & haplotype, unsigned start, unsigned end, unsigned size)
-{
-	if (end == 0) end = haplotype.size();
-	if (start == end) return "?";
-	std::string collapsed_haplotype = "";
-	unsigned wsize = adjustSize(haplotype.size(), size);
-	unsigned counter = 0;
-	std::string code = "1";
-
-	for (unsigned i = start; i < end; ++i) {
-		counter += 1;
-		if (haplotype[i] == "2") code = "2";
-		else code = (code == "?" || code == "2") ? code : haplotype[i];
-		if (counter == wsize) {
-			collapsed_haplotype += code;
-			counter = 0;
-			code = "1";
-		}
-	}
-	// make it missing data if "?" is in the haplotype
-	if (collapsed_haplotype.find("?") != std::string::npos) return "?";
-	else return collapsed_haplotype;
-}
-
-
 class HaplotypeCoder
 {
 public:
-	HaplotypeCoder(const int size) : data(0), __recombCount(0), __size(size) {}
+	HaplotypeCoder(const int size) : __data(0), __freqs(), __recombCount(0), __size(size) {}
 	~HaplotypeCoder() {};
 	HaplotypeCoder * clone() const { return new HaplotypeCoder(*this); }
-	// [[familyid, sampleid, hap1, hap2] ...]
-	VecVecString data;
-	void Execute(const VecVecVecString & haploVecsConst);
+
+	// each element of haploVecs is a family's data
+	// each element of haploVecs[i] is a haplotype with the first 2 items being fid and sid
+	// each element of maf is a family's data
+	// each element of maf[i] is founder population MAF of the corresponding variant
+	void Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst);
 
 	void Print();
 
+	VecVecString GetHaplotypes() { return __data; }
+	VecVecDouble GetAlleleFrequencies(const std::string & family) { return __freqs[family]; }
 	int CountRecombinations() { return __recombCount; }
 
 private:
+	VecVecString __data;
+	VecVecDoubleDict __freqs;
 	int __recombCount;
-	int __size;
+	unsigned __size;
 };
 }
 #endif

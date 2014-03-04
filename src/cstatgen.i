@@ -51,9 +51,13 @@
 %include "std_map.i"
 
 %template(VecInt) std::vector<int>; 
+%template(VecDouble) std::vector<double>;
 %template(VecString) std::vector<std::string>; 
 %template(VecVecString) std::vector<std::vector<std::string> >; 
 %template(VecVecVecString) std::vector<std::vector<std::vector<std::string> > >; 
+%template(VecVecDouble) std::vector<std::vector<double> >; 
+%template(VecDoubleDict) std::map<std::string, std::vector<double> >;
+%template(VecVecDoubleDict) std::map<std::string, std::vector<std::vector<double> > >;
 
 %include "Exception.hpp"
 %include "VCFstream.hpp"

@@ -10,12 +10,51 @@ try:
 except ImportError:
    from distutils.command.build_py import build_py
 
+# monkey-patch for parallel compilation
+import multiprocessing.pool
+N_JOBS = 6
+
+def compile_parallel(
+        self,
+        sources,
+        output_dir=None,
+        macros=None,
+        include_dirs=None,
+        debug=0,
+        extra_preargs=None,
+        extra_postargs=None,
+        depends=None):
+
+    # Copied from distutils.ccompiler.CCompiler
+    macros, objects, extra_postargs, pp_opts, build = self._setup_compile(
+        output_dir, macros, include_dirs, sources, depends, extra_postargs)
+    cc_args = self._get_cc_args(pp_opts, debug, extra_preargs)
+    #
+    def _single_compile(obj):
+
+        try:
+            src, ext = build[obj]
+        except KeyError:
+            return
+        self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
+    # convert to list, imap is evaluated on-demand
+    list(multiprocessing.pool.ThreadPool(N_JOBS).imap(_single_compile, objects))
+    return objects
+
+import distutils.ccompiler
+distutils.ccompiler.CCompiler.compile=compile_parallel
+   
 import sys, os, subprocess
 from glob import glob
 from src import NAME, VERSION
 
 if sys.platform == "win32":
     sys.exit('Windows OS is not supported.')
+
+
+# use ccache to speed up build
+if subprocess.call(['ccache'], stderr = open(os.devnull, "w")):
+    os.environ['CC'] = 'ccache gcc'
     
 SWIG_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
              '-w-511', '-w-509', '-outdir', '.']
