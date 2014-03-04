@@ -89,8 +89,10 @@ void DataLoader::LoadSamples(Pedigree & ped, const VecVecString & samples)
 		VecString genotypes(samples[i].begin() + 5, samples[i].end());
 		__AddPerson(ped, fam_info, genotypes);
 	}
+
 	ped.Sort();
 	SortFamilies(ped);
+
 }
 
 
@@ -104,12 +106,16 @@ void DataLoader::__AddPerson(Pedigree & ped, VecString & fam_info, VecString & g
 		ped.TranslateSexCode(fam_info[4].c_str(), sex_failure));
 	// add person genotypes
 	for (unsigned i = 0; i < genotypes.size(); ++i) {
-		String c1 = genotypes[i].substr(0, 1).c_str();
-		String c2 = genotypes[i].substr(1, 1).c_str();
-		Alleles new_genotype;
-		new_genotype[0] = ped.LoadAllele(ped.GetMarkerInfo(i), c1);
-		new_genotype[1] = ped.LoadAllele(ped.GetMarkerInfo(i), c2);
-		if (new_genotype.isKnown()) ped[ped.count - 1].markers[i] = new_genotype;
+		// convert char's face value to int
+		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i].one = (int)genotypes[i][0] - 48;
+		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i].two = (int)genotypes[i][1] - 48;
+		// String c1(genotypes[i][0]);
+		// String c2(genotypes[i][1]);
+		// Alleles new_genotype;
+		// new_genotype[0] = ped.LoadAllele(ped.GetMarkerInfo(i), c1);
+		// new_genotype[1] = ped.LoadAllele(ped.GetMarkerInfo(i), c2);
+		// if (new_genotype.isKnown())
+        // ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i] = new_genotype;
 	}
 }
 
@@ -171,41 +177,47 @@ void MendelianErrorChecker::Apply(Pedigree & ped)
 			//
 			// genotype data missing for both founders
 			//
-			if (!mom->markers[m].isKnown() && !dad->markers[m].isKnown()) continue;
+			if (!mom->markers[m].isKnown() && !dad->markers[m].isKnown())
+				continue;
 			//
 			// if mother/father missing, substitute with uninformative marker
 			// otherwise use as is
 			//
-			int gdad1, gdad2, gmom1, gmom2;
+			char gdad1, gdad2, gmom1, gmom2;
 			if (!mom->markers[m].isKnown()) {
 				gmom1 = 1; gmom2 = 2;
 			} else {
-				gmom1 = mom->markers[m][0]; gmom2 = mom->markers[m][1];
+				gmom1 = mom->markers[m].one; gmom2 = mom->markers[m].two;
 			}
 			if (!dad->markers[m].isKnown()) {
 				gdad1 = 1; gdad2 = 2;
 			} else {
-				gdad1 = dad->markers[m][0]; gdad2 = dad->markers[m][1];
+				gdad1 = dad->markers[m].one; gdad2 = dad->markers[m].two;
 			}
 			//
 			// check for mendelian error
 			//
 			// person missing data
 			if (!ped[i].markers[m].isKnown()) {
-				if (dad->markers[m].isHomozygous() && mom->markers[m].isHomozygous() && gdad1 == gmom1) {
-					ped[i].markers[m][0] = gdad1; ped[i].markers[m][1] = gdad2; continue;
+				if (dad->markers[m].isHomozygous() && mom->markers[m].isHomozygous()) {
+					ped[i].markers[m].one = gdad1; ped[i].markers[m].two = gmom1;
 				}
+				continue;
 			}
 			// no error
-			if (((ped[i].markers[m][0] == gdad1 || ped[i].markers[m][0] == gdad2) &&
-			     (ped[i].markers[m][1] == gmom1 || ped[i].markers[m][1] == gmom2)) ||
-			    ((ped[i].markers[m][1] == gdad1 || ped[i].markers[m][1] == gdad2) &&
-			     (ped[i].markers[m][0] == gmom1 || ped[i].markers[m][0] == gmom2)))
+			if (((ped[i].markers[m].one == gdad1 || ped[i].markers[m].one == gdad2) &&
+			     (ped[i].markers[m].two == gmom1 || ped[i].markers[m].two == gmom2)) ||
+			    ((ped[i].markers[m].two == gdad1 || ped[i].markers[m].two == gdad2) &&
+			     (ped[i].markers[m].one == gmom1 || ped[i].markers[m].one == gmom2)))
 				continue;
 			// error found, make missing
 			else {
+				// std::clog << "Marker index " << m << std::endl;
+				// std::clog << "Father geno " << gdad1 << " " << gdad2 << std::endl;
+				// std::clog << "Mather geno " << gmom1 << " " << gmom2 << std::endl;
+				// std::clog << "Kid geno " << ped[i].markers[m].one << " " << ped[i].markers[m].two << std::endl;
 				__errorCount += 1;
-				ped[i].markers[m][0] = ped[i].markers[m][1] = 0;
+				ped[i].markers[m].one = ped[i].markers[m].two = 0;
 			}
 		}
 	}
