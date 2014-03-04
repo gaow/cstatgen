@@ -103,6 +103,16 @@ public:
 	}
 
 
+	std::string GetInfo(const std::string & key)
+	{
+		VcfRecordInfo & info = __line.getInfo();
+		const std::string * s = info.getString(key.c_str());
+
+		if (s) return *s;
+		else throw ValueError("VCF line does not have info field " + key);
+	}
+
+
 	int CountSampleGenotypes()
 	{
 		return __line.getNumSamples();

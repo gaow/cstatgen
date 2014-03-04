@@ -11,7 +11,7 @@ int main()
 	// vs.Extract("1", 69269, 801942);
 	vs.Extract("1", 32768, 801942);
 	while (vs.Next()) {
-		std::cout << vs.GetChrom() << " " << vs.GetPosition() << " " << vs.IsBiAllelic() << std::endl;
+		std::cout << vs.GetChrom() << " " << vs.GetPosition() << " " << vs.IsBiAllelic() << " " << vs.GetInfo("AF") << std::endl;
 		for (auto i : vs.GetGenotypes()) std::cout << i << ' ';
 		std::cout << std::endl;
 		vector<int> idx { 1, 2 };
