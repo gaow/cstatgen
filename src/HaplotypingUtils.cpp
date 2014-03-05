@@ -10,6 +10,7 @@
 #include <cctype>
 #include <set>
 #include <algorithm>
+#include <sstream>
 
 namespace cstatgen {
 
@@ -115,7 +116,7 @@ void DataLoader::__AddPerson(Pedigree & ped, VecString & fam_info, VecString & g
 		// new_genotype[0] = ped.LoadAllele(ped.GetMarkerInfo(i), c1);
 		// new_genotype[1] = ped.LoadAllele(ped.GetMarkerInfo(i), c2);
 		// if (new_genotype.isKnown())
-        // ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i] = new_genotype;
+		// ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i] = new_genotype;
 	}
 }
 
@@ -221,6 +222,15 @@ void MendelianErrorChecker::Apply(Pedigree & ped)
 			}
 		}
 	}
+}
+
+
+inline std::string join(const std::vector<std::string> & vec, const char * delim = "")
+{
+	std::stringstream ss;
+
+	std::for_each(vec.begin(), vec.end(), [&] (const std::string & s) { ss << ((ss.tellp()) ? delim : "") << s; });
+	return ss.str();
 }
 
 
@@ -369,8 +379,7 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 				VecString newperson(haploVecs[f][p].begin(), haploVecs[f][p].begin() + 2);
 				__data.push_back(newperson);
 			}
-			__data[__data.size() - 1].push_back(std::accumulate(haploStrs[p].begin(), haploStrs[p].end(),
-					std::string("")));
+			__data[__data.size() - 1].push_back(join(haploStrs[p], ","));
 		}
 		//
 		// calculate haplotype pattern frequency
