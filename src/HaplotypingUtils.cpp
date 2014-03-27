@@ -67,10 +67,11 @@ void DataLoader::LoadVariants(Pedigree & ped,
 	VecInt vs(names.size());
 
 	for (unsigned i = 0; i < names.size(); ++i) {
-		ped.pd.columnHash.Push(ped.GetMarkerID(names[i].c_str()));
+		int markerID = ped.GetMarkerID(names[i].c_str());
+		ped.pd.columnHash.Push(markerID);
 		ped.pd.columns.Push(1);
 		ped.pd.columnCount++;
-		MarkerInfo * info = ped.GetMarkerInfo(i);
+		MarkerInfo * info = ped.GetMarkerInfo(markerID);
 		info->chromosome = (chrom == "X" || chrom == "x") ? 999 : atoi(chrom.c_str());
 		// adjust input position to make sure every position is unique
 		int position = positions[i];
@@ -82,13 +83,13 @@ void DataLoader::LoadVariants(Pedigree & ped,
 }
 
 
-void DataLoader::LoadSamples(Pedigree & ped, const VecVecString & samples)
+void DataLoader::LoadSamples(Pedigree & ped, const VecVecString & samples, const VecString & names)
 {
 
 	for (unsigned i = 0; i < samples.size(); ++i) {
 		VecString fam_info(samples[i].begin(), samples[i].begin() + 5);
 		VecString genotypes(samples[i].begin() + 5, samples[i].end());
-		__AddPerson(ped, fam_info, genotypes);
+		__AddPerson(ped, fam_info, genotypes, names);
 	}
 
 	ped.Sort();
@@ -97,7 +98,8 @@ void DataLoader::LoadSamples(Pedigree & ped, const VecVecString & samples)
 }
 
 
-void DataLoader::__AddPerson(Pedigree & ped, VecString & fam_info, VecString & genotypes)
+void DataLoader::__AddPerson(Pedigree & ped, const VecString & fam_info,
+                             const VecString & genotypes, const VecString & names)
 {
 	// add person info
 	bool sex_failure = false;
@@ -106,17 +108,18 @@ void DataLoader::__AddPerson(Pedigree & ped, VecString & fam_info, VecString & g
 		fam_info[2].c_str(), fam_info[3].c_str(),
 		ped.TranslateSexCode(fam_info[4].c_str(), sex_failure));
 	// add person genotypes
-	for (unsigned i = 0; i < genotypes.size(); ++i) {
+	for (unsigned i = 0; i < names.size(); ++i) {
+		int markerID = ped.GetMarkerID(names[i].c_str());
 		// convert char's face value to int
-		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i].one = (int)genotypes[i][0] - 48;
-		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i].two = (int)genotypes[i][1] - 48;
+		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].one = (int)genotypes[i][0] - 48;
+		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].two = (int)genotypes[i][1] - 48;
 		// String c1(genotypes[i][0]);
 		// String c2(genotypes[i][1]);
 		// Alleles new_genotype;
-		// new_genotype[0] = ped.LoadAllele(ped.GetMarkerInfo(i), c1);
-		// new_genotype[1] = ped.LoadAllele(ped.GetMarkerInfo(i), c2);
+		// new_genotype[0] = ped.LoadAllele(ped.GetMarkerInfo(markerID), c1);
+		// new_genotype[1] = ped.LoadAllele(ped.GetMarkerInfo(markerID), c2);
 		// if (new_genotype.isKnown())
-		// ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[i] = new_genotype;
+		// ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID] = new_genotype;
 	}
 }
 
@@ -125,8 +128,7 @@ void GeneticHaplotyper::Apply(Pedigree & ped)
 {
 	data.resize(0);
 
-	String chrom = __chrom.c_str();
-	if (chrom == "X") ped.chromosomeX = true;
+	if (__chrom == "X") ped.chromosomeX = true;
 	//
 	ped.EstimateFrequencies(0, true);
 	// recode alleles so more frequent alleles have lower allele numbers internally
@@ -139,7 +141,7 @@ void GeneticHaplotyper::Apply(Pedigree & ped)
 	engine.bestHaplotype = true;
 	engine.zeroRecombination = false;
 	engine.SetupGlobals();
-	engine.SetupMap(chrom);
+	engine.SetupMap((__chrom == "X" || __chrom == "Y") ? 999 : atoi(__chrom.c_str()));
 	for (int i = 0; i < ped.familyCount; i++) {
 		if (engine.SelectFamily(ped.families[i])) {
 			engine.Analyse();

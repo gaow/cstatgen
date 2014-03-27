@@ -36,7 +36,7 @@ public:
 		try {
 			DataLoader dl;
 			dl.LoadVariants(ped, marker_names, marker_positions, chrom, positionAdjustment);
-			dl.LoadSamples(ped, samples);
+			dl.LoadSamples(ped, samples, marker_names);
 			MendelianErrorChecker mc;
 			mc.Apply(ped);
 			__mendelianErrorCount += mc.CountMendelianErrors();

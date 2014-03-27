@@ -45,12 +45,14 @@ public:
 		double positionAdjustment = 0.01);
 
 	void LoadSamples(Pedigree & ped,
-		const VecVecString & samples);
+		const VecVecString & samples,
+		const VecString & names);
 
 private:
 	void __AddPerson(Pedigree & ped,
-		VecString & fam_info,
-		VecString & genotypes);
+		const VecString & fam_info,
+		const VecString & genotypes,
+		const VecString & names);
 
 };
 

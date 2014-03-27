@@ -11,8 +11,7 @@ except ImportError:
    from distutils.command.build_py import build_py
 
 # monkey-patch for parallel compilation
-import multiprocessing.pool
-N_JOBS = 6
+import multiprocessing, multiprocessing.pool
 
 def compile_parallel(
         self,
@@ -38,7 +37,7 @@ def compile_parallel(
             return
         self._compile(obj, src, ext, cc_args, extra_postargs, pp_opts)
     # convert to list, imap is evaluated on-demand
-    list(multiprocessing.pool.ThreadPool(N_JOBS).imap(_single_compile, objects))
+    list(multiprocessing.pool.ThreadPool(multiprocessing.cpu_count()).imap(_single_compile, objects))
     return objects
 
 import distutils.ccompiler
@@ -53,8 +52,11 @@ if sys.platform == "win32":
 
 
 # use ccache to speed up build
-if subprocess.call(['ccache'], stderr = open(os.devnull, "w")):
-    os.environ['CC'] = 'ccache gcc'
+try:
+    if subprocess.call(['ccache'], stderr = open(os.devnull, "w")):
+        os.environ['CC'] = 'ccache gcc'
+except OSError:
+    pass
     
 SWIG_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
              '-w-511', '-w-509', '-outdir', '.']
