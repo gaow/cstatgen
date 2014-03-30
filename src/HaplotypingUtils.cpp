@@ -68,9 +68,7 @@ void DataLoader::LoadVariants(Pedigree & ped,
 
 	for (unsigned i = 0; i < names.size(); ++i) {
 		int markerID = ped.GetMarkerID(names[i].c_str());
-		ped.pd.columnHash.Push(markerID);
-		ped.pd.columns.Push(1);
-		ped.pd.columnCount++;
+       	ped.pd.AddMarkerColumn(names[i].c_str());
 		MarkerInfo * info = ped.GetMarkerInfo(markerID);
 		info->chromosome = (chrom == "X" || chrom == "x") ? 999 : atoi(chrom.c_str());
 		// adjust input position to make sure every position is unique
