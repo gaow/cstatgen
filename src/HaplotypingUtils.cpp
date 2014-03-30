@@ -24,7 +24,7 @@ void DataLoader::LoadVariants(Pedigree * & ped,
 
 	for (unsigned i = 0; i < names.size(); ++i) {
 		// marker already exists
-		// if (ped->LookupMarker(names[i].c_str()) != -1) continue;
+		if (ped->LookupMarker(names[i].c_str()) != -1) continue;
 		// add new marker
 		int markerID = ped->GetMarkerID(names[i].c_str());
 		ped->pd.AddMarkerColumn(names[i].c_str());
@@ -97,7 +97,8 @@ void GeneticHaplotyper::Apply(Pedigree * & ped)
 	engine.bestHaplotype = true;
 	engine.zeroRecombination = false;
 	engine.SetupGlobals();
-	engine.SetupMap((__chrom == "X" || __chrom == "Y") ? 999 : atoi(__chrom.c_str()));
+	String chrom = __chrom.c_str();
+	engine.SetupMap(chrom);
 	for (int i = 0; i < ped->familyCount; i++) {
 		if (engine.SelectFamily(ped->families[i])) {
 			engine.Analyse();
