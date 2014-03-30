@@ -14,51 +14,7 @@
 
 namespace cstatgen {
 
-void reset_ped(Pedigree & ped)
-{
-
-	// FIXME: It does not make sense to me but I have to reset ped data object manually,
-	// otherwise in a Python program that calls CHP::Apply multiple times in a loop,
-	// ped.GetMarkerInfo(i)->freq.dim will not equal 0 after a few runs
-	// complaining the same marker name has been previously used.
-	// cannot yet figure out why as this is suppose to be a brand new ped object here!
-	// UPDATE:
-	// It might due to using it from Python. The swig generated wrapper did not delete it after use
-	// anyways let me just manually clean up everything instead of wrestling with swig
-	// UPDATE 2:
-	// seems it's just the markerInfo part gives problems; ped.count and ped.familyCount are always 0
-
-	// delete old pointer
-	for (int i = 0; i < ped.markerInfoCount; i++)
-		delete ped.markerInfo[i];
-	delete [] ped.markerInfo;
-	delete [] ped.markerInfoByInteger;
-	// FIXME: Only Clear() is not going to delete the char * buffer pointer which unfortunately is protected ...
-	// so there will still be memory leak here
-	ped.markerNames.Clear();
-	ped.markerLookup.Clear();
-	ped.markerInfoByName.Clear();
-	ped.markerCount = ped.markerInfoCount = ped.markerInfoSize = 0;
-	// reset pointer
-	ped.GrowMarkerInfo();
-	// delete old pointer
-	for (int i = 0; i < ped.count; i++)
-		delete ped.persons[i];
-
-	for (int i = 0; i < ped.familyCount; i++)
-		delete ped.families[i];
-
-	delete [] ped.families;
-	delete [] ped.persons;
-	ped.size = 10000;
-	ped.count = ped.familyCount = ped.haveTwins = 0;
-	// reset pointer
-	ped.persons = new Person *[ped.size];
-	ped.families = new Family * [1];
-}
-
-
-void DataLoader::LoadVariants(Pedigree & ped,
+void DataLoader::LoadVariants(Pedigree * & ped,
                               const VecString & names,
                               const VecInt & positions,
                               const std::string & chrom,
@@ -67,9 +23,12 @@ void DataLoader::LoadVariants(Pedigree & ped,
 	VecInt vs(names.size());
 
 	for (unsigned i = 0; i < names.size(); ++i) {
-		int markerID = ped.GetMarkerID(names[i].c_str());
-       	ped.pd.AddMarkerColumn(names[i].c_str());
-		MarkerInfo * info = ped.GetMarkerInfo(markerID);
+		// marker already exists
+		// if (ped->LookupMarker(names[i].c_str()) != -1) continue;
+		// add new marker
+		int markerID = ped->GetMarkerID(names[i].c_str());
+		ped->pd.AddMarkerColumn(names[i].c_str());
+		MarkerInfo * info = ped->GetMarkerInfo(markerID);
 		info->chromosome = (chrom == "X" || chrom == "x") ? 999 : atoi(chrom.c_str());
 		// adjust input position to make sure every position is unique
 		int position = positions[i];
@@ -81,7 +40,7 @@ void DataLoader::LoadVariants(Pedigree & ped,
 }
 
 
-void DataLoader::LoadSamples(Pedigree & ped, const VecVecString & samples, const VecString & names)
+void DataLoader::LoadSamples(Pedigree * & ped, const VecVecString & samples, const VecString & names)
 {
 
 	for (unsigned i = 0; i < samples.size(); ++i) {
@@ -90,27 +49,26 @@ void DataLoader::LoadSamples(Pedigree & ped, const VecVecString & samples, const
 		__AddPerson(ped, fam_info, genotypes, names);
 	}
 
-	ped.Sort();
-	SortFamilies(ped);
-
+	ped->Sort();
+	SortFamilies(*ped);
 }
 
 
-void DataLoader::__AddPerson(Pedigree & ped, const VecString & fam_info,
+void DataLoader::__AddPerson(Pedigree * & ped, const VecString & fam_info,
                              const VecString & genotypes, const VecString & names)
 {
 	// add person info
 	bool sex_failure = false;
 
-	ped.AddPerson(fam_info[0].c_str(), fam_info[1].c_str(),
+	ped->AddPerson(fam_info[0].c_str(), fam_info[1].c_str(),
 		fam_info[2].c_str(), fam_info[3].c_str(),
-		ped.TranslateSexCode(fam_info[4].c_str(), sex_failure));
+		ped->TranslateSexCode(fam_info[4].c_str(), sex_failure));
 	// add person genotypes
 	for (unsigned i = 0; i < names.size(); ++i) {
-		int markerID = ped.GetMarkerID(names[i].c_str());
+		int markerID = ped->GetMarkerID(names[i].c_str());
 		// convert char's face value to int
-		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].one = (int)genotypes[i][0] - 48;
-		ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].two = (int)genotypes[i][1] - 48;
+		ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].one = (int)genotypes[i][0] - 48;
+		ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].two = (int)genotypes[i][1] - 48;
 		// String c1(genotypes[i][0]);
 		// String c2(genotypes[i][1]);
 		// Alleles new_genotype;
@@ -122,26 +80,26 @@ void DataLoader::__AddPerson(Pedigree & ped, const VecString & fam_info,
 }
 
 
-void GeneticHaplotyper::Apply(Pedigree & ped)
+void GeneticHaplotyper::Apply(Pedigree * & ped)
 {
 	data.resize(0);
 
-	if (__chrom == "X") ped.chromosomeX = true;
+	if (__chrom == "X") ped->chromosomeX = true;
 	//
-	ped.EstimateFrequencies(0, true);
+	ped->EstimateFrequencies(0, true);
 	// recode alleles so more frequent alleles have lower allele numbers internally
-	ped.LumpAlleles(0.0);
+	ped->LumpAlleles(0.0);
 	// remove uninformative family or individuals
 	// !! Do not trim here, because if a family is uninformative we can report as is
 	// ped.Trim(true);
-	FamilyAnalysis engine(ped);
+	FamilyAnalysis engine(*ped);
 	// activate haplotyping options
 	engine.bestHaplotype = true;
 	engine.zeroRecombination = false;
 	engine.SetupGlobals();
 	engine.SetupMap((__chrom == "X" || __chrom == "Y") ? 999 : atoi(__chrom.c_str()));
-	for (int i = 0; i < ped.familyCount; i++) {
-		if (engine.SelectFamily(ped.families[i])) {
+	for (int i = 0; i < ped->familyCount; i++) {
+		if (engine.SelectFamily(ped->families[i])) {
 			engine.Analyse();
 			data.push_back(engine.hapOutput);
 		}
@@ -165,16 +123,16 @@ void GeneticHaplotyper::Print()
 }
 
 
-void MendelianErrorChecker::Apply(Pedigree & ped)
+void MendelianErrorChecker::Apply(Pedigree * & ped)
 {
 	// check mendelian error for everyone's every marker in input ped object
-	for (int i = 0; i < ped.count; i++) {
+	for (int i = 0; i < ped->count; i++) {
 		// skip founder
-		if (ped[i].isFounder()) continue;
+		if (ped->persons[i]->isFounder()) continue;
 		// identify founders for this person
-		Person * mom = ped[i].mother;
-		Person * dad = ped[i].father;
-		for (int m = 0; m < ped.markerCount; m++) {
+		Person * mom = ped->persons[i]->mother;
+		Person * dad = ped->persons[i]->father;
+		for (int m = 0; m < ped->markerCount; m++) {
 			//
 			// genotype data missing for both founders
 			//
@@ -199,17 +157,17 @@ void MendelianErrorChecker::Apply(Pedigree & ped)
 			// check for mendelian error
 			//
 			// person missing data
-			if (!ped[i].markers[m].isKnown()) {
+			if (!ped->persons[i]->markers[m].isKnown()) {
 				if (dad->markers[m].isHomozygous() && mom->markers[m].isHomozygous()) {
-					ped[i].markers[m].one = gdad1; ped[i].markers[m].two = gmom1;
+					ped->persons[i]->markers[m].one = gdad1; ped->persons[i]->markers[m].two = gmom1;
 				}
 				continue;
 			}
 			// no error
-			if (((ped[i].markers[m].one == gdad1 || ped[i].markers[m].one == gdad2) &&
-			     (ped[i].markers[m].two == gmom1 || ped[i].markers[m].two == gmom2)) ||
-			    ((ped[i].markers[m].two == gdad1 || ped[i].markers[m].two == gdad2) &&
-			     (ped[i].markers[m].one == gmom1 || ped[i].markers[m].one == gmom2)))
+			if (((ped->persons[i]->markers[m].one == gdad1 || ped->persons[i]->markers[m].one == gdad2) &&
+			     (ped->persons[i]->markers[m].two == gmom1 || ped->persons[i]->markers[m].two == gmom2)) ||
+			    ((ped->persons[i]->markers[m].two == gdad1 || ped->persons[i]->markers[m].two == gdad2) &&
+			     (ped->persons[i]->markers[m].one == gmom1 || ped->persons[i]->markers[m].one == gmom2)))
 				continue;
 			// error found, make missing
 			else {
@@ -218,7 +176,7 @@ void MendelianErrorChecker::Apply(Pedigree & ped)
 				// std::clog << "Mather geno " << gmom1 << " " << gmom2 << std::endl;
 				// std::clog << "Kid geno " << ped[i].markers[m].one << " " << ped[i].markers[m].two << std::endl;
 				__errorCount += 1;
-				ped[i].markers[m].one = ped[i].markers[m].two = 0;
+				ped->persons[i]->markers[m].one = ped->persons[i]->markers[m].two = 0;
 			}
 		}
 	}

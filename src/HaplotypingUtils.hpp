@@ -30,26 +30,24 @@ typedef std::vector<std::vector<double> > VecVecDouble;
 typedef std::map<std::string, std::vector<double> > VecDoubleDict;
 typedef std::map<std::string, std::vector<std::vector<double> > > VecVecDoubleDict;
 
-void reset_ped(Pedigree & ped);
-
 class DataLoader
 {
 public:
 	DataLoader() {};
 	~DataLoader() {};
 	DataLoader * clone() const { return new DataLoader(*this); }
-	void LoadVariants(Pedigree & ped,
+	void LoadVariants(Pedigree * & ped,
 		const VecString & names,
 		const VecInt & positions,
 		const std::string & chrom,
 		double positionAdjustment = 0.01);
 
-	void LoadSamples(Pedigree & ped,
+	void LoadSamples(Pedigree * & ped,
 		const VecVecString & samples,
 		const VecString & names);
 
 private:
-	void __AddPerson(Pedigree & ped,
+	void __AddPerson(Pedigree * & ped,
 		const VecString & fam_info,
 		const VecString & genotypes,
 		const VecString & names);
@@ -62,7 +60,7 @@ public:
 	MendelianErrorChecker() : __errorCount(0) {};
 	~MendelianErrorChecker() {};
 	MendelianErrorChecker * clone() const { return new MendelianErrorChecker(*this); }
-	void Apply(Pedigree & ped);
+	void Apply(Pedigree * & ped);
 
 	int CountMendelianErrors() { return __errorCount; }
 
@@ -80,7 +78,7 @@ public:
 	// [family][sample][haplotypes]
 	VecVecVecString data;
 	// Apply haplotyping. Missing data are imputed as possible
-	void Apply(Pedigree & ped);
+	void Apply(Pedigree * & ped);
 
 	void Print();
 
