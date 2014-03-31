@@ -213,10 +213,43 @@ inline unsigned adjustSize(unsigned n, unsigned a)
 }
 
 
-inline std::string collapse(const VecString & haplotype, unsigned start, unsigned end, unsigned size)
+inline std::string collapse_by_cluster(const VecString & haplotype, unsigned start, unsigned end, const VecVecInt & clusters)
 {
-	if (end == 0) end = haplotype.size();
-	if (start == end) return "?";
+	std::string collapsed_haplotype = "";
+
+	std::vector<unsigned> clustered(0);
+	for (unsigned i = start; i < end; ++i) {
+		// previously being clustered with another position and was accounted for
+		if (std::find(clustered.begin(), clustered.end(), i - 2) != clustered.end()) continue;
+		// find positions that cluster with i
+		std::vector<unsigned> icluster(0);
+		for (unsigned c = 0; c < clusters.size(); ++c) {
+			if (std::find(clusters[c].begin(), clusters[c].end(), i - 2) != clusters[c].end()) {
+				for (unsigned j = 0; j < clusters[c].size(); ++j) {
+					if (j >= (end - 2) ) continue;
+					clustered.push_back(j);
+					icluster.push_back(j + 2);
+				}
+			}
+		}
+		// collapse
+		if (icluster.size() == 0) collapsed_haplotype += haplotype[i];
+		else {
+			std::string code = "1";
+			for (unsigned j = 0; j < icluster.size(); ++j) {
+				if (haplotype[j] == "2") code = "2";
+				else code = (code == "?" || code == "2") ? code : haplotype[j];
+			}
+			collapsed_haplotype += code;
+		}
+	}
+	return collapsed_haplotype;
+}
+
+
+inline std::string collapse_by_size(const VecString & haplotype, unsigned start, unsigned end, unsigned size)
+{
+
 	std::string collapsed_haplotype = "";
 	unsigned wsize = adjustSize(end - start, size);
 	unsigned counter = 0;
@@ -238,8 +271,8 @@ inline std::string collapse(const VecString & haplotype, unsigned start, unsigne
 }
 
 
-inline VecVecDouble calculate_cmaf(const std::vector<double> & maf,
-                                   std::vector<unsigned> chunks, unsigned size)
+inline VecVecDouble calculate_cmaf_by_size(const std::vector<double> & maf,
+                                           std::vector<unsigned> chunks, unsigned size)
 {
 	// append the ultimate end position
 	chunks.push_back(maf.size() + 2);
@@ -275,7 +308,74 @@ inline VecVecDouble calculate_cmaf(const std::vector<double> & maf,
 }
 
 
-void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst)
+inline VecVecDouble calculate_cmaf_by_cluster(const std::vector<double> & maf,
+                                              std::vector<unsigned> chunks, const VecVecInt & clusters)
+{
+	// append the ultimate end position
+	chunks.push_back(maf.size() + 2);
+	// return value
+	VecVecDouble res(0);
+	unsigned start = 0;
+	for (unsigned c = 0; c < chunks.size(); ++c) {
+		unsigned end = chunks[c] - 2;
+		std::vector<unsigned> clustered(0);
+		std::vector<double> cmaf(0);
+		for (unsigned i = start; i < end; ++i) {
+			// previously being clustered with another position and was accounted for
+			if (std::find(clustered.begin(), clustered.end(), i - 2) != clustered.end()) continue;
+			// find positions that cluster with i
+			std::vector<unsigned> icluster(0);
+			for (unsigned c = 0; c < clusters.size(); ++c) {
+				if (std::find(clusters[c].begin(), clusters[c].end(), i - 2) != clusters[c].end()) {
+					for (unsigned j = 0; j < clusters[c].size(); ++j) {
+						if (j >= (end - 2) ) continue;
+						clustered.push_back(j);
+						icluster.push_back(j + 2);
+					}
+				}
+			}
+			// collapse
+			if (icluster.size() == 0) cmaf.push_back(maf[i]);
+			else {
+				double icmaf = 1.0;
+				for (unsigned j = 0; j < icluster.size(); ++j) {
+					icmaf *= (1 - maf[j]);
+				}
+				cmaf.push_back(1 - icmaf);
+			}
+		}
+		res.push_back(cmaf);
+		start = end;
+	}
+	// for (unsigned i = 0 ; i < res.size(); ++i) {
+	//  for (unsigned j = 0; j < res[i].size(); ++j) {
+	//      std::clog << res[i][j] << " ";
+	//  }
+	//  std::clog << std::endl;
+	// }
+	// std::clog << std::endl;
+	return res;
+}
+
+
+inline std::string collapse(const VecString & haplotype, unsigned start, unsigned end, double size, const VecVecInt & clusters)
+{
+	if (end == 0) end = haplotype.size();
+	if (start == end) return "?";
+	if (size > 0 && size < 1) return collapse_by_cluster(haplotype, start, end, clusters);
+	else return collapse_by_size(haplotype, start, end, unsigned(size));
+}
+
+
+inline VecVecDouble calculate_cmaf(const std::vector<double> & maf, std::vector<unsigned> chunks, double size, const VecVecInt & clusters)
+{
+	if (size > 0 && size < 1) return calculate_cmaf_by_cluster(maf, chunks, clusters);
+	else return calculate_cmaf_by_size(maf, chunks, unsigned(size));
+}
+
+
+void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst,
+                             const VecVecVecInt & markerIdxClusters)
 {
 	__data.resize(0);
 	__freqs.clear();
@@ -313,7 +413,7 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 				std::string haplotype = collapse(haploVecs[f][p],
 					(r > 0) ? recombPositions[r - 1] : 2,
 					(r == recombPositions.size()) ? haploVecs[f][p].size() : recombPositions[r],
-					__size);
+					__size, markerIdxClusters[f]);
 				if (haplotype != "?" &&
 				    std::find(patterns[r].begin(), patterns[r].end(), haplotype) == patterns[r].end()) {
 					patterns[r].push_back(haplotype);
@@ -344,7 +444,7 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 		// calculate haplotype pattern frequency
 		//
 		// size of cmafs equals recombPositions.size() + 1
-		VecVecDouble cmafs = calculate_cmaf(mafVecsConst[f], recombPositions, __size);
+		VecVecDouble cmafs = calculate_cmaf(mafVecsConst[f], recombPositions, __size, markerIdxClusters[f]);
 		__freqs[haploVecs[f][0][0]] = VecVecDouble();
 		for (unsigned r = 0; r <= recombPositions.size(); r++) {
 			std::vector<double> tmp(patterns[r].size());

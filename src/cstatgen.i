@@ -55,6 +55,8 @@
 %template(VecString) std::vector<std::string>; 
 %template(VecVecString) std::vector<std::vector<std::string> >; 
 %template(VecVecVecString) std::vector<std::vector<std::vector<std::string> > >; 
+%template(VecVecInt) std::vector<std::vector<int> >; 
+%template(VecVecVecInt) std::vector<std::vector<std::vector<int> > >; 
 %template(VecVecDouble) std::vector<std::vector<double> >; 
 %template(VecDoubleDict) std::map<std::string, std::vector<double> >;
 %template(VecVecDoubleDict) std::map<std::string, std::vector<std::vector<double> > >;

@@ -23,6 +23,8 @@
 namespace cstatgen {
 
 typedef std::vector<int> VecInt;
+typedef std::vector<std::vector<int> > VecVecInt;
+typedef std::vector<std::vector<std::vector<int> > > VecVecVecInt;
 typedef std::vector<std::string> VecString;
 typedef std::vector<std::vector<std::string> > VecVecString;
 typedef std::vector<std::vector<std::vector<std::string> > > VecVecVecString;
@@ -90,7 +92,7 @@ private:
 class HaplotypeCoder
 {
 public:
-	HaplotypeCoder(const int size) : __data(0), __freqs(), __recombCount(0), __size(size) {}
+	HaplotypeCoder(const double size) : __data(0), __freqs(), __recombCount(0), __size(size) {}
 	~HaplotypeCoder() {};
 	HaplotypeCoder * clone() const { return new HaplotypeCoder(*this); }
 
@@ -98,7 +100,8 @@ public:
 	// each element of haploVecs[i] is a haplotype with the first 2 items being fid and sid
 	// each element of maf is a family's data
 	// each element of maf[i] is founder population MAF of the corresponding variant
-	void Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst);
+	void Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst,
+		const VecVecVecInt & markerIdxClusters);
 
 	void Print();
 
@@ -110,7 +113,7 @@ private:
 	VecVecString __data;
 	VecVecDoubleDict __freqs;
 	int __recombCount;
-	unsigned __size;
+	double __size;
 };
 }
 #endif
