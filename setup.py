@@ -5,6 +5,7 @@
 # GNU General Public License (http://www.gnu.org/licenses/gpl.html)
 
 from distutils.core import setup, Extension
+# from distutils.dep_util import newer
 try:
    from distutils.command.build_py import build_py_2to3 as build_py
 except ImportError:
@@ -94,14 +95,14 @@ try:
     os.remove('swigpyrun.h')
 except OSError as e:
     sys.exit('Failed to generate wrapper file: {0}'.format(e))
-#
-UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp",
-                     "pdf/*.cpp", "klib/*.c", "general/*.cpp", "vcf/*.cpp"])
+
 # Under linux/gcc, lib stdc++ is needed for C++ based extension.
 libs = ['stdc++'] if sys.platform == 'linux2' else []
 compile_args = ["-O3", "-march=native", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
 link_args = ["-lm", "-lz"]
 #
+UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp",
+                     "pdf/*.cpp", "klib/*.c", "general/*.cpp", "vcf/*.cpp"])
 CSTATGEN_MODULE = [
     Extension('{}._cstatgen'.format(NAME),
               sources = [WRAPPER_CPP] + CPP + UMICH_FILES,
@@ -112,12 +113,27 @@ CSTATGEN_MODULE = [
               include_dirs = getfn(["general", "klib", "vcf", "clusters", "libsrc", "merlin", "pdf"]) + ["src"]
               )
 ]
+#
+# exclude two modules due to lack of gsl and bio++
+EGGLIB_FILES = [x for x in getfn("egglib-cpp/*.cpp", prefix = "src/egglib") if not (x.endswith("ABC.cpp") or x.endswith("BppDiversity.cpp"))]
+EGGLIB_MODULE = [
+    Extension('_egglib_binding',
+              sources = ["src/egglib/egglib_binding.cpp"] + EGGLIB_FILES,
+              extra_compile_args = compile_args,
+    	      extra_link_args = link_args,
+              libraries = libs,
+              library_dirs = [],
+              include_dirs = getfn(["egglib/egglib-cpp", "egglib"], prefix = "src")
+              )
+]
+
 setup(name = NAME,
     version = VERSION,
     description = "Gao Wang's statgen library",
     author = "Gao Wang",
-    packages = [NAME],
-    package_dir = {NAME:'src'},
+    packages = [NAME, NAME + ".egglib"],
+    package_dir = {NAME:'src', NAME + ".egglib":'src/egglib'},
+    package_data = {NAME + ".egglib":['apps.conf']},
     cmdclass = {'build_py': build_py},
-    ext_modules = CSTATGEN_MODULE
+    ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE
 )
