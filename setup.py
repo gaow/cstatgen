@@ -98,7 +98,7 @@ except OSError as e:
 
 # Under linux/gcc, lib stdc++ is needed for C++ based extension.
 libs = ['stdc++'] if sys.platform == 'linux2' else []
-compile_args = ["-O3", "-march=native", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
+compile_args_umich = ["-O3", "-march=native", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
 link_args = ["-lm", "-lz"]
 #
 UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp",
@@ -106,7 +106,7 @@ UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp",
 CSTATGEN_MODULE = [
     Extension('{}._cstatgen'.format(NAME),
               sources = [WRAPPER_CPP] + CPP + UMICH_FILES,
-              extra_compile_args = compile_args,
+              extra_compile_args = compile_args_umich,
     	      extra_link_args = link_args,
               libraries = libs,
               library_dirs = [],
@@ -114,12 +114,13 @@ CSTATGEN_MODULE = [
               )
 ]
 #
-# exclude two modules due to lack of gsl and bio++
+compile_args_egglib = ["-O3", "-march=native", "-std=c++11", "-UHAVE_LIBBPP_SEQ", "-UHAVE_LIBBPP_CORE", "-UHAVE_LIBGSLCBLAS"]
+# exclude two modules due to lack of gsl and bio++; egglib should have used macro to control for it, though
 EGGLIB_FILES = [x for x in getfn("egglib-cpp/*.cpp", prefix = "src/egglib") if not (x.endswith("ABC.cpp") or x.endswith("BppDiversity.cpp"))]
 EGGLIB_MODULE = [
     Extension('_egglib_binding',
               sources = ["src/egglib/egglib_binding.cpp"] + EGGLIB_FILES,
-              extra_compile_args = compile_args,
+              extra_compile_args = compile_args_egglib,
     	      extra_link_args = link_args,
               libraries = libs,
               library_dirs = [],
