@@ -17,6 +17,7 @@ namespace cstatgen {
 
 typedef std::vector<int> VecInt;
 typedef std::vector<std::string> VecString;
+typedef std::vector<std::vector<std::string> > VecVecString;
 
 class VCFstream
 {
@@ -24,7 +25,7 @@ public:
 	/// Initialize VCFstream with VCF file
 	/// \param vcf file
 	/// \param vcf index
-	VCFstream(const std::string & vcf)
+	VCFstream(const std::string & vcf) : __vcf(vcf)
 	{
 		std::string msg;
 
@@ -64,6 +65,27 @@ public:
 			samples[i].assign(__header.getSampleName(i));
 		}
 		return samples;
+	}
+
+
+	/// Get all variants in VCF file
+	/// \return list of (chr, pos)
+	VecVecString GetGenomeCoordinates()
+	{
+		VecVecString res(0);
+		VcfRecord line;
+		VcfFileReader reader;
+		VcfHeader header;
+
+		reader.open(__vcf.c_str(), header);
+		reader.readVcfIndex();
+		while (reader.readRecord(line)) {
+			VecString variant(2);
+			variant[0] = line.getChromStr();
+			variant[1] = std::to_string(line.get1BasedPosition());
+			res.push_back(variant);
+		}
+		return res;
 	}
 
 
@@ -165,6 +187,7 @@ private:
 	VCFstream(const VCFstream &);
 	VCFstream & operator=(const VCFstream &);
 
+	std::string __vcf;
 	VcfRecord __line;
 	VcfFileReader __reader;
 	VcfHeader __header;
