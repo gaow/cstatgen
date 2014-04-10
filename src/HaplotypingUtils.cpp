@@ -216,7 +216,6 @@ inline unsigned adjustSize(unsigned n, unsigned a)
 inline std::string collapse_by_cluster(const VecString & haplotype, unsigned start, unsigned end, const VecVecInt & clusters)
 {
 	std::string collapsed_haplotype = "";
-
 	std::vector<unsigned> clustered(0);
 	for (unsigned i = start; i < end; ++i) {
 		// previously being clustered with another position and was accounted for
@@ -237,8 +236,8 @@ inline std::string collapse_by_cluster(const VecString & haplotype, unsigned sta
 		else {
 			std::string code = "1";
 			for (unsigned j = 0; j < icluster.size(); ++j) {
-				if (haplotype[j] == "2") code = "2";
-				else code = (code == "?" || code == "2") ? code : haplotype[j];
+				if (haplotype[icluster[j]] == "2") code = "2";
+				else code = (code == "?" || code == "2") ? code : haplotype[icluster[j]];
 			}
 			collapsed_haplotype += code;
 		}
