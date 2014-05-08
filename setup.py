@@ -44,7 +44,7 @@ def compile_parallel(
 import distutils.ccompiler
 distutils.ccompiler.CCompiler.compile=compile_parallel
    
-import sys, os, subprocess
+import sys, os, subprocess, platform
 from glob import glob
 from src import NAME, VERSION
 
@@ -55,7 +55,7 @@ if sys.platform == "win32":
 # use ccache to speed up build
 try:
     if subprocess.call(['ccache'], stderr = open(os.devnull, "w")):
-        os.environ['CC'] = 'ccache gcc'
+        os.environ['CC'] = 'ccache clang -Qunused-arguments' if platform.system() == 'Darwin' else 'ccache gcc'
 except OSError:
     pass
     
