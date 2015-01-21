@@ -427,7 +427,7 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 			// convert one haplotype's all recomb segments to a single super marker
 			for (unsigned r = 0; r <= recombPositions.size(); r++) {
 				std::sort(patterns[r].begin(), patterns[r].end());
-				if (haploStrs[p][r] == "?") haploStrs[p][r] = "0";
+				if (haploStrs[p][r].find("?") != std::string::npos) haploStrs[p][r] = "0";
 				else haploStrs[p][r] = std::to_string(std::find(patterns[r].begin(), patterns[r].end(),
 							haploStrs[p][r]) - patterns[r].begin() + 1);
 			}
