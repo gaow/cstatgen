@@ -1,4 +1,4 @@
-Date: Wed Feb 12 21:18:49 CST 2014
+Date: Mon Jan 26 22:34:50 CST 2015
 This folder contains C++ source from Goncalo's group, libStatGen library version 1.0.12 Released 5/14/2014:
      * ./klib, the klib library, originally under the name "samtools" in the libStatGen library
      * ./general and ./vcf are part of the libStatGen library
