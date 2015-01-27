@@ -1,18 +1,18 @@
 ////////////////////////////////////////////////////////////////////// 
 // libsrc/MathNormal.cpp 
-// (c) 2000-2007 Goncalo Abecasis
+// (c) 2000-2010 Goncalo Abecasis
 // 
-// This file is distributed as part of the MERLIN source code package   
+// This file is distributed as part of the Goncalo source code package   
 // and may not be redistributed in any form, without prior written    
 // permission from the author. Permission is granted for you to       
 // modify this file for your own personal use, but modified versions  
 // must retain this copyright notice and must not be distributed.     
 // 
-// Permission is granted for you to use this file to compile MERLIN.    
+// Permission is granted for you to use this file to compile Goncalo.    
 // 
 // All computer programs have bugs. Use this file at your own risk.   
 // 
-// Tuesday December 18, 2007
+// Sunday May 02, 2010
 // 
  
 #include "MathNormal.h"
@@ -254,6 +254,7 @@ NormalSet::NormalSet(int threads)
    count = size = 0;
    numericMinimizer = 2;
    precision = 1e-8;
+   varScale = 1.0;
    }
 
 void NormalSet::Free()
@@ -382,9 +383,9 @@ void NormalSet::SelectPoint(Vector & v)
 
    for (int i = 0, j = means.dim; i < vcEstimated; i++, j++)
       if (v[j] > 16 || v[j] < -16)
-         variances[i] = v[j] > 0 ? 1e7 : 1e-7;
+         variances[i] = (v[j] > 0 ? 1e7 : 1e-7) * varScale;
       else
-         variances[i] = exp(v[j]);
+         variances[i] = exp(v[j]) * varScale;
 
    if (vcConstrained) CalculateConstrainedVariances();
 
@@ -562,6 +563,8 @@ void NormalSet::EditLinearDegenerates()
 
   for (int v = 0; v < vcEstimated; v++)
     variances[v] = residualVar * var_weights[v] / var_counts[v];
+
+  varScale = residualVar;
   }
 
 int NormalSet::CountParameters()
@@ -574,7 +577,7 @@ void NormalSet::GetStartingPoint(Vector & startPoint)
    for (int i = 0; i < means.dim; i++)
       startPoint[i] = means[i];
    for (int i = 0; i < variances.dim; i++)
-      startPoint[i + means.dim] = log(variances[i]);
+      startPoint[i + means.dim] = log(variances[i] / varScale);
    }
 
 void NormalSet::RemoveRedundancy()

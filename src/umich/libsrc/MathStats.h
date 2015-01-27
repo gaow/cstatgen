@@ -1,18 +1,18 @@
 ////////////////////////////////////////////////////////////////////// 
 // libsrc/MathStats.h 
-// (c) 2000-2007 Goncalo Abecasis
+// (c) 2000-2010 Goncalo Abecasis
 // 
-// This file is distributed as part of the MERLIN source code package   
+// This file is distributed as part of the Goncalo source code package   
 // and may not be redistributed in any form, without prior written    
 // permission from the author. Permission is granted for you to       
 // modify this file for your own personal use, but modified versions  
 // must retain this copyright notice and must not be distributed.     
 // 
-// Permission is granted for you to use this file to compile MERLIN.    
+// Permission is granted for you to use this file to compile Goncalo.    
 // 
 // All computer programs have bugs. Use this file at your own risk.   
 // 
-// Tuesday December 18, 2007
+// Sunday May 02, 2010
 // 
  
 #ifndef _MATHSTATS_H_
@@ -24,10 +24,11 @@
 // Normal distribution functions
 //
 double ndist (double x, bool upper = true);
+double logndist (double x, bool upper = true);
 
 // ninv(p) calculates X such that p = P(x >= X) for std normal dist
 //
-double ninv ( double p );
+double ninv ( long double p );
 
 // Chi-Sq distribution function
 // P(Chi>=X) for v degrees of freedom

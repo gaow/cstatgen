@@ -1,18 +1,18 @@
 ////////////////////////////////////////////////////////////////////// 
 // libsrc/MathStats.cpp 
-// (c) 2000-2007 Goncalo Abecasis
+// (c) 2000-2010 Goncalo Abecasis
 // 
-// This file is distributed as part of the MERLIN source code package   
+// This file is distributed as part of the Goncalo source code package   
 // and may not be redistributed in any form, without prior written    
 // permission from the author. Permission is granted for you to       
 // modify this file for your own personal use, but modified versions  
 // must retain this copyright notice and must not be distributed.     
 // 
-// Permission is granted for you to use this file to compile MERLIN.    
+// Permission is granted for you to use this file to compile Goncalo.    
 // 
 // All computer programs have bugs. Use this file at your own risk.   
 // 
-// Tuesday December 18, 2007
+// Sunday May 02, 2010
 // 
  
 #include "MathConstant.h"
@@ -24,7 +24,7 @@
 #include <stdio.h>
 
 // Approximates the sqrt of an integer
-// (should be within +/- 1 for inputs < 1,000,000
+// (should be within +/- 1 for inputs < 1,000,000)
 
 int introot(int n)
    {
@@ -43,7 +43,7 @@ int introot(int n)
 //
 
 #define LOWER_TAIL_ONE     7.5
-#define UPPER_TAIL_ZERO    20
+#define UPPER_TAIL_ZERO    37.5
 
 double ndist(double z, bool upper)
    {
@@ -85,10 +85,51 @@ double ndist(double z, bool upper)
    return (upper) ? p : 1 - p;
    }
 
+double logndist(double z, bool upper)
+   {
+   // Based on original FORTRAN code for ANORM by W. Cody
+
+   if (z < 0)
+      {
+      upper = !upper;
+      z = -z;
+      }
+
+   if (!upper || z < sqrt(32))
+      return log(ndist(z, upper));
+
+   double p[] = {0.21589853405795699,  0.1274011611602473639,
+                 0.022235277870649807,  0.001421619193227893466,
+                 2.9112874951168792E-5,  0.02307344176494017303 };
+
+   double q[] = {1.28426009614491121,    0.468238212480865118,
+                 0.0659881378689285515,  0.00378239633202758244,
+                 7.29751555083966205E-5};
+
+   double onexsq = 1.0 / (z * z);
+   double xnum = p[5] * onexsq;
+   double xden = onexsq;
+
+   for (int i = 0; i < 4; i++)
+      {
+      xnum = (xnum + p[i]) * onexsq;
+      xden = (xden + q[i]) * onexsq;
+      }
+
+   double result = onexsq * (xnum + p[4]) / (xden + q[4]);
+   result = (0.39894228040143267794 - result) / z;
+
+   onexsq = floor (z * 16) / 16;
+   double delta = (z - onexsq) * (z + onexsq);
+
+   return (-onexsq * onexsq * 0.5) + (-delta * 0.5) + log(result);
+   }
+
+
 // The standard normal distribution
 //
 
-double ninv( double p )
+double ninv( long double p )
 /****************************************************
    C Equivalent of Wichura's PPND16, Algorithm AS241
    Applied Statistics Vol 37 1988 pp 477 - 484
@@ -141,7 +182,7 @@ double ninv( double p )
                            1.05075007164441684324E-9
                         } ;
 
-   static const double e[8] = {
+   static const long double e[8] = {
                            6.65790464350110377720E0,
                            5.46378491116411436990E0,
                            1.78482653991729133580E0,
@@ -152,7 +193,7 @@ double ninv( double p )
                            2.01033439929228813265E-7
                         } ;
 
-   static const double f[7] = {
+   static const long double f[7] = {
                            5.99832206555887937690E-1,
                            1.36929880922735805310E-1,
                            1.48753612908506148525E-2,
@@ -162,8 +203,8 @@ double ninv( double p )
                            2.04426310338993978564E-15
                         } ;
 
-   double q = p - 0.5;
-   double r, x ;
+   long double q = p - 0.5;
+   long double r, x ;
 
    if ( fabs( q ) < SPLIT1 ) {
       r = CONST1 - q * q ;
@@ -177,12 +218,28 @@ double ninv( double p )
       else
          r = 1.0 - p ;
 
-      if ( r < 1e-200)
-         error("p-value [%.2g] outside range in ninv()", r );
+#ifdef __BORLANDC__
+   #define NINV_LONG_DOUBLE
+#endif
+
+#ifdef __GNUC__
+   #define NINV_LONG_DOUBLE
+#endif
+
+#ifdef NINV_LONG_DOUBLE
+      if ( r < 1e-1000L )
+#else
+      if ( r < 1e-300 )
+#endif
+         error("p-value [%.2g] outside range in ninv()", p );
 
       if ( r > 0.0 )
          {
-         r = sqrt( -log( r ) ) ;
+#ifdef NINV_LONG_DOUBLE
+         r = sqrtl( -logl( r ) ) ;
+#else
+         r = sqrt( -log( r ) );
+#endif
          if ( r <= SPLIT2 )
             {
             r -= CONST2 ;
@@ -197,7 +254,7 @@ double ninv( double p )
             x =  ((((((( e[7] * r + e[6] ) * r + e[5] ) * r + e[4] ) * r
                         + e[3] ) * r + e[2] ) * r + e[1] ) * r + e[0] ) /
                   ((((((( f[6] * r + f[5] ) * r + f[4] ) * r + f[3] ) * r
-                        + f[2] ) * r + f[1] ) * r + f[0] ) * r + 1.0 ) ;
+                        + f[2] ) * r + f[1] ) * r + f[0] ) * r + 1.0L ) ;
             }
          }
       else
@@ -487,7 +544,6 @@ double betacf(double a, double b, double x)
       error("betacf: a or b too big or ITMAX too small");
    return h;
    }
-
 
 
 
