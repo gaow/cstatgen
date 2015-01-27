@@ -18,6 +18,7 @@
 #include "PhoneHome.h"
 #include "knetfile.h"
 
+#include <time.h>
 #include <iostream>
 #include <string.h>
 
@@ -53,6 +54,7 @@ bool PhoneHome::checkVersion(const char* programName, const char* version,
     enableCompletionStatus();
     add("pgm", programName);
     add("vsn", version);
+    add("args", params);
 
     connect();
 

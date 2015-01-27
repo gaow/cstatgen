@@ -26,7 +26,6 @@
 #include <unordered_set>
 #endif
 
-
 typedef std::string vcfIDtype;
 
 
