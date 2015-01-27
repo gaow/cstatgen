@@ -1,0 +1,56 @@
+\hypertarget{classCollapsor}{\section{Collapsor Class Reference}
+\label{classCollapsor}\index{Collapsor@{Collapsor}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classCollapsor_aaa7f3f52d31e81b078933fa34c57d099}{void {\bfseries set\-Set\-File\-Name} (const char $\ast$fn)}\label{classCollapsor_aaa7f3f52d31e81b078933fa34c57d099}
+
+\item 
+void \hyperlink{classCollapsor_a4215b29910ad62cb949e8b01eb0ca730}{set\-Frequency\-Cutoff} (int howto\-Calc\-Freq, double lb, double ub)
+\item 
+\hypertarget{classCollapsor_a833e81ad32307670e9590e921a393716}{void {\bfseries filter\-Genotype\-By\-Frequency} (\hyperlink{classVCFData}{V\-C\-F\-Data} $\ast$d)}\label{classCollapsor_a833e81ad32307670e9590e921a393716}
+
+\item 
+bool \hyperlink{classCollapsor_ac89c1d1baaf4932b80e62476e2b667e8}{iterate\-Set} (V\-C\-F\-Input\-File \&vin, \hyperlink{classVCFData}{V\-C\-F\-Data} $\ast$data)
+\item 
+\hypertarget{classCollapsor_a8c6f764b5b2eae1b5b5aed5b624f74b0}{std\-::string \& {\bfseries get\-Current\-Set\-Name} ()}\label{classCollapsor_a8c6f764b5b2eae1b5b5aed5b624f74b0}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classCollapsor_ac89c1d1baaf4932b80e62476e2b667e8}{\index{Collapsor@{Collapsor}!iterate\-Set@{iterate\-Set}}
+\index{iterate\-Set@{iterate\-Set}!Collapsor@{Collapsor}}
+\subsubsection[{iterate\-Set}]{\setlength{\rightskip}{0pt plus 5cm}bool Collapsor\-::iterate\-Set (
+\begin{DoxyParamCaption}
+\item[{V\-C\-F\-Input\-File \&}]{vin, }
+\item[{{\bf V\-C\-F\-Data} $\ast$}]{data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classCollapsor_ac89c1d1baaf4932b80e62476e2b667e8}
+iterate all sets \begin{DoxyReturn}{Returns}
+false\-: when all sets are went over 
+\end{DoxyReturn}
+\hypertarget{classCollapsor_a4215b29910ad62cb949e8b01eb0ca730}{\index{Collapsor@{Collapsor}!set\-Frequency\-Cutoff@{set\-Frequency\-Cutoff}}
+\index{set\-Frequency\-Cutoff@{set\-Frequency\-Cutoff}!Collapsor@{Collapsor}}
+\subsubsection[{set\-Frequency\-Cutoff}]{\setlength{\rightskip}{0pt plus 5cm}void Collapsor\-::set\-Frequency\-Cutoff (
+\begin{DoxyParamCaption}
+\item[{int}]{howto\-Calc\-Freq, }
+\item[{double}]{lb, }
+\item[{double}]{ub}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classCollapsor_a4215b29910ad62cb949e8b01eb0ca730}
+
+\begin{DoxyParams}{Parameters}
+{\em howto\-Calc\-Freq} & freq from all sample or from all control \\
+\hline
+{\em lb,\-:} & lower bound \\
+\hline
+{\em ub,\-:} & upper bound \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+Collapsor.\-h\end{DoxyCompactItemize}

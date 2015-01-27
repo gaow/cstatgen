@@ -1,0 +1,226 @@
+\hypertarget{classVCFData}{\section{V\-C\-F\-Data Class Reference}
+\label{classVCFData}\index{V\-C\-F\-Data@{V\-C\-F\-Data}}
+}
+
+
+{\ttfamily \#include $<$V\-C\-F\-Data.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classVCFData_aa237fc9ab7baada2b1621bd098319c7e}{adjust\-People\-Order} (std\-::vector$<$ std\-::string $>$ \&p, std\-::vector$<$ std\-::string $>$ $\ast$dropped\-Id)
+\item 
+\hypertarget{classVCFData_a4a54a9919215f4d3ce8e7cafdc8593f4}{void {\bfseries add\-V\-C\-F\-Header} (V\-C\-F\-Header $\ast$h, std\-::vector$<$ std\-::string $>$ $\ast$dropped\-Id)}\label{classVCFData_a4a54a9919215f4d3ce8e7cafdc8593f4}
+
+\item 
+void \hyperlink{classVCFData_a5d4d267764c8fd3533242af5e11b32a2}{add\-V\-C\-F\-Record} (V\-C\-F\-Record \&r)
+\item 
+\hypertarget{classVCFData_a314b2f45dce69ca78a92d22e117a4680}{void {\bfseries load\-Plink} (const char $\ast$prefix)}\label{classVCFData_a314b2f45dce69ca78a92d22e117a4680}
+
+\item 
+\hypertarget{classVCFData_ac954c619485c7dde44b1d3b07df4da37}{int {\bfseries load\-Plink\-Phenotype} (const char $\ast$fn)}\label{classVCFData_ac954c619485c7dde44b1d3b07df4da37}
+
+\item 
+\hypertarget{classVCFData_afd60d597f9ea5addef895e81122c67e5}{int {\bfseries load\-Phenotype\-By\-Col} (const char $\ast$fn, int col)}\label{classVCFData_afd60d597f9ea5addef895e81122c67e5}
+
+\item 
+int \hyperlink{classVCFData_a919196e09bb6f13bcd30a313386747cd}{read\-Plink\-Phenotype\-Skip\-Missing} (const char $\ast$fn, const char $\ast$selected\-Col, Matrix $\ast$data, Ordered\-Map$<$ std\-::string, int $>$ $\ast$row\-Name, Ordered\-Map$<$ std\-::string, int $>$ $\ast$col\-Name)
+\item 
+\hypertarget{classVCFData_a5f33cfc1d575be6e92b9a3bd888a8057}{void {\bfseries dichotomized\-Phenotype} (double threshold)}\label{classVCFData_a5f33cfc1d575be6e92b9a3bd888a8057}
+
+\item 
+\hypertarget{classVCFData_a371f90cce2469e56d147486893fdb97e}{Vector $\ast$ {\bfseries extract\-Phenotype} ()}\label{classVCFData_a371f90cce2469e56d147486893fdb97e}
+
+\item 
+\hypertarget{classVCFData_ad2c2f810ee6ff936b62f27363921f779}{int {\bfseries load\-Covariate} (const char $\ast$fn)}\label{classVCFData_ad2c2f810ee6ff936b62f27363921f779}
+
+\item 
+\hypertarget{classVCFData_aa0fb190cf49d8699602b0165fc234f32}{void {\bfseries match\-Data} (Matrix $\ast$m1, Ordered\-Map$<$ std\-::string, int $>$ \&row\-Label1, int $\ast$skip1, Matrix $\ast$m2, Ordered\-Map$<$ std\-::string, int $>$ \&row\-Label2, int $\ast$skip2)}\label{classVCFData_aa0fb190cf49d8699602b0165fc234f32}
+
+\item 
+int \hyperlink{classVCFData_abad5d2e38d231e53fb2d4131740f9e8c}{read\-Table} (const char $\ast$fn, Matrix $\ast$data, Ordered\-Map$<$ std\-::string, int $>$ $\ast$row\-Name, Ordered\-Map$<$ std\-::string, int $>$ $\ast$col\-Name, std\-::string $\ast$upper\-Left\-Name, double default\-Value)
+\item 
+int \hyperlink{classVCFData_a833405588404513e5404a6a79594f3fe}{read\-Plink\-Table} (const char $\ast$fn, Matrix $\ast$data, Ordered\-Map$<$ std\-::string, int $>$ $\ast$row\-Name, Ordered\-Map$<$ std\-::string, int $>$ $\ast$col\-Name, double default\-Value)
+\item 
+\hypertarget{classVCFData_a7d1f8f57af22b098cf3b0eeb96e72819}{void {\bfseries read\-Genotype\-From\-R} (const char $\ast$fn)}\label{classVCFData_a7d1f8f57af22b098cf3b0eeb96e72819}
+
+\item 
+\hypertarget{classVCFData_ad72d49dcbca45f6a000c8b36183737b3}{void {\bfseries write\-Raw\-Data} (const char $\ast$prefix)}\label{classVCFData_ad72d49dcbca45f6a000c8b36183737b3}
+
+\item 
+\hypertarget{classVCFData_ab1687e350234379a42e607b5aa9006a8}{void {\bfseries write\-Genotype} (const char $\ast$fn)}\label{classVCFData_ab1687e350234379a42e607b5aa9006a8}
+
+\item 
+void \hyperlink{classVCFData_a7f38fd776722b474270ebd21f9088131}{write\-Covariate} (const char $\ast$fn)
+\item 
+\hypertarget{classVCFData_a6915ffdb20757ed622a79f3496ebecc0}{void {\bfseries write\-Phenotype} (const char $\ast$fn)}\label{classVCFData_a6915ffdb20757ed622a79f3496ebecc0}
+
+\item 
+void \hyperlink{classVCFData_a1440087740630d905f1d93bbcf041726}{write\-Table} (const char $\ast$fn, Matrix $\ast$data, Ordered\-Map$<$ std\-::string, int $>$ \&row\-Name, Ordered\-Map$<$ std\-::string, int $>$ \&col\-Name, const char $\ast$upper\-Left\-Name)
+\item 
+\hypertarget{classVCFData_a645ad7d81cdf4896d98689ae46c4bd09}{void {\bfseries calculate\-Frequency} (const int type)}\label{classVCFData_a645ad7d81cdf4896d98689ae46c4bd09}
+
+\item 
+\hypertarget{classVCFData_a7f27883257e2a548c59c2da734bfcbc7}{bool {\bfseries is\-Case\-Control\-Phenotype} ()}\label{classVCFData_a7f27883257e2a548c59c2da734bfcbc7}
+
+\item 
+\hypertarget{classVCFData_aa48f49b02d0ba948a40aef0106a6d47d}{void {\bfseries dump\-Size} ()}\label{classVCFData_aa48f49b02d0ba948a40aef0106a6d47d}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classVCFData_af1661b9760e51b83634333b9f38c04aa}{Matrix $\ast$ {\bfseries genotype}}\label{classVCFData_af1661b9760e51b83634333b9f38c04aa}
+
+\item 
+\hypertarget{classVCFData_aff88260e91790e537e0792410fc91e93}{Matrix $\ast$ {\bfseries collapsed\-Genotype}}\label{classVCFData_aff88260e91790e537e0792410fc91e93}
+
+\item 
+\hypertarget{classVCFData_af5a6977f9f27d35395046a864d6abfc1}{Matrix $\ast$ {\bfseries covariate}}\label{classVCFData_af5a6977f9f27d35395046a864d6abfc1}
+
+\item 
+\hypertarget{classVCFData_a7502133d0c5d8dc43cf0ed75dc7f7671}{Matrix $\ast$ {\bfseries phenotype}}\label{classVCFData_a7502133d0c5d8dc43cf0ed75dc7f7671}
+
+\item 
+\hypertarget{classVCFData_a03f2924ec3a783a34fe41dc9c8eb4d2c}{Vector $\ast$ {\bfseries phenotype\-Vec}}\label{classVCFData_a03f2924ec3a783a34fe41dc9c8eb4d2c}
+
+\item 
+\hypertarget{classVCFData_a07c48779ea36732ce3b220fffed59998}{std\-::vector$<$ double $>$ {\bfseries marker\-Freq}}\label{classVCFData_a07c48779ea36732ce3b220fffed59998}
+
+\item 
+\hypertarget{classVCFData_aac73a75814ee6c2708e581f0f0b896e7}{std\-::vector$<$ int $>$ {\bfseries marker\-M\-A\-C}}\label{classVCFData_aac73a75814ee6c2708e581f0f0b896e7}
+
+\item 
+\hypertarget{classVCFData_ab4be4eca5558b91daff6ecd46517f619}{std\-::vector$<$ int $>$ {\bfseries marker\-Total\-Allele}}\label{classVCFData_ab4be4eca5558b91daff6ecd46517f619}
+
+\item 
+\hypertarget{classVCFData_a4968754b31f2e496260f391ea9b170f2}{std\-::vector$<$ double $>$ {\bfseries collapsed\-Marker\-Freq}}\label{classVCFData_a4968754b31f2e496260f391ea9b170f2}
+
+\item 
+\hypertarget{classVCFData_a56a6cb3d71011276ef5aebf1b797765f}{std\-::vector$<$ int $>$ {\bfseries collapsed\-Marker\-M\-A\-C}}\label{classVCFData_a56a6cb3d71011276ef5aebf1b797765f}
+
+\item 
+\hypertarget{classVCFData_a525cb51f73a69999d6915caab6a0dd53}{std\-::vector$<$ int $>$ {\bfseries collapsed\-Marker\-Total\-Allele}}\label{classVCFData_a525cb51f73a69999d6915caab6a0dd53}
+
+\item 
+\hypertarget{classVCFData_ad1f61f7d437419416515290c7c473d94}{Ordered\-Map$<$ std\-::string, int $>$ {\bfseries people2\-Idx}}\label{classVCFData_ad1f61f7d437419416515290c7c473d94}
+
+\item 
+\hypertarget{classVCFData_ab8e7f7256fc5d6ae6b86e3b665e5a70a}{Ordered\-Map$<$ std\-::string, int $>$ {\bfseries marker2\-Idx}}\label{classVCFData_ab8e7f7256fc5d6ae6b86e3b665e5a70a}
+
+\item 
+\hypertarget{classVCFData_a4911ab48ac18b974d50dd80a5ee5acc3}{Ordered\-Map$<$ std\-::string, int $>$ {\bfseries covariate2\-Idx}}\label{classVCFData_a4911ab48ac18b974d50dd80a5ee5acc3}
+
+\item 
+\hypertarget{classVCFData_aef9b99ac39bb6a9fb4550a2665110e12}{Ordered\-Map$<$ std\-::string, int $>$ {\bfseries phenotype2\-Idx}}\label{classVCFData_aef9b99ac39bb6a9fb4550a2665110e12}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Hold genotype, phenotype, covariate data marker\-Name (id), marker\-Chrom, marker\-Pos, marker\-Ref, marker\-Alt, marker\-Freq people\-Name marker2\-Idx, people2\-Idx Read from V\-C\-F file Read from P\-L\-I\-N\-K format Read external phenotype, covariate file 
+
+\subsection{Member Function Documentation}
+\hypertarget{classVCFData_a5d4d267764c8fd3533242af5e11b32a2}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!add\-V\-C\-F\-Record@{add\-V\-C\-F\-Record}}
+\index{add\-V\-C\-F\-Record@{add\-V\-C\-F\-Record}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{add\-V\-C\-F\-Record}]{\setlength{\rightskip}{0pt plus 5cm}void V\-C\-F\-Data\-::add\-V\-C\-F\-Record (
+\begin{DoxyParamCaption}
+\item[{V\-C\-F\-Record \&}]{r}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classVCFData_a5d4d267764c8fd3533242af5e11b32a2}
+N\-O\-T\-E\-: call add\-V\-C\-F\-Header() first \hypertarget{classVCFData_aa237fc9ab7baada2b1621bd098319c7e}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!adjust\-People\-Order@{adjust\-People\-Order}}
+\index{adjust\-People\-Order@{adjust\-People\-Order}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{adjust\-People\-Order}]{\setlength{\rightskip}{0pt plus 5cm}void V\-C\-F\-Data\-::adjust\-People\-Order (
+\begin{DoxyParamCaption}
+\item[{std\-::vector$<$ std\-::string $>$ \&}]{p, }
+\item[{std\-::vector$<$ std\-::string $>$ $\ast$}]{dropped\-Id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classVCFData_aa237fc9ab7baada2b1621bd098319c7e}
+will adjust people2idx and phenotype and covariate order 
+\begin{DoxyParams}{Parameters}
+{\em p,\-:} & new order \\
+\hline
+{\em dropped\-Id,\-:} & dropped people's id \\
+\hline
+\end{DoxyParams}
+\hypertarget{classVCFData_a919196e09bb6f13bcd30a313386747cd}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!read\-Plink\-Phenotype\-Skip\-Missing@{read\-Plink\-Phenotype\-Skip\-Missing}}
+\index{read\-Plink\-Phenotype\-Skip\-Missing@{read\-Plink\-Phenotype\-Skip\-Missing}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{read\-Plink\-Phenotype\-Skip\-Missing}]{\setlength{\rightskip}{0pt plus 5cm}int V\-C\-F\-Data\-::read\-Plink\-Phenotype\-Skip\-Missing (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{fn, }
+\item[{const char $\ast$}]{selected\-Col, }
+\item[{Matrix $\ast$}]{data, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ $\ast$}]{row\-Name, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ $\ast$}]{col\-Name}
+\end{DoxyParamCaption}
+)}}\label{classVCFData_a919196e09bb6f13bcd30a313386747cd}
+\begin{DoxyReturn}{Returns}
+-\/1\-: error $>$=0 \-: num of individuals skipped 
+\end{DoxyReturn}
+\hypertarget{classVCFData_a833405588404513e5404a6a79594f3fe}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!read\-Plink\-Table@{read\-Plink\-Table}}
+\index{read\-Plink\-Table@{read\-Plink\-Table}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{read\-Plink\-Table}]{\setlength{\rightskip}{0pt plus 5cm}int V\-C\-F\-Data\-::read\-Plink\-Table (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{fn, }
+\item[{Matrix $\ast$}]{data, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ $\ast$}]{row\-Name, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ $\ast$}]{col\-Name, }
+\item[{double}]{default\-Value}
+\end{DoxyParamCaption}
+)}}\label{classVCFData_a833405588404513e5404a6a79594f3fe}
+similar to read\-Table, but skip the first column and require header file have the same number of fields as other lines. \hypertarget{classVCFData_abad5d2e38d231e53fb2d4131740f9e8c}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!read\-Table@{read\-Table}}
+\index{read\-Table@{read\-Table}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{read\-Table}]{\setlength{\rightskip}{0pt plus 5cm}int V\-C\-F\-Data\-::read\-Table (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{fn, }
+\item[{Matrix $\ast$}]{data, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ $\ast$}]{row\-Name, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ $\ast$}]{col\-Name, }
+\item[{std\-::string $\ast$}]{upper\-Left\-Name, }
+\item[{double}]{default\-Value}
+\end{DoxyParamCaption}
+)}}\label{classVCFData_abad5d2e38d231e53fb2d4131740f9e8c}
+read 
+\begin{DoxyParams}{Parameters}
+{\em fn} & into \\
+\hline
+{\em data} & from R-\/readable format R\-E\-Q\-U\-R\-I\-E\-: \\
+\hline
+{\em row\-Name} & and \\
+\hline
+{\em col\-Name} & are both treated like string \\
+\hline
+{\em data} & should be integer/float number \\
+\hline
+{\em default\-Value,when} & data cannot be converted to double, use this value instead. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classVCFData_a7f38fd776722b474270ebd21f9088131}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!write\-Covariate@{write\-Covariate}}
+\index{write\-Covariate@{write\-Covariate}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{write\-Covariate}]{\setlength{\rightskip}{0pt plus 5cm}void V\-C\-F\-Data\-::write\-Covariate (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{fn}
+\end{DoxyParamCaption}
+)}}\label{classVCFData_a7f38fd776722b474270ebd21f9088131}
+write covariate to file, format is as following\-: header line\-: People\-Name Cov\-Name1 Cov\-Name2 ... content line\-: P1 1.\-0 2.\-0 ... \hypertarget{classVCFData_a1440087740630d905f1d93bbcf041726}{\index{V\-C\-F\-Data@{V\-C\-F\-Data}!write\-Table@{write\-Table}}
+\index{write\-Table@{write\-Table}!VCFData@{V\-C\-F\-Data}}
+\subsubsection[{write\-Table}]{\setlength{\rightskip}{0pt plus 5cm}void V\-C\-F\-Data\-::write\-Table (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{fn, }
+\item[{Matrix $\ast$}]{data, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ \&}]{row\-Name, }
+\item[{Ordered\-Map$<$ std\-::string, int $>$ \&}]{col\-Name, }
+\item[{const char $\ast$}]{upper\-Left\-Name}
+\end{DoxyParamCaption}
+)}}\label{classVCFData_a1440087740630d905f1d93bbcf041726}
+write 
+\begin{DoxyParams}{Parameters}
+{\em data} & in to a R-\/readable format \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+V\-C\-F\-Data.\-h\item 
+V\-C\-F\-Data.\-cpp\end{DoxyCompactItemize}

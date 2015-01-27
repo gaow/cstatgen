@@ -1,0 +1,116 @@
+\hypertarget{classModelParser}{\section{Model\-Parser Class Reference}
+\label{classModelParser}\index{Model\-Parser@{Model\-Parser}}
+}
+
+
+{\ttfamily \#include $<$Model\-Parser.\-h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{classModelParser_a83a5484f3fa5e80242216cb0d08180a4}{parse} (const std\-::string \&s)
+\item 
+\hypertarget{classModelParser_aab017724228e05e104c48b65e6591965}{const std\-::string \& {\bfseries get\-Name} () const }\label{classModelParser_aab017724228e05e104c48b65e6591965}
+
+\item 
+\hypertarget{classModelParser_a48674af5a50b124b86194864385af517}{bool {\bfseries has\-Tag} (const std\-::string \&tag) const }\label{classModelParser_a48674af5a50b124b86194864385af517}
+
+\item 
+\hypertarget{classModelParser_aaed7ae55cc66c1c4fcd38672be12d712}{const char $\ast$ {\bfseries value} (const std\-::string \&tag) const }\label{classModelParser_aaed7ae55cc66c1c4fcd38672be12d712}
+
+\item 
+\hyperlink{classModelParser}{Model\-Parser} \& \hyperlink{classModelParser_a29363d37f73bcc655c995d30d662cc08}{assign} (const std\-::string \&tag, bool $\ast$value)
+\item 
+\hypertarget{classModelParser_af62115ed375db3e8909932f3636d09d4}{\hyperlink{classModelParser}{Model\-Parser} \& {\bfseries assign} (const std\-::string \&tag, double $\ast$value)}\label{classModelParser_af62115ed375db3e8909932f3636d09d4}
+
+\item 
+\hypertarget{classModelParser_abd272e8dc6db873c3b6d3e2f85179124}{\hyperlink{classModelParser}{Model\-Parser} \& {\bfseries assign} (const std\-::string \&tag, int $\ast$value)}\label{classModelParser_abd272e8dc6db873c3b6d3e2f85179124}
+
+\item 
+\hypertarget{classModelParser_a26bb6bf4aee749a358ffe77ea616bd60}{\hyperlink{classModelParser}{Model\-Parser} \& {\bfseries assign} (const std\-::string \&tag, std\-::string $\ast$value)}\label{classModelParser_a26bb6bf4aee749a358ffe77ea616bd60}
+
+\item 
+\hyperlink{classModelParser}{Model\-Parser} \& \hyperlink{classModelParser_ac3c7dc0f7484ebd31cf54cc8b9a0c577}{assign} (const std\-::string \&tag, bool $\ast$value, const bool def)
+\item 
+\hypertarget{classModelParser_a03a38e94224700ff73332930d9d43e4a}{\hyperlink{classModelParser}{Model\-Parser} \& {\bfseries assign} (const std\-::string \&tag, double $\ast$value, const double def)}\label{classModelParser_a03a38e94224700ff73332930d9d43e4a}
+
+\item 
+\hypertarget{classModelParser_aeed128d82ced7586870cd293fee36264}{\hyperlink{classModelParser}{Model\-Parser} \& {\bfseries assign} (const std\-::string \&tag, int $\ast$value, const int def)}\label{classModelParser_aeed128d82ced7586870cd293fee36264}
+
+\item 
+\hypertarget{classModelParser_aefce479b7f56bfbe74d79110edf01e49}{\hyperlink{classModelParser}{Model\-Parser} \& {\bfseries assign} (const std\-::string \&tag, std\-::string $\ast$value, const std\-::string \&def)}\label{classModelParser_aefce479b7f56bfbe74d79110edf01e49}
+
+\item 
+\hypertarget{classModelParser_a7c0cdad1d8b8a7c0aee6c0ae07664363}{const size\-\_\-t {\bfseries size} () const }\label{classModelParser_a7c0cdad1d8b8a7c0aee6c0ae07664363}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classModelParser_aac2c439ee878395e385046a1f5aafc48}{static const char {\bfseries L\-E\-F\-T\-\_\-\-D\-E\-L\-I\-M} = '\mbox{[}'}\label{classModelParser_aac2c439ee878395e385046a1f5aafc48}
+
+\item 
+\hypertarget{classModelParser_a185a34c33b9648946627a5b06ae1a741}{static const char {\bfseries R\-I\-G\-H\-T\-\_\-\-D\-E\-L\-I\-M} = '\mbox{]}'}\label{classModelParser_a185a34c33b9648946627a5b06ae1a741}
+
+\item 
+\hypertarget{classModelParser_a1811dec15667074357233d6df7f44939}{static const char {\bfseries P\-A\-R\-A\-M\-\_\-\-D\-E\-L\-I\-M} = '\-:'}\label{classModelParser_a1811dec15667074357233d6df7f44939}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Parse \char`\"{}mb\char`\"{} to \{\char`\"{}mb\char`\"{}\} Parse \char`\"{}mb(nperm=10000, alpha=0.\-1)\char`\"{} then later use assign(\char`\"{}nperm\char`\"{}, \&p) to set value for p 
+
+\subsection{Member Function Documentation}
+\hypertarget{classModelParser_a29363d37f73bcc655c995d30d662cc08}{\index{Model\-Parser@{Model\-Parser}!assign@{assign}}
+\index{assign@{assign}!ModelParser@{Model\-Parser}}
+\subsubsection[{assign}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Model\-Parser}\& Model\-Parser\-::assign (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{tag, }
+\item[{bool $\ast$}]{value}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classModelParser_a29363d37f73bcc655c995d30d662cc08}
+assign 
+\begin{DoxyParams}{Parameters}
+{\em tag} & to \\
+\hline
+{\em value} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classModelParser_ac3c7dc0f7484ebd31cf54cc8b9a0c577}{\index{Model\-Parser@{Model\-Parser}!assign@{assign}}
+\index{assign@{assign}!ModelParser@{Model\-Parser}}
+\subsubsection[{assign}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Model\-Parser}\& Model\-Parser\-::assign (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{tag, }
+\item[{bool $\ast$}]{value, }
+\item[{const bool}]{def}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classModelParser_ac3c7dc0f7484ebd31cf54cc8b9a0c577}
+if 
+\begin{DoxyParams}{Parameters}
+{\em tag} & is provided, assign \\
+\hline
+{\em tag} & to \\
+\hline
+{\em value} & otherwise, set \\
+\hline
+{\em value} & to \\
+\hline
+{\em def} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classModelParser_a83a5484f3fa5e80242216cb0d08180a4}{\index{Model\-Parser@{Model\-Parser}!parse@{parse}}
+\index{parse@{parse}!ModelParser@{Model\-Parser}}
+\subsubsection[{parse}]{\setlength{\rightskip}{0pt plus 5cm}int Model\-Parser\-::parse (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{s}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classModelParser_a83a5484f3fa5e80242216cb0d08180a4}
+\begin{DoxyReturn}{Returns}
+0\-: if parse succeed. N\-O\-T\-E\-: will convert all letters to lower case 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+Model\-Parser.\-h\end{DoxyCompactItemize}

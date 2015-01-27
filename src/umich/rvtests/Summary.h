@@ -1,8 +1,8 @@
 #ifndef _SUMMARY_H_
 #define _SUMMARY_H_
 
-#include "base/IO.h"
-#include "base/CommonFunction.h"
+#include "IO.h"
+#include "CommonFunction.h"
 #include "ModelUtil.h"
 
 inline void assign(const std::vector<double>& in, Vector* out) {

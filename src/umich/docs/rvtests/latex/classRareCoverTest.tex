@@ -1,0 +1,61 @@
+\hypertarget{classRareCoverTest}{\section{Rare\-Cover\-Test Class Reference}
+\label{classRareCoverTest}\index{Rare\-Cover\-Test@{Rare\-Cover\-Test}}
+}
+Inheritance diagram for Rare\-Cover\-Test\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classRareCoverTest}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRareCoverTest_a65a7be8d4f72226c2e378251a1110642}{{\bfseries Rare\-Cover\-Test} (int n\-Perm, double alpha)}\label{classRareCoverTest_a65a7be8d4f72226c2e378251a1110642}
+
+\item 
+\hypertarget{classRareCoverTest_a0c3dd9692b804f5c9ba712fb195161f9}{int {\bfseries fit} (\hyperlink{classDataConsolidator}{Data\-Consolidator} $\ast$dc)}\label{classRareCoverTest_a0c3dd9692b804f5c9ba712fb195161f9}
+
+\item 
+\hypertarget{classRareCoverTest_a78626327132047575b9c36f6f0dc5e5f}{void {\bfseries reset} ()}\label{classRareCoverTest_a78626327132047575b9c36f6f0dc5e5f}
+
+\item 
+\hypertarget{classRareCoverTest_a2d8d5fd3d311e773b6f974dc6e796b63}{void {\bfseries write\-Header} (File\-Writer $\ast$fp, const \hyperlink{classResult}{Result} \&site\-Info)}\label{classRareCoverTest_a2d8d5fd3d311e773b6f974dc6e796b63}
+
+\item 
+\hypertarget{classRareCoverTest_a1af6aae137c2a322f6e7a309bcf67b20}{void {\bfseries write\-Output} (File\-Writer $\ast$fp, const \hyperlink{classResult}{Result} \&site\-Info)}\label{classRareCoverTest_a1af6aae137c2a322f6e7a309bcf67b20}
+
+\item 
+double \hyperlink{classRareCoverTest_a425080e90820f33773da8111b641f053}{calculate\-Stat} (Matrix \&genotype, Vector \&phenotype, std\-::set$<$ int $>$ $\ast$selected\-Index)
+\item 
+double \hyperlink{classRareCoverTest_acbebef2b77dba2dc49eb75ead9425668}{calculate\-Correlation} (Vector \&g, Vector \&collapsed, Vector \&pheno)
+\item 
+\hypertarget{classRareCoverTest_aa8aeb38d2968517510407a103d7cbaf0}{void {\bfseries combine} (Vector $\ast$c, Vector \&v)}\label{classRareCoverTest_aa8aeb38d2968517510407a103d7cbaf0}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classRareCoverTest_acbebef2b77dba2dc49eb75ead9425668}{\index{Rare\-Cover\-Test@{Rare\-Cover\-Test}!calculate\-Correlation@{calculate\-Correlation}}
+\index{calculate\-Correlation@{calculate\-Correlation}!RareCoverTest@{Rare\-Cover\-Test}}
+\subsubsection[{calculate\-Correlation}]{\setlength{\rightskip}{0pt plus 5cm}double Rare\-Cover\-Test\-::calculate\-Correlation (
+\begin{DoxyParamCaption}
+\item[{Vector \&}]{g, }
+\item[{Vector \&}]{collapsed, }
+\item[{Vector \&}]{pheno}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classRareCoverTest_acbebef2b77dba2dc49eb75ead9425668}
+Calculate correlatio of (g + collapsed, pheno) \hypertarget{classRareCoverTest_a425080e90820f33773da8111b641f053}{\index{Rare\-Cover\-Test@{Rare\-Cover\-Test}!calculate\-Stat@{calculate\-Stat}}
+\index{calculate\-Stat@{calculate\-Stat}!RareCoverTest@{Rare\-Cover\-Test}}
+\subsubsection[{calculate\-Stat}]{\setlength{\rightskip}{0pt plus 5cm}double Rare\-Cover\-Test\-::calculate\-Stat (
+\begin{DoxyParamCaption}
+\item[{Matrix \&}]{genotype, }
+\item[{Vector \&}]{phenotype, }
+\item[{std\-::set$<$ int $>$ $\ast$}]{selected\-Index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classRareCoverTest_a425080e90820f33773da8111b641f053}
+For a given genotype and phenotype, calculate Rare\-Cover stats, which markers are selected Here the genotype is\-: marker by people 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+Model\-Fitter.\-h\end{DoxyCompactItemize}

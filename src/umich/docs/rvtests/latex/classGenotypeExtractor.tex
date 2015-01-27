@@ -1,0 +1,125 @@
+\hypertarget{classGenotypeExtractor}{\section{Genotype\-Extractor Class Reference}
+\label{classGenotypeExtractor}\index{Genotype\-Extractor@{Genotype\-Extractor}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classGenotypeExtractor_a6ff59c48d46fed9aa928d90bf7500e39}{{\bfseries Genotype\-Extractor} (V\-C\-F\-Extractor $\ast$v)}\label{classGenotypeExtractor_a6ff59c48d46fed9aa928d90bf7500e39}
+
+\item 
+int \hyperlink{classGenotypeExtractor_a404348b817a6844d0a88983cb46c326c}{extract\-Multiple\-Genotype} (Matrix $\ast$g)
+\item 
+int \hyperlink{classGenotypeExtractor_a84d6e7394ece8f32ffcc08377a1db30e}{extract\-Single\-Genotype} (Matrix $\ast$g, \hyperlink{classResult}{Result} $\ast$b)
+\item 
+\hypertarget{classGenotypeExtractor_aef7a95ffb96b9ad7ce1f4cc4858fbc22}{bool {\bfseries set\-Site\-Freq\-Min} (const double f)}\label{classGenotypeExtractor_aef7a95ffb96b9ad7ce1f4cc4858fbc22}
+
+\item 
+\hypertarget{classGenotypeExtractor_a0777da1c25ac6388d0c110827bb92b8b}{bool {\bfseries set\-Site\-Freq\-Max} (const double f)}\label{classGenotypeExtractor_a0777da1c25ac6388d0c110827bb92b8b}
+
+\item 
+\hypertarget{classGenotypeExtractor_aa4708bbdd89f464b67eb4be1dd8bfad3}{bool {\bfseries check\-G\-D} (V\-C\-F\-Individual $\ast$indv, int gd\-Idx)}\label{classGenotypeExtractor_aa4708bbdd89f464b67eb4be1dd8bfad3}
+
+\item 
+\hypertarget{classGenotypeExtractor_ae93e2c35f08df71764cae8921dd5019d}{bool {\bfseries check\-G\-Q} (V\-C\-F\-Individual $\ast$indv, int gq\-Idx)}\label{classGenotypeExtractor_ae93e2c35f08df71764cae8921dd5019d}
+
+\item 
+\hypertarget{classGenotypeExtractor_a2f98e3e13638f430362d0b8099c379d2}{void {\bfseries set\-G\-Dmin} (int m)}\label{classGenotypeExtractor_a2f98e3e13638f430362d0b8099c379d2}
+
+\item 
+\hypertarget{classGenotypeExtractor_aebb1afb9de7eee2cd62da0bfbf3bba7c}{void {\bfseries set\-G\-Dmax} (int m)}\label{classGenotypeExtractor_aebb1afb9de7eee2cd62da0bfbf3bba7c}
+
+\item 
+\hypertarget{classGenotypeExtractor_a27ff068f92acf500eb07f3b4ad9e7aea}{void {\bfseries set\-G\-Qmin} (int m)}\label{classGenotypeExtractor_a27ff068f92acf500eb07f3b4ad9e7aea}
+
+\item 
+\hypertarget{classGenotypeExtractor_ade3ad5e5dfc254ef22e3692f7ac00c67}{void {\bfseries set\-G\-Qmax} (int m)}\label{classGenotypeExtractor_ade3ad5e5dfc254ef22e3692f7ac00c67}
+
+\item 
+Vector \& \hyperlink{classGenotypeExtractor_ab924228dcf705f329804acebca1df812}{get\-Weight} ()
+\item 
+\hypertarget{classGenotypeExtractor_ab488139105b763cb4ee6c29c95ea8893}{void {\bfseries set\-Dosage\-Tag} (const std\-::string \&tag)}\label{classGenotypeExtractor_ab488139105b763cb4ee6c29c95ea8893}
+
+\item 
+\hypertarget{classGenotypeExtractor_ab9962575d690cff556bc62d350079321}{void {\bfseries unset\-Dosage\-Tag} ()}\label{classGenotypeExtractor_ab9962575d690cff556bc62d350079321}
+
+\item 
+\hypertarget{classGenotypeExtractor_aeb13746f85a90205c694095bb39d3270}{void {\bfseries set\-Par\-Region} (Par\-Region $\ast$p)}\label{classGenotypeExtractor_aeb13746f85a90205c694095bb39d3270}
+
+\item 
+\hypertarget{classGenotypeExtractor_aca852e602aedb79687feb339db55f741}{void {\bfseries set\-Sex} (const std\-::vector$<$ int $>$ $\ast$sex)}\label{classGenotypeExtractor_aca852e602aedb79687feb339db55f741}
+
+\item 
+\hypertarget{classGenotypeExtractor_a869c1288481f87a22d150f7dcb660ab3}{void {\bfseries enable\-Clayton\-Coding} ()}\label{classGenotypeExtractor_a869c1288481f87a22d150f7dcb660ab3}
+
+\item 
+\hypertarget{classGenotypeExtractor_ac8490f1cee6ace4d9a32e99d8a06b935}{void {\bfseries disable\-Clayton\-Coding} ()}\label{classGenotypeExtractor_ac8490f1cee6ace4d9a32e99d8a06b935}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classGenotypeExtractor_a235fd507d4129618852329645c6fa4d7}{static const int {\bfseries S\-U\-C\-C\-E\-E\-D} = 0}\label{classGenotypeExtractor_a235fd507d4129618852329645c6fa4d7}
+
+\item 
+\hypertarget{classGenotypeExtractor_aa40d806a23dfadfb81cc2dcb247aef73}{static const int {\bfseries E\-R\-R\-O\-R} = -\/1}\label{classGenotypeExtractor_aa40d806a23dfadfb81cc2dcb247aef73}
+
+\item 
+\hypertarget{classGenotypeExtractor_a7a0e5852bc6da31847be2bbcecab56c0}{static const int {\bfseries F\-I\-L\-E\-\_\-\-E\-N\-D} = -\/2}\label{classGenotypeExtractor_a7a0e5852bc6da31847be2bbcecab56c0}
+
+\item 
+\hypertarget{classGenotypeExtractor_ae1ed6e49b539071e6d13e1745d0cc1b0}{static const int {\bfseries F\-A\-I\-L\-\_\-\-F\-I\-L\-T\-E\-R} = -\/3}\label{classGenotypeExtractor_ae1ed6e49b539071e6d13e1745d0cc1b0}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classGenotypeExtractor_a404348b817a6844d0a88983cb46c326c}{\index{Genotype\-Extractor@{Genotype\-Extractor}!extract\-Multiple\-Genotype@{extract\-Multiple\-Genotype}}
+\index{extract\-Multiple\-Genotype@{extract\-Multiple\-Genotype}!GenotypeExtractor@{Genotype\-Extractor}}
+\subsubsection[{extract\-Multiple\-Genotype}]{\setlength{\rightskip}{0pt plus 5cm}int Genotype\-Extractor\-::extract\-Multiple\-Genotype (
+\begin{DoxyParamCaption}
+\item[{Matrix $\ast$}]{g}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classGenotypeExtractor_a404348b817a6844d0a88983cb46c326c}
+
+\begin{DoxyParams}{Parameters}
+{\em g,store} & people by marker matrix \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 for success 
+\end{DoxyReturn}
+\hypertarget{classGenotypeExtractor_a84d6e7394ece8f32ffcc08377a1db30e}{\index{Genotype\-Extractor@{Genotype\-Extractor}!extract\-Single\-Genotype@{extract\-Single\-Genotype}}
+\index{extract\-Single\-Genotype@{extract\-Single\-Genotype}!GenotypeExtractor@{Genotype\-Extractor}}
+\subsubsection[{extract\-Single\-Genotype}]{\setlength{\rightskip}{0pt plus 5cm}int Genotype\-Extractor\-::extract\-Single\-Genotype (
+\begin{DoxyParamCaption}
+\item[{Matrix $\ast$}]{g, }
+\item[{{\bf Result} $\ast$}]{b}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classGenotypeExtractor_a84d6e7394ece8f32ffcc08377a1db30e}
+\begin{DoxyReturn}{Returns}
+0 for success 
+
+-\/2 for reach end. 
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em g,\-:} & people by 1 matrix, where column name is like \char`\"{}chr\-:pos\char`\"{} \\
+\hline
+{\em b,\-:} & extract information, e.\-g. \char`\"{}1\textbackslash{}t100\textbackslash{}t\-A\textbackslash{}t\-C\char`\"{} \\
+\hline
+\end{DoxyParams}
+\hypertarget{classGenotypeExtractor_ab924228dcf705f329804acebca1df812}{\index{Genotype\-Extractor@{Genotype\-Extractor}!get\-Weight@{get\-Weight}}
+\index{get\-Weight@{get\-Weight}!GenotypeExtractor@{Genotype\-Extractor}}
+\subsubsection[{get\-Weight}]{\setlength{\rightskip}{0pt plus 5cm}Vector\& Genotype\-Extractor\-::get\-Weight (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classGenotypeExtractor_ab924228dcf705f329804acebca1df812}
+\begin{DoxyReturn}{Returns}
+weigth, its length equals to \# of markers 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+Main.\-cpp\end{DoxyCompactItemize}

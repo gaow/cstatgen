@@ -2,8 +2,8 @@
 #define _DATACONSOLIDATOR_H_
 
 #include "Result.h"
-#include "base/Logger.h"
-#include "base/ParRegion.h"
+#include "Logger.h"
+#include "ParRegion.h"
 #include "MathMatrix.h"
 #include "Random.h"
 

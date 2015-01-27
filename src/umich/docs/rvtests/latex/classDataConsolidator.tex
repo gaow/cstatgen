@@ -1,0 +1,270 @@
+\hypertarget{classDataConsolidator}{\section{Data\-Consolidator Class Reference}
+\label{classDataConsolidator}\index{Data\-Consolidator@{Data\-Consolidator}}
+}
+
+
+{\ttfamily \#include $<$Data\-Consolidator.\-h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries P\-L\-I\-N\-K\-\_\-\-S\-E\-X} \{ {\bfseries A\-N\-Y\-\_\-\-S\-E\-X} =  -\/1, 
+{\bfseries M\-A\-L\-E} =  1, 
+{\bfseries F\-E\-M\-A\-L\-E} =  2
+ \}
+\item 
+enum {\bfseries P\-L\-I\-N\-K\-\_\-\-P\-H\-E\-N\-O\-T\-Y\-P\-E} \{ {\bfseries A\-N\-Y\-\_\-\-P\-H\-E\-N\-O} =  -\/1, 
+{\bfseries C\-T\-R\-L} =  1, 
+{\bfseries C\-A\-S\-E} =  2
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDataConsolidator_aaf864962320e2fa28fc345c646426d47}{void {\bfseries set\-Strategy} (const int s)}\label{classDataConsolidator_aaf864962320e2fa28fc345c646426d47}
+
+\item 
+void \hyperlink{classDataConsolidator_acc7e1257797598cb69db26dedbf909e7}{consolidate} (Matrix \&pheno, Matrix \&cov, Matrix \&geno)
+\item 
+\hypertarget{classDataConsolidator_a1e3186b079b05bb9484e787a1ec86288}{bool {\bfseries has\-No\-Missing\-Genotype} (Matrix \&g, int r)}\label{classDataConsolidator_a1e3186b079b05bb9484e787a1ec86288}
+
+\item 
+\hypertarget{classDataConsolidator_a486805b59a97e99bd52dfa62552b9664}{void {\bfseries copy\-Row} (Matrix \&src, const int src\-Row, Matrix $\ast$dest, const int dest\-Row)}\label{classDataConsolidator_a486805b59a97e99bd52dfa62552b9664}
+
+\item 
+\hypertarget{classDataConsolidator_ae8e8098f431f72d34065bf63c2bc72ab}{void {\bfseries copy\-Col\-Name} (Matrix \&src, Matrix $\ast$dest)}\label{classDataConsolidator_ae8e8098f431f72d34065bf63c2bc72ab}
+
+\item 
+\hypertarget{classDataConsolidator_a02f8da2a937e773627471e9c8efe0a3f}{void {\bfseries set\-Phenotype\-Name} (const std\-::vector$<$ std\-::string $>$ \&name)}\label{classDataConsolidator_a02f8da2a937e773627471e9c8efe0a3f}
+
+\item 
+\hypertarget{classDataConsolidator_a3e1b9bdaa8170965cfb48203d95fb2cb}{const std\-::vector$<$ std\-::string $>$ \& {\bfseries get\-Row\-Label} () const }\label{classDataConsolidator_a3e1b9bdaa8170965cfb48203d95fb2cb}
+
+\item 
+\hypertarget{classDataConsolidator_a07a010120f96b5e007f0437eec5a0057}{Matrix \& {\bfseries get\-Genotype} ()}\label{classDataConsolidator_a07a010120f96b5e007f0437eec5a0057}
+
+\item 
+\hypertarget{classDataConsolidator_a80a1c89b99b485c693e992bbabe88111}{Matrix \& {\bfseries get\-Phenotype} ()}\label{classDataConsolidator_a80a1c89b99b485c693e992bbabe88111}
+
+\item 
+\hypertarget{classDataConsolidator_a96c4b5b2a122e420f86714c3cb0fa451}{Matrix \& {\bfseries get\-Covariate} ()}\label{classDataConsolidator_a96c4b5b2a122e420f86714c3cb0fa451}
+
+\item 
+\hypertarget{classDataConsolidator_ab12753ca733a0bb5d15299a7e617f98e}{Vector \& {\bfseries get\-Weight} ()}\label{classDataConsolidator_ab12753ca733a0bb5d15299a7e617f98e}
+
+\item 
+\hypertarget{classDataConsolidator_a1c576cec1c21356bf5b8efb92edc610b}{\hyperlink{classResult}{Result} \& {\bfseries get\-Result} ()}\label{classDataConsolidator_a1c576cec1c21356bf5b8efb92edc610b}
+
+\item 
+int \hyperlink{classDataConsolidator_a9438e5e1cef935dc0218b6f3a224054f}{count\-Raw\-Genotype} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing, const P\-L\-I\-N\-K\-\_\-\-S\-E\-X sex, const P\-L\-I\-N\-K\-\_\-\-P\-H\-E\-N\-O\-T\-Y\-P\-E phenotype) const 
+\item 
+\hypertarget{classDataConsolidator_ade6bb3acbcf12e6cdce387c11d2665e8}{int {\bfseries count\-Raw\-Genotype\-From\-Case} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing) const }\label{classDataConsolidator_ade6bb3acbcf12e6cdce387c11d2665e8}
+
+\item 
+\hypertarget{classDataConsolidator_a8284e55581f7f3f9297c860732e59e00}{int {\bfseries count\-Raw\-Genotype\-From\-Control} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing) const }\label{classDataConsolidator_a8284e55581f7f3f9297c860732e59e00}
+
+\item 
+\hypertarget{classDataConsolidator_a8cebd4da6d55fd703b2f4b1197b494fe}{int {\bfseries count\-Raw\-Genotype} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing) const }\label{classDataConsolidator_a8cebd4da6d55fd703b2f4b1197b494fe}
+
+\item 
+\hypertarget{classDataConsolidator_a71dbabe3cc64f40ce1d1ee0c3d2a1ef1}{int {\bfseries count\-Raw\-Genotype\-From\-Female} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing) const }\label{classDataConsolidator_a71dbabe3cc64f40ce1d1ee0c3d2a1ef1}
+
+\item 
+\hypertarget{classDataConsolidator_a339b61163ca0dd39b4ca2f644593a0fc}{int {\bfseries count\-Raw\-Genotype\-From\-Female\-Case} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing) const }\label{classDataConsolidator_a339b61163ca0dd39b4ca2f644593a0fc}
+
+\item 
+\hypertarget{classDataConsolidator_a5b0ed490343fd48b40fe472a70f1e873}{int {\bfseries count\-Raw\-Genotype\-From\-Female\-Control} (int column\-Index, int $\ast$hom\-Ref, int $\ast$het, int $\ast$hom\-Alt, int $\ast$missing) const }\label{classDataConsolidator_a5b0ed490343fd48b40fe472a70f1e873}
+
+\item 
+\hypertarget{classDataConsolidator_ab54c06be926fc7e0bfe5026b7bd197e6}{bool {\bfseries is\-Phenotype\-Updated} () const }\label{classDataConsolidator_ab54c06be926fc7e0bfe5026b7bd197e6}
+
+\item 
+\hypertarget{classDataConsolidator_acae7e76efa22c884538b479e09d71db9}{bool {\bfseries is\-Covariate\-Updated} () const }\label{classDataConsolidator_acae7e76efa22c884538b479e09d71db9}
+
+\item 
+\hypertarget{classDataConsolidator_a86023411ac6e73487bb79d25c1b5f915}{bool {\bfseries need\-To\-Update\-Kinship} () const }\label{classDataConsolidator_a86023411ac6e73487bb79d25c1b5f915}
+
+\item 
+int \hyperlink{classDataConsolidator_af21210c0105a31392d49c1afcd1e2d78}{load\-Kinship\-File} (const std\-::string \&fn, const std\-::vector$<$ std\-::string $>$ \&names, Eigen\-Matrix $\ast$$\ast$p\-Kinship, Eigen\-Matrix $\ast$$\ast$p\-Kinship\-U, Eigen\-Matrix $\ast$$\ast$p\-Kinship\-S, bool $\ast$p\-Kinship\-Loaded)
+\item 
+\hypertarget{classDataConsolidator_a5a3b62e3bbbd9bf0c99e3d7da8176f8d}{int {\bfseries load\-Kinship\-File\-For\-Auto} (const std\-::string \&fn, const std\-::vector$<$ std\-::string $>$ \&names)}\label{classDataConsolidator_a5a3b62e3bbbd9bf0c99e3d7da8176f8d}
+
+\item 
+\hypertarget{classDataConsolidator_a30666fc84801cfd6e41252ba9d8838f0}{int {\bfseries load\-Kinship\-File\-For\-X} (const std\-::string \&fn, const std\-::vector$<$ std\-::string $>$ \&names)}\label{classDataConsolidator_a30666fc84801cfd6e41252ba9d8838f0}
+
+\item 
+int \hyperlink{classDataConsolidator_a296e1c33fcf7dc936de8c3c8d269aa27}{decompose\-Kinship\-For\-Auto} ()
+\item 
+\hypertarget{classDataConsolidator_a5f408a66bc96c5c35b46c8e037b577a4}{const Eigen\-Matrix $\ast$ {\bfseries get\-Kinship\-For\-Auto} () const }\label{classDataConsolidator_a5f408a66bc96c5c35b46c8e037b577a4}
+
+\item 
+\hypertarget{classDataConsolidator_a96264603901b05e5db06bf521e05eceb}{const Eigen\-Matrix $\ast$ {\bfseries get\-Kinship\-U\-For\-Auto} () const }\label{classDataConsolidator_a96264603901b05e5db06bf521e05eceb}
+
+\item 
+\hypertarget{classDataConsolidator_a70018150cef6a5b0286bd82104b58504}{const Eigen\-Matrix $\ast$ {\bfseries get\-Kinship\-S\-For\-Auto} () const }\label{classDataConsolidator_a70018150cef6a5b0286bd82104b58504}
+
+\item 
+\hypertarget{classDataConsolidator_ab8fc9035c1c59e9dcdaac3e1fdad15e1}{bool {\bfseries has\-Kinship\-For\-Auto} () const }\label{classDataConsolidator_ab8fc9035c1c59e9dcdaac3e1fdad15e1}
+
+\item 
+\hypertarget{classDataConsolidator_a9217cca4e2d6db91849e5b1f6cb85f7d}{int {\bfseries decompose\-Kinship\-For\-X} ()}\label{classDataConsolidator_a9217cca4e2d6db91849e5b1f6cb85f7d}
+
+\item 
+\hypertarget{classDataConsolidator_a3ad74745814e28455f21d68d9a972efe}{const Eigen\-Matrix $\ast$ {\bfseries get\-Kinship\-For\-X} () const }\label{classDataConsolidator_a3ad74745814e28455f21d68d9a972efe}
+
+\item 
+\hypertarget{classDataConsolidator_a92169c65d5e960b15f21030da2efba43}{const Eigen\-Matrix $\ast$ {\bfseries get\-Kinship\-U\-For\-X} () const }\label{classDataConsolidator_a92169c65d5e960b15f21030da2efba43}
+
+\item 
+\hypertarget{classDataConsolidator_a5c3335f177f0f9bca35199707762e43e}{const Eigen\-Matrix $\ast$ {\bfseries get\-Kinship\-S\-For\-X} () const }\label{classDataConsolidator_a5c3335f177f0f9bca35199707762e43e}
+
+\item 
+\hypertarget{classDataConsolidator_a19bf9e104900fb727863db0a1ac86406}{bool {\bfseries has\-Kinship\-For\-X} () const }\label{classDataConsolidator_a19bf9e104900fb727863db0a1ac86406}
+
+\item 
+\hypertarget{classDataConsolidator_a55c87299fae9e49cf7e56837cd9115a9}{bool {\bfseries has\-Kinship} () const }\label{classDataConsolidator_a55c87299fae9e49cf7e56837cd9115a9}
+
+\item 
+\hypertarget{classDataConsolidator_a70cead67b8c1b36c33f09abb7ecfdd4d}{void {\bfseries set\-Par\-Region} (Par\-Region $\ast$p)}\label{classDataConsolidator_a70cead67b8c1b36c33f09abb7ecfdd4d}
+
+\item 
+\hypertarget{classDataConsolidator_aa20113afd520eb2602bf474858a0e406}{void {\bfseries set\-Sex} (const std\-::vector$<$ int $>$ $\ast$sex)}\label{classDataConsolidator_aa20113afd520eb2602bf474858a0e406}
+
+\item 
+bool \hyperlink{classDataConsolidator_aff9b9fa8b9adaf51da4957585bd8d58b}{is\-Hemi\-Region} (int column\-Index)
+\item 
+\hypertarget{classDataConsolidator_ae1c486ce4cd359714d5b26103d30de41}{void {\bfseries code\-Genotype\-For\-Dominant\-Model} (Matrix $\ast$geno)}\label{classDataConsolidator_ae1c486ce4cd359714d5b26103d30de41}
+
+\item 
+\hypertarget{classDataConsolidator_ab2146a967d511a61c4eaec48630c0d82}{void {\bfseries code\-Genotype\-For\-Recessive\-Model} (Matrix $\ast$geno)}\label{classDataConsolidator_ab2146a967d511a61c4eaec48630c0d82}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classDataConsolidator_a1a79503768c029b2d3082cf018cf4c50}{static const int {\bfseries U\-N\-I\-N\-I\-T\-I\-A\-L\-I\-Z\-E\-D} = 0}\label{classDataConsolidator_a1a79503768c029b2d3082cf018cf4c50}
+
+\item 
+\hypertarget{classDataConsolidator_a96f6214f9c99bc1ce51325a654a50337}{static const int {\bfseries I\-M\-P\-U\-T\-E\-\_\-\-M\-E\-A\-N} = 1}\label{classDataConsolidator_a96f6214f9c99bc1ce51325a654a50337}
+
+\item 
+\hypertarget{classDataConsolidator_a243483b1928920c0d485add4250c29db}{static const int {\bfseries I\-M\-P\-U\-T\-E\-\_\-\-H\-W\-E} = 2}\label{classDataConsolidator_a243483b1928920c0d485add4250c29db}
+
+\item 
+\hypertarget{classDataConsolidator_aa80afbd032e7318b6adf6e91dc37b684}{static const int {\bfseries D\-R\-O\-P} = 3}\label{classDataConsolidator_aa80afbd032e7318b6adf6e91dc37b684}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This class is in charge of cleanning data before fitting in model The cleaning step includes\-: remove monomorphic sites handle missing data genotype (impute to mean, impute by H\-W\-E, or filter out mssing genotypes and its corresponding phenotypes, covariates) (future todo) include weights (G\-E\-R\-P, Sift) (future todo) re-\/weight genotype (dominate model, recessive model) 
+
+\subsection{Member Function Documentation}
+\hypertarget{classDataConsolidator_acc7e1257797598cb69db26dedbf909e7}{\index{Data\-Consolidator@{Data\-Consolidator}!consolidate@{consolidate}}
+\index{consolidate@{consolidate}!DataConsolidator@{Data\-Consolidator}}
+\subsubsection[{consolidate}]{\setlength{\rightskip}{0pt plus 5cm}void Data\-Consolidator\-::consolidate (
+\begin{DoxyParamCaption}
+\item[{Matrix \&}]{pheno, }
+\item[{Matrix \&}]{cov, }
+\item[{Matrix \&}]{geno}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classDataConsolidator_acc7e1257797598cb69db26dedbf909e7}
+
+\begin{DoxyParams}{Parameters}
+{\em pheno,@param} & cov \\
+\hline
+{\em genotype} & are all ordered and sorted by the same people \\
+\hline
+{\em pheno\-Out,@param} & cov\-Out and \\
+\hline
+{\em genotype} & are outputted N\-O\-T\-E\-: \\
+\hline
+{\em cov\-Out} & may be filled as column vector of 1 if \\
+\hline
+{\em cov} & is empty \\
+\hline
+\end{DoxyParams}
+\hypertarget{classDataConsolidator_a9438e5e1cef935dc0218b6f3a224054f}{\index{Data\-Consolidator@{Data\-Consolidator}!count\-Raw\-Genotype@{count\-Raw\-Genotype}}
+\index{count\-Raw\-Genotype@{count\-Raw\-Genotype}!DataConsolidator@{Data\-Consolidator}}
+\subsubsection[{count\-Raw\-Genotype}]{\setlength{\rightskip}{0pt plus 5cm}int Data\-Consolidator\-::count\-Raw\-Genotype (
+\begin{DoxyParamCaption}
+\item[{int}]{column\-Index, }
+\item[{int $\ast$}]{hom\-Ref, }
+\item[{int $\ast$}]{het, }
+\item[{int $\ast$}]{hom\-Alt, }
+\item[{int $\ast$}]{missing, }
+\item[{const P\-L\-I\-N\-K\-\_\-\-S\-E\-X}]{sex, }
+\item[{const P\-L\-I\-N\-K\-\_\-\-P\-H\-E\-N\-O\-T\-Y\-P\-E}]{phenotype}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classDataConsolidator_a9438e5e1cef935dc0218b6f3a224054f}
+Count 
+\begin{DoxyParams}{Parameters}
+{\em hom\-Ref,@param} & het, \\
+\hline
+{\em hom\-Alt} & and \\
+\hline
+{\em missing} & from the genotype column specified by \\
+\hline
+{\em column\-Index} & \\
+\hline
+{\em sex} & \-: only process specified sex (1, male; 2, female; $<$0, any) \\
+\hline
+{\em phenotype,\-:} & only process specified phenotype (1, control; 2, case; $<$0 any) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if succeed 
+\end{DoxyReturn}
+\hypertarget{classDataConsolidator_a296e1c33fcf7dc936de8c3c8d269aa27}{\index{Data\-Consolidator@{Data\-Consolidator}!decompose\-Kinship\-For\-Auto@{decompose\-Kinship\-For\-Auto}}
+\index{decompose\-Kinship\-For\-Auto@{decompose\-Kinship\-For\-Auto}!DataConsolidator@{Data\-Consolidator}}
+\subsubsection[{decompose\-Kinship\-For\-Auto}]{\setlength{\rightskip}{0pt plus 5cm}int Data\-Consolidator\-::decompose\-Kinship\-For\-Auto (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classDataConsolidator_a296e1c33fcf7dc936de8c3c8d269aa27}
+will decompose original kinship matrix and release the memory of original kinship upon successful decomposition Kinship = U $\ast$ S $\ast$ U' where S is diagonal matrix from smallest to largest
+
+Decompose autosomal kinship matrix and release its memory K = U $\ast$ S $\ast$ U' \begin{DoxyReturn}{Returns}
+0 if success 
+\end{DoxyReturn}
+\hypertarget{classDataConsolidator_aff9b9fa8b9adaf51da4957585bd8d58b}{\index{Data\-Consolidator@{Data\-Consolidator}!is\-Hemi\-Region@{is\-Hemi\-Region}}
+\index{is\-Hemi\-Region@{is\-Hemi\-Region}!DataConsolidator@{Data\-Consolidator}}
+\subsubsection[{is\-Hemi\-Region}]{\setlength{\rightskip}{0pt plus 5cm}bool Data\-Consolidator\-::is\-Hemi\-Region (
+\begin{DoxyParamCaption}
+\item[{int}]{column\-Index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classDataConsolidator_aff9b9fa8b9adaf51da4957585bd8d58b}
+Check if genotype matrix column 
+\begin{DoxyParams}{Parameters}
+{\em column\-Index} & is a chromosome X. \\
+\hline
+\end{DoxyParams}
+\hypertarget{classDataConsolidator_af21210c0105a31392d49c1afcd1e2d78}{\index{Data\-Consolidator@{Data\-Consolidator}!load\-Kinship\-File@{load\-Kinship\-File}}
+\index{load\-Kinship\-File@{load\-Kinship\-File}!DataConsolidator@{Data\-Consolidator}}
+\subsubsection[{load\-Kinship\-File}]{\setlength{\rightskip}{0pt plus 5cm}int Data\-Consolidator\-::load\-Kinship\-File (
+\begin{DoxyParamCaption}
+\item[{const std\-::string \&}]{fn, }
+\item[{const std\-::vector$<$ std\-::string $>$ \&}]{names, }
+\item[{Eigen\-Matrix $\ast$$\ast$}]{p\-Kinship, }
+\item[{Eigen\-Matrix $\ast$$\ast$}]{p\-Kinship\-U, }
+\item[{Eigen\-Matrix $\ast$$\ast$}]{p\-Kinship\-S, }
+\item[{bool $\ast$}]{p\-Kinship\-Loaded}
+\end{DoxyParamCaption}
+)}}\label{classDataConsolidator_af21210c0105a31392d49c1afcd1e2d78}
+Load kinship file 
+\begin{DoxyParams}{Parameters}
+{\em fn,load} & samples given by \\
+\hline
+{\em names} & Store results to \\
+\hline
+{\em p\-Kinship,@param} & p\-Kinship\-U, \\
+\hline
+{\em p\-Kinship\-S} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
+\item 
+Data\-Consolidator.\-h\item 
+Data\-Consolidator.\-cpp\end{DoxyCompactItemize}

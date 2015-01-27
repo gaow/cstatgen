@@ -1,10 +1,10 @@
 #include "DataConsolidator.h"
 
-#include "third/eigen/Eigen/Core"
-#include "third/eigen/Eigen/Eigenvalues"
+#include "Eigen/Core"
+#include "Eigen/Eigenvalues"
 
 #include "CommonFunction.h"
-#include "regression/EigenMatrix.h"
+#include "EigenMatrix.h"
 #include "IO.h"
 
 #undef DEBUG

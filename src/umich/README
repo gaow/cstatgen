@@ -2,7 +2,9 @@ Date: Mon Jan 26 22:34:50 CST 2015
 This folder contains C++ source from Goncalo's group, libStatGen library version 1.0.12 Released 5/14/2014:
      * ./klib, the klib library, originally under the name "samtools" in the libStatGen library
      * ./general and ./vcf are part of the libStatGen library
-     * ./libsrc are taken from the RVTests package
+     * ./libsrc is taken from the RVTests package
+     * ./base, ./regression and ./rvtests are taken from the RVTests package
      * ./merlin, ./cluster and ./pdf are part of the merlin package
      * ./*Patches.diff are hacks written by Gao Wang
      * ./*Test are tests written by Gao Wang
+     * ./docs are doxygen generated documentations
