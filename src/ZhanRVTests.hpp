@@ -39,27 +39,31 @@ public:
 		mp.Dimension(phenotype[0].size(), phenotype.size());
 		for (int row = 0; row < phenotype[0].size(); ++row) {
 			for (int col = 0; col < phenotype.size(); ++col) {
-				mp[row][col] = phenotype[row][col];
+				mp[row][col] = phenotype[col][row];
 			}
 		}
 		//
 		Matrix mc;
+        if (covariates.size() == 0) mc.Dimension(0, 0);
+        else {
 		mc.Dimension(covariates[0].size(), covariates.size());
 		for (int row = 0; row < covariates[0].size(); ++row) {
 			for (int col = 0; col < covariates.size(); ++col) {
-				mc[row][col] = covariates[row][col];
+				mc[row][col] = covariates[col][row];
 			}
 		}
-		m_dc->consolidate(mp, mc, mg);
+        }
+        m_dc.setStrategy(DataConsolidator::IMPUTE_MEAN);
+		m_dc.consolidate(mp, mc, mg);
 	}
 
 
 	~RVTester()
 	{
 		delete m_model;
-        delete m_dc;
 	};
-	RVTester * clone() const { return new RVTester(*this); }
+  // DataConsolidator does not allow for copying
+	// RVTester * clone() const { return new RVTester(*this); }
 	int fit(const std::string t, bool isBinary = false, int n = 1000, double a = 0.05)
 	{
 		// if (t == "AnalyticVT") m_model = new AnalyticVT();
@@ -78,8 +82,9 @@ public:
 		else if (t == "ZegginiTest") m_model = new ZegginiTest();
 		else m_model = new SingleVariantScoreTest();
 		if (isBinary) m_model->setBinaryOutcome();
-		m_model->fit(m_dc);
-		return 0;
+		int status = m_model->fit(&m_dc);
+        m_model -> writeOutput(NULL, m_siteInfo);
+        return status;
 	}
 
 
@@ -90,8 +95,9 @@ public:
 
 
 private:
-	DataConsolidator * m_dc;
+	DataConsolidator m_dc;
 	ModelFitter * m_model;
+  Result m_siteInfo;
 };
 }
 #endif

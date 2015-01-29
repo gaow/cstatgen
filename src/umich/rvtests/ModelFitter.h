@@ -164,7 +164,7 @@ class SingleVariantWaldTest: public ModelFitter{
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
     // skip interecept (column 0)
     for (int i = 1; i < this->X.cols; ++i) {
-      siteInfo.writeValueTab(fp);
+      if (fp) siteInfo.writeValueTab(fp);
       if (!fitOK) {
         // fprintf(fp, "%s\tNA\tNA\tNA\n", this->X.GetColumnLabel(i));
         result.updateValue("Test", this->X.GetColumnLabel(i));
@@ -186,7 +186,7 @@ class SingleVariantWaldTest: public ModelFitter{
         result.updateValue("SE", se);
         result.updateValue("Pvalue", pval);
       }
-      result.writeValueLine(fp);
+      if (fp) result.writeValueLine(fp);
     }
   };
  private:
@@ -243,7 +243,7 @@ class SingleVariantFirthTest: public ModelFitter{
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
     // skip interecept (column 0)
     for (int i = 1; i < this->X.cols; ++i) {
-      siteInfo.writeValueTab(fp);
+      if (fp) siteInfo.writeValueTab(fp);
       result.clearValue();
 
       result.updateValue("Test", this->X.GetColumnLabel(i));
@@ -253,7 +253,7 @@ class SingleVariantFirthTest: public ModelFitter{
         result.updateValue("Pvalue", firth.GetAsyPvalue()[i]);
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
  private:
   Matrix X; // 1 + cov + geno
@@ -321,7 +321,7 @@ class SingleVariantScoreTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     result.clearValue();
     if (fitOK) {
       if (!isBinaryOutcome()) {
@@ -336,7 +336,7 @@ class SingleVariantScoreTest: public ModelFitter{
         result.updateValue("PVALUE", logistic.GetPvalue());
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   };
  private:
   double af;
@@ -420,7 +420,7 @@ class SingleVariantFisherExactTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       /* fprintf(fp, "%d\t", model.Get00()); */
       /* fprintf(fp, "%d\t", model.Get01()); */
@@ -454,7 +454,7 @@ class SingleVariantFisherExactTest: public ModelFitter{
     } /* else { */
     /*   fprintf(fp, "0\t0\t0\t0\tNA\tNA\tNA\n"); */
     /* } */
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   };
   void reset() {
     model.reset();
@@ -517,7 +517,7 @@ class SingleVariantFamilyScore: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       if (isBinaryOutcome()) {
 
@@ -528,7 +528,7 @@ class SingleVariantFamilyScore: public ModelFitter{
         result.updateValue("Pvalue", pvalue);
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
   void writeFootnote(FileWriter* fp) {
     appendHeritability(fp, model);
@@ -592,7 +592,7 @@ class SingleVariantFamilyLRT: public ModelFitter{
   }
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       if (isBinaryOutcome()) {
       } else {
@@ -602,7 +602,7 @@ class SingleVariantFamilyLRT: public ModelFitter{
         result.updateValue("Pvalue", pvalue);
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
   void writeFootnote(FileWriter* fp) {
     appendHeritability(fp, model);
@@ -670,7 +670,7 @@ class SingleVariantFamilyGrammarGamma: public ModelFitter{
   }
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       if (isBinaryOutcome()) {
       } else {
@@ -680,7 +680,7 @@ class SingleVariantFamilyGrammarGamma: public ModelFitter{
         result.updateValue("Pvalue", pvalue);
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
   void writeFootnote(FileWriter* fp) {
     appendHeritability(fp, model);
@@ -752,7 +752,7 @@ class CMCTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       result.updateValue("NonRefSite", this->totalNonRefSite());
       if (isBinaryOutcome()) {
@@ -773,7 +773,7 @@ class CMCTest: public ModelFitter{
         result.updateValue("Pvalue", linear.GetPvalue());
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   };
  private:
   /**
@@ -844,7 +844,7 @@ class CMCWaldTest: public ModelFitter{
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
     for (int i = 1; i < this->X.cols; ++i) {
-      siteInfo.writeValueTab(fp);
+      if (fp) siteInfo.writeValueTab(fp);
       if (fitOK) {
         result.updateValue("NonRefSite", this->totalNonRefSite());
         double beta, se, pval;
@@ -861,7 +861,7 @@ class CMCWaldTest: public ModelFitter{
         result.updateValue("SE", se);
         result.updateValue("Pvalue", pval);
       }
-      result.writeValueLine(fp);
+      if (fp) result.writeValueLine(fp);
     }
   };
  private:
@@ -933,7 +933,7 @@ class ZegginiWaldTest: public ModelFitter{
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
     for (int i = 1; i < this->X.cols; ++i) {
-      siteInfo.writeValueTab(fp);
+      if (fp) siteInfo.writeValueTab(fp);
       if (fitOK) {
         // result.updateValue("NonRefSite", this->totalNonRefSite());
         double beta, se, pval;
@@ -950,7 +950,7 @@ class ZegginiWaldTest: public ModelFitter{
         result.updateValue("SE", se);
         result.updateValue("Pvalue", pval);
       }
-      result.writeValueLine(fp);
+      if (fp) result.writeValueLine(fp);
     }
   };
  private:
@@ -1021,7 +1021,7 @@ class CMCFisherExactTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     result.clearValue();
     if (fitOK) {
       result.updateValue("N00", model.Get00());
@@ -1033,7 +1033,7 @@ class CMCFisherExactTest: public ModelFitter{
       result.updateValue("PvalueGreater", model.getPExactOneSidedGreater());
 
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   };
   void reset() {
     model.reset();
@@ -1092,7 +1092,7 @@ class ZegginiTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     result.clearValue();
     if (fitOK) {
       if (isBinaryOutcome()) {
@@ -1101,7 +1101,7 @@ class ZegginiTest: public ModelFitter{
         result.updateValue("Pvalue", linear.GetPvalue());
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   };
  private:
   Matrix collapsedGenotype;
@@ -1186,7 +1186,9 @@ class MadsonBrowningTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp)
+      {
+        siteInfo.writeValueTab(fp);
 
     if (isBinaryOutcome()) {
       perm.writeOutput(fp);
@@ -1194,16 +1196,17 @@ class MadsonBrowningTest: public ModelFitter{
     } else {
       fp->write("NA\n");
     }
-    /* if (isBinaryOutcome()) { */
-    /*   if (fitOK){ */
-    /*     perm.writeOutput(fp); */
-    /*     fprintf(fp, "\n"); */
-    /*   } else { */
-    /*     fprintf(fp, "NA\tNA\tNA\tNA\tNA\tNA\n"); */
-    /*   } */
-    /* } else { */
-    /*   fprintf(fp, "NA\n"); */
-    /* } */
+    if (isBinaryOutcome()) {
+      if (fitOK){
+        perm.writeOutput(fp);
+        fp -> write("\n");
+      } else {
+        fp -> write("NA\tNA\tNA\tNA\tNA\tNA\n");
+      }
+    } else {
+      fp -> write("NA\n");
+    }
+    }
   };
  private:
   Matrix collapsedGenotype;
@@ -1265,7 +1268,7 @@ class FpTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       if (isBinaryOutcome()) {
         result.updateValue("Pvalue", logistic.GetPvalue());
@@ -1273,7 +1276,7 @@ class FpTest: public ModelFitter{
         result.updateValue("Pvalue", linear.GetPvalue());
       }
     }
-    result.writeValueLine(fp);
+   if (fp) result.writeValueLine(fp);
   };
  private:
   Matrix collapsedGenotype;
@@ -1348,14 +1351,14 @@ class RareCoverTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+   if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       if (isBinaryOutcome()) {
         result.updateValue("NumIncludeMarker", (int)this->selected.size());
       }
     }
-    result.writeValueTab(fp);
-    this->perm.writeOutputLine(fp);
+    if (fp) result.writeValueTab(fp);
+    if (fp) this->perm.writeOutputLine(fp);
 
   };
   /**
@@ -1498,9 +1501,11 @@ class CMATTest:public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
+    if (fp) {
     siteInfo.writeValueTab(fp);
     if (isBinaryOutcome()) {
       this->perm.writeOutputLine(fp);
+    }
     }
   };
   double calculateStat(Matrix& genotype, Vector& phenotype,
@@ -1678,10 +1683,12 @@ class VariableThresholdPrice: public ModelFitter{
   }
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
+    if (fp) { 
     siteInfo.writeValueTab(fp);
     fp->printf("\t%g\t", this->optimalFreq);
     this->perm.writeOutputLine(fp);
     // fprintf(fp, "\n");
+    }
   }
   void reset() {
     fitOK = true;
@@ -1805,15 +1812,17 @@ class VariableThresholdCMC: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    // char buf[1000];
-    // siteInfo.writeValue(fp);
+    char buf[1000];
+    if (fp) siteInfo.writeValue(fp);
     for (size_t i = 0; i < freq.size(); i ++ ){
-      /* sprintf(buf, "%s\t%f\t", prependString, freq[i]); */
-      /* model[i].writeOutput(fp, buf); */
       result.updateValue("FreqThreshold", toString(freq[i]));
-      //result.writeValueTab(fp);
-      siteInfo.writeValueTab(fp);
-      model[i].writeOutput(fp, result);
+      if (fp) {
+        sprintf(buf, "%s\t%f\t", prependString, freq[i]);
+        model[i].writeOutput(fp, buf);
+        //result.writeValueTab(fp);
+        siteInfo.writeValueTab(fp);
+        model[i].writeOutput(fp, result);
+      }
     }
   };
   void reset() {
@@ -1890,7 +1899,7 @@ class VTCMC: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     int index;
     double optimFreq;
     double effect;
@@ -1917,7 +1926,7 @@ class VTCMC: public ModelFitter{
     result.updateValue("Effect", effect);
     result.updateValue("Pvalue", pValue);
 
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   };
   void reset() {
     fitOK = true;
@@ -2088,7 +2097,7 @@ class AnalyticVT: public ModelFitter{
 
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       result.updateValue("MinMAF", mvvt.getMinMAF());
       result.updateValue("MaxMAF", mvvt.getMaxMAF());
@@ -2099,7 +2108,7 @@ class AnalyticVT: public ModelFitter{
       result.updateValue("Stat", mvvt.getStat());
       result.updateValue("Pvalue", mvvt.getPvalue());
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
  private:
   Type type;
@@ -2188,7 +2197,7 @@ class FamCMC: public ModelFitter{
   }
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK && !isBinaryOutcome()) {
       result.updateValue("NumSite", numVariant);
       result.updateValue("AF", af);
@@ -2197,7 +2206,7 @@ class FamCMC: public ModelFitter{
       result.updateValue("Effect", effect);
       result.updateValue("Pvalue", pvalue);
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
   void writeFootnote(FileWriter* fp) {
     appendHeritability(fp, lmm);
@@ -2281,7 +2290,7 @@ class FamZeggini: public ModelFitter{
   }
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     if (fitOK && !isBinaryOutcome()) {
       result.updateValue("NumSite", numVariant);
       result.updateValue("MeanBurden", af);
@@ -2290,7 +2299,7 @@ class FamZeggini: public ModelFitter{
       result.updateValue("Effect", effect);
       result.updateValue("Pvalue", pvalue);
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
   void writeFootnote(FileWriter* fp) {
     appendHeritability(fp, lmm);
@@ -2412,7 +2421,9 @@ class SkatTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp)
+      {
+        siteInfo.writeValueTab(fp);
     if (!fitOK){
       fp->write("NA\tNA");
       if (usePermutation) {
@@ -2428,6 +2439,7 @@ class SkatTest: public ModelFitter{
       }
       fp->write("\n");
     }
+      }
   };
  private:
   double beta1;
@@ -2535,12 +2547,15 @@ class KBACTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp)
+      {
+        siteInfo.writeValueTab(fp);
     if (!fitOK){
       fp->write("NA\n");
     } else {
       fp->printf("%f\n", this->pValue);
     }
+      }
   };
   void resize(int numPeople, int numMarker) {
     bool resized = false;
@@ -2647,7 +2662,9 @@ class FamSkatTest: public ModelFitter{
   }
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp)
+      {
+        siteInfo.writeValueTab(fp);
     if (!fitOK){
       fp->write("NA\tNA");
       fp->write("\n");
@@ -2656,6 +2673,7 @@ class FamSkatTest: public ModelFitter{
       fp->printf("%g\t%g", this->skat.GetQ(), this->pValue);
       fp->write("\n");
     }
+      }
   };
  private:
   bool needToFitNullModel;
@@ -2895,7 +2913,7 @@ class MetaScoreTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
-    siteInfo.writeValueTab(fp);
+    if (fp) siteInfo.writeValueTab(fp);
     int informativeAC = het + 2* homAlt;
 
     result.clearValue();
@@ -2962,7 +2980,7 @@ class MetaScoreTest: public ModelFitter{
         }
       }
     }
-    result.writeValueLine(fp);
+    if (fp) result.writeValueLine(fp);
   }
 
   void writeFootnote(FileWriter* fp) {
@@ -3265,9 +3283,9 @@ class MetaCovTest: public ModelFitter{
     this->fout = fp;
     while (queue.size() && getWindowSize(queue, loci) > windowSize) {
       if (isBinaryOutcome()) {
-        printCovarianceForBinaryTrait(fout, queue);
+        if (fp) printCovarianceForBinaryTrait(fout, queue);
       } else {
-        printCovariance(fout, queue);
+        if (fp) printCovariance(fout, queue);
       }
       queue.pop_front();
     };
@@ -3606,7 +3624,7 @@ class MetaSkewTest: public ModelFitter{
     this->fout = fp;
     while (queue.size() && getWindowSize(queue, loci) > windowSize) {
       if (isBinaryOutcome()) {
-        printSkewForBinaryTrait(fout, queue);
+        if (fp) printSkewForBinaryTrait(fout, queue);
       }
       // if (isBinaryOutcome()) {
       //   // printCovarianceForBinaryTrait(fout, queue);
@@ -3924,7 +3942,7 @@ class MetaKurtTest: public ModelFitter{
     this->fout = fp;
     while (queue.size() && getWindowSize(queue, loci) > windowSize) {
       if (isBinaryOutcome()) {
-        printKurtForBinaryTrait(fout, queue);
+        if (fp) printKurtForBinaryTrait(fout, queue);
       }
       // if (isBinaryOutcome()) {
       //   // printCovarianceForBinaryTrait(fout, queue);
@@ -4127,6 +4145,7 @@ class DumpModel: public ModelFitter{
 
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo){
+    if (fp) { 
     std::string fn = this->prefix + "\t" + siteInfo.joinValue() + ".data";
 
 
@@ -4182,7 +4201,7 @@ class DumpModel: public ModelFitter{
       fprintf(fDump, "\n");
     };
     fclose(fDump);
-
+    }
   };
 
   void reset() {

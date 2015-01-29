@@ -332,17 +332,17 @@ LIB_GSL = [
    'gsl/min/fsolver.c',
    'gsl/min/convergence.c'
     ]
-
+os.system("cd src/third/libMvtnorm; make; cd -")
 CSTATGEN_MODULE = [
     Extension('{}._cstatgen'.format(NAME),
               sources = [WRAPPER_CPP] + CPP + UMICH_FILES + getfn(LIB_GSL),
               extra_compile_args = compile_args_umich,
     	      extra_link_args = link_args,
               libraries = libs + ["Mvtnorm"],
-              library_dirs = ["src/umich/regression"],
+              library_dirs = ["src/third/libMvtnorm"],
               include_dirs = getfn([".", "general", "klib", "vcf", "clusters", "libsrc", "base",
-                                    "merlin", "regression", "regression/libMvtnorm",
-                                    "rvtests", "pdf", "eigen", "gsl"]) + ["src"]
+                                    "merlin", "regression", "rvtests", "pdf", "eigen", "gsl"]) + \
+                                    ["src", "src/third"]
               )
 ]
 #
