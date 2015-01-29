@@ -1,7 +1,7 @@
 FC=gfortran
 
-release: CXXFLAGS=-O2 -DNDEBUG
-release: FCFLAGS=-O2 -DNDEBUG
+release: CXXFLAGS=-O2 -DNDEBUG -fPIC
+release: FCFLAGS=-O2 -DNDEBUG -fPIC
 debug: CXXFLAGS= -O0 -ggdb
 debug: FCFLAGS=-O0 -ggdb
 

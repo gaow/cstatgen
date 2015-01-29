@@ -98,11 +98,12 @@ except OSError as e:
 
 # Under linux/gcc, lib stdc++ is needed for C++ based extension.
 libs = ['stdc++'] if sys.platform == 'linux2' else []
-compile_args_umich = ["-O3", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
+compile_args_umich = ["-O3", "-shared", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
+                      # "-static", "-static-libgcc", "-static-libstdc++", "-fPIC"]
 link_args = ["-lm", "-lz"]
 #
-UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp", "regression/*.cpp", "rvtests/*.cpp",
-                     "base/*.cpp", "pdf/*.cpp", "klib/*.c", "general/*.cpp", "vcf/*.cpp"])
+UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp", "regression/*.cpp",
+                     "rvtests/*.cpp", "base/*.cpp", "pdf/*.cpp", "klib/*.c", "general/*.cpp", "vcf/*.cpp"])
 LIB_GSL = [
    'gsl/error.c',
    'gsl/sys/infnan.c',
@@ -325,7 +326,11 @@ LIB_GSL = [
    'gsl/permutation/init.c',
    'gsl/permutation/inline.c',
    'gsl/permutation/permutation.c',
-   'gsl/permutation/permute.c'
+   'gsl/permutation/permute.c',
+   #
+   'gsl/min/brent.c',
+   'gsl/min/fsolver.c',
+   'gsl/min/convergence.c'
     ]
 
 CSTATGEN_MODULE = [
@@ -333,10 +338,11 @@ CSTATGEN_MODULE = [
               sources = [WRAPPER_CPP] + CPP + UMICH_FILES + getfn(LIB_GSL),
               extra_compile_args = compile_args_umich,
     	      extra_link_args = link_args,
-              libraries = libs,
-              library_dirs = [],
+              libraries = libs + ["Mvtnorm"],
+              library_dirs = ["src/umich/regression"],
               include_dirs = getfn([".", "general", "klib", "vcf", "clusters", "libsrc", "base",
-                                    "merlin", "regression", "rvtests", "pdf", "eigen", "gsl"]) + ["src"]
+                                    "merlin", "regression", "regression/libMvtnorm",
+                                    "rvtests", "pdf", "eigen", "gsl"]) + ["src"]
               )
 ]
 #

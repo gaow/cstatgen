@@ -11,6 +11,7 @@
 #include "VCFstream.hpp"
 #include "HaplotypingUtils.hpp"
 #include "HaplotypingEngine.hpp"
+#include "ZhanRVTests.hpp"
 %}
 
 %include exception.i
@@ -65,3 +66,4 @@
 %include "VCFstream.hpp"
 %include "HaplotypingUtils.hpp"
 %include "HaplotypingEngine.hpp"
+%include "ZhanRVTests.hpp"

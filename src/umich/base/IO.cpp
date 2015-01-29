@@ -16,9 +16,9 @@ AbstractFileReader* AbstractFileReader::open(const char* fileName){
     case GZIP:
         fr = new GzipFileReader(fileName);
         break;
-    case BZIP2:
-        fr = new Bzip2FileReader(fileName);
-        break;
+    // case BZIP2:
+    //     fr = new Bzip2FileReader(fileName);
+    //     break;
     default:
         fprintf(stderr, "Cannot detect file type (does it exist?!)\n");
         break;

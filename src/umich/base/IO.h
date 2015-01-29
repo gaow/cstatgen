@@ -157,78 +157,78 @@ private:
 };
 //////////////////////////////////////////////////////////////////////
 // Bzip2 reading class
-#include <bzlib.h>
-class Bzip2FileReader: public AbstractFileReader{
-public:
-Bzip2FileReader(const char* fileName):
-  fp(NULL) {
-    this->open(fileName);
-#ifdef IO_DEBUG
-    fprintf(stderr, "Bzip2FileReader() open %s\n", fileName);
-#endif
-  };
-  virtual ~Bzip2FileReader() {
-#ifdef IO_DEBUG
-    fprintf(stderr, "~Bzip2FileReader() close\n");
-#endif
-    if (this->fp) {
-      BZ2_bzclose(fp);
-    }
-  };
+/* #include <bzlib.h> */
+/* class Bzip2FileReader: public AbstractFileReader{ */
+/* public: */
+/* Bzip2FileReader(const char* fileName): */
+/*   fp(NULL) { */
+/*     this->open(fileName); */
+/* #ifdef IO_DEBUG */
+/*     fprintf(stderr, "Bzip2FileReader() open %s\n", fileName); */
+/* #endif */
+/*   }; */
+/*   virtual ~Bzip2FileReader() { */
+/* #ifdef IO_DEBUG */
+/*     fprintf(stderr, "~Bzip2FileReader() close\n"); */
+/* #endif */
+/*     if (this->fp) { */
+/*       BZ2_bzclose(fp); */
+/*     } */
+/*   }; */
 
-  // get a char, if EOF, return EOF
-  int getc(){
-    char c;
-    this->bzerror = BZ_OK;
-    int nBuf = BZ2_bzRead(&this->bzerror, this->bzp, &c, sizeof(char));
-    UNUSED(nBuf);
-    if (this->bzerror == BZ_OK) {
-      return c;
-    } else {
-      return EOF;
-    }
-  }
-  // check eof
-  bool isEof() {
-    return (this->bzerror == BZ_STREAM_END);
-  }
-  // open
-  BZFILE* open(const char* fileName) {
-    this->fp = fopen(fileName, "rb");
-    if (!this->fp) {
-      fprintf(stderr, "ERROR: Cannot open %s\n", fileName);
-      return NULL;
-    }
-    this->bzp = BZ2_bzReadOpen(&this->bzerror, this->fp, 0, 0, NULL, 0);
+/*   // get a char, if EOF, return EOF */
+/*   int getc(){ */
+/*     char c; */
+/*     this->bzerror = BZ_OK; */
+/*     int nBuf = BZ2_bzRead(&this->bzerror, this->bzp, &c, sizeof(char)); */
+/*     UNUSED(nBuf); */
+/*     if (this->bzerror == BZ_OK) { */
+/*       return c; */
+/*     } else { */
+/*       return EOF; */
+/*     } */
+/*   } */
+/*   // check eof */
+/*   bool isEof() { */
+/*     return (this->bzerror == BZ_STREAM_END); */
+/*   } */
+/*   // open */
+/*   BZFILE* open(const char* fileName) { */
+/*     this->fp = fopen(fileName, "rb"); */
+/*     if (!this->fp) { */
+/*       fprintf(stderr, "ERROR: Cannot open %s\n", fileName); */
+/*       return NULL; */
+/*     } */
+/*     this->bzp = BZ2_bzReadOpen(&this->bzerror, this->fp, 0, 0, NULL, 0); */
 
-    if (this->bzerror != BZ_OK) {
-      BZ2_bzReadClose ( &bzerror, this->bzp );
-      fprintf(stderr, "ERROR: Cannot open %s\n", fileName);
-      return NULL;
-    }
-    return this->bzp;
-  }
-  // close
-  void close() {
-    if (this->bzerror != BZ_STREAM_END) {
-      BZ2_bzReadClose(&this->bzerror, this->bzp);
-      /* omit code to handle error */
-    } else {
-      BZ2_bzReadClose(&this->bzerror, this->bzp);
-    }
-    if (this->fp) fclose(this->fp);
-    this->fp = NULL;
-    this->bzp = NULL;
-    this->bzerror = 0;
-  };
-  int read(void* buf, int len) {
-    return BZ2_bzRead ( &this->bzerror, this->bzp, buf, len);
-  };
-private:
-  FILE* fp;
-  BZFILE* bzp;
-  int bzerror;
-};
+/*     if (this->bzerror != BZ_OK) { */
+/*       BZ2_bzReadClose ( &bzerror, this->bzp ); */
+/*       fprintf(stderr, "ERROR: Cannot open %s\n", fileName); */
+/*       return NULL; */
+/*     } */
+/*     return this->bzp; */
+/*   } */
+/*   // close */
+/*   void close() { */
+/*     if (this->bzerror != BZ_STREAM_END) { */
+/*       BZ2_bzReadClose(&this->bzerror, this->bzp); */
+/*       /\* omit code to handle error *\/ */
+/*     } else { */
+/*       BZ2_bzReadClose(&this->bzerror, this->bzp); */
+/*     } */
+/*     if (this->fp) fclose(this->fp); */
+/*     this->fp = NULL; */
+/*     this->bzp = NULL; */
+/*     this->bzerror = 0; */
+/*   }; */
+/*   int read(void* buf, int len) { */
+/*     return BZ2_bzRead ( &this->bzerror, this->bzp, buf, len); */
+/*   }; */
+/* private: */
+/*   FILE* fp; */
+/*   BZFILE* bzp; */
+/*   int bzerror; */
+/* }; */
 //////////////////////////////////////////////////////////////////////
 
 /**
@@ -542,71 +542,71 @@ private:
   gzFile fp;
 }; // end GzipFileWriter
 
-class Bzip2FileWriter:public AbstractFileWriter{
-public:
-  Bzip2FileWriter(const char* fn, bool append = false):bzp(NULL){
-    if (this->open(fn, append)){
-      fprintf(stderr, "Cannot create bzip2 file %s\n", fn);
-    }
-  }
-  virtual ~Bzip2FileWriter(){
-    this->close();
-#ifdef IO_DEBUG
-    fprintf(stderr, "Bzip2FileWriter desc()\n");
-#endif
-  };
-  int open(const char* fn, bool append = false){
-    if (append)
-      fprintf(stderr, "bzip2 does not support appending.\n");
-    this->fp = fopen(fn, "wb");
-    if (fp == NULL) return -1;
+/* class Bzip2FileWriter:public AbstractFileWriter{ */
+/* public: */
+/*   Bzip2FileWriter(const char* fn, bool append = false):bzp(NULL){ */
+/*     if (this->open(fn, append)){ */
+/*       fprintf(stderr, "Cannot create bzip2 file %s\n", fn); */
+/*     } */
+/*   } */
+/*   virtual ~Bzip2FileWriter(){ */
+/*     this->close(); */
+/* #ifdef IO_DEBUG */
+/*     fprintf(stderr, "Bzip2FileWriter desc()\n"); */
+/* #endif */
+/*   }; */
+/*   int open(const char* fn, bool append = false){ */
+/*     if (append) */
+/*       fprintf(stderr, "bzip2 does not support appending.\n"); */
+/*     this->fp = fopen(fn, "wb"); */
+/*     if (fp == NULL) return -1; */
 
-    this->bzp = BZ2_bzWriteOpen(&this->bzerror, this->fp, 9, 0, 30); //block size is 9, 0 means silent, 30 means working factor
-    if (this->bzerror != BZ_OK) {
-      BZ2_bzWriteClose( & bzerror, this->bzp, 0, 0, 0); // 0: abandon, 0: results of # of bytes for input, 0: results of # of bytes outputted.
-      fprintf(stderr, "ERROR: Cannot open %s for write\n", fn);
-      return -1;
-    }
-    return 0;
-  }
-  void close(){
-    BZ2_bzWriteClose(&bzerror, this->bzp, 0, 0, 0);
-    if (bzerror != BZ_OK){
-    };
-    if (this->fp) fclose(this->fp);
+/*     this->bzp = BZ2_bzWriteOpen(&this->bzerror, this->fp, 9, 0, 30); //block size is 9, 0 means silent, 30 means working factor */
+/*     if (this->bzerror != BZ_OK) { */
+/*       BZ2_bzWriteClose( & bzerror, this->bzp, 0, 0, 0); // 0: abandon, 0: results of # of bytes for input, 0: results of # of bytes outputted. */
+/*       fprintf(stderr, "ERROR: Cannot open %s for write\n", fn); */
+/*       return -1; */
+/*     } */
+/*     return 0; */
+/*   } */
+/*   void close(){ */
+/*     BZ2_bzWriteClose(&bzerror, this->bzp, 0, 0, 0); */
+/*     if (bzerror != BZ_OK){ */
+/*     }; */
+/*     if (this->fp) fclose(this->fp); */
 
-    this->bzp = NULL;
-    this->fp = NULL;
-  };
-  int write(const char* s) {
-    int ret = strlen(s);
-    BZ2_bzWrite(&this->bzerror, this->bzp, (void*)s, ret);
-    if (this->bzerror != BZ_OK) {
-      this->close();
-      return -1;
-    }
-    return ret;
-  };
-  int writeLine(const char* s) {
-    int ret = strlen(s);
-    BZ2_bzWrite(&this->bzerror, this->bzp, (void*)s, ret);
-    if (this->bzerror != BZ_OK) {
-      this->close();
-      return -1;
-    }
-    char buf[] = "\n";
-    BZ2_bzWrite(&this->bzerror, this->bzp, buf, 1);
-    if (this->bzerror != BZ_OK) {
-      this->close();
-      return -1;
-    }
-    return (ret + 1);
-  };
-private:
-  FILE* fp;
-  BZFILE* bzp;
-  int bzerror;
-}; // end Bzip2FileWriter
+/*     this->bzp = NULL; */
+/*     this->fp = NULL; */
+/*   }; */
+/*   int write(const char* s) { */
+/*     int ret = strlen(s); */
+/*     BZ2_bzWrite(&this->bzerror, this->bzp, (void*)s, ret); */
+/*     if (this->bzerror != BZ_OK) { */
+/*       this->close(); */
+/*       return -1; */
+/*     } */
+/*     return ret; */
+/*   }; */
+/*   int writeLine(const char* s) { */
+/*     int ret = strlen(s); */
+/*     BZ2_bzWrite(&this->bzerror, this->bzp, (void*)s, ret); */
+/*     if (this->bzerror != BZ_OK) { */
+/*       this->close(); */
+/*       return -1; */
+/*     } */
+/*     char buf[] = "\n"; */
+/*     BZ2_bzWrite(&this->bzerror, this->bzp, buf, 1); */
+/*     if (this->bzerror != BZ_OK) { */
+/*       this->close(); */
+/*       return -1; */
+/*     } */
+/*     return (ret + 1); */
+/*   }; */
+/* private: */
+/*   FILE* fp; */
+/*   BZFILE* bzp; */
+/*   int bzerror; */
+/* }; // end Bzip2FileWriter */
 
 class BGZipFileWriter:public AbstractFileWriter{
 public:
@@ -715,8 +715,8 @@ public:
     // int l = strlen(fileName);
     if (this->checkSuffix(fileName, ".gz")) {
       this->fpRaw = new GzipFileWriter(fileName, append);
-    } else if (this->checkSuffix(fileName, ".bz2")){
-      this->fpRaw = new Bzip2FileWriter(fileName, append);
+    /* } else if (this->checkSuffix(fileName, ".bz2")){ */
+    /*   this->fpRaw = new Bzip2FileWriter(fileName, append); */
     } else {
       this->fpRaw = new TextFileWriter(fileName, append);
     }
@@ -734,8 +734,8 @@ public:
       this->fpRaw = new TextFileWriter(fileName, append);
     } else if (GZIP == t) {
       this->fpRaw = new GzipFileWriter(fileName, append);
-    } else if (BZIP2 == t) {
-      this->fpRaw = new Bzip2FileWriter(fileName, append);
+    /* } else if (BZIP2 == t) { */
+    /*   this->fpRaw = new Bzip2FileWriter(fileName, append); */
     } else if (BGZIP == t) {
       this->fpRaw = new BGZipFileWriter(fileName, append);
     } else {
