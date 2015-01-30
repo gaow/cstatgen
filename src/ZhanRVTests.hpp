@@ -14,20 +14,21 @@
 
 #include <vector>
 #include <string>
-
+#include <numeric>      // std::accumulate
 
 namespace cstatgen {
 
 class RVTester
 {
 public:
-	RVTester (const std::vector<std::vector<double> > & genotype,
+	RVTester (const std::vector<std::vector<double> > & genotype_all,
 		const std::vector<std::vector<double> > & phenotype,
-		const std::vector<std::vector<double> > & covariates)
+		const std::vector<std::vector<double> > & covariates,
+		double maf_lower = 0.0, double maf_upper = 1.0)
 	{
 		// input genotype is like VCF format rows are variants cols are samples
 		// genotype matrix rows are samples, cols are variants
-
+		std::vector<std::vector<double> > genotype = m_PruneByMAF(genotype_all, maf_lower, maf_upper);
 		mg.Dimension(genotype[0].size(), genotype.size());
 		for (int row = 0; row < genotype[0].size(); ++row) {
 			for (int col = 0; col < genotype.size(); ++col) {
@@ -88,10 +89,10 @@ public:
 
 	std::string pvalue()
 	{
-      if (m_model->getResult()["PvalueTwoSide"] != "NA")
-		return m_model->getResult()["PvalueTwoSide"];
-      else
-		return m_model->getResult()["Pvalue"];
+		if (m_model->getResult()["PvalueTwoSide"] != "NA")
+			return m_model->getResult()["PvalueTwoSide"];
+		else
+			return m_model->getResult()["Pvalue"];
 	}
 
 
@@ -102,6 +103,24 @@ private:
 	DataConsolidator m_dc;
 	ModelFitter * m_model;
 	Result m_siteInfo;
+
+	std::vector<std::vector<double> > m_PruneByMAF(const std::vector<std::vector<double> > & genotype_all,
+	                                               double maf_lower, double maf_upper)
+	{
+		if (maf_lower > 0.0 || maf_upper < 0.5) {
+			// remove by cutoff
+			std::vector<std::vector<double> > genotype(0);
+			double maf = 0.0;
+			for (unsigned i = 0; i < genotype_all.size(); ++i) {
+				maf = std::accumulate(genotype_all[i].begin(), genotype_all[i].end(), 0.0) /
+				      float(genotype_all[i].size());
+				maf = (maf > 0.5) ? 1 - maf : maf;
+				if (maf > maf_lower && maf < maf_upper) genotype.push_back(genotype_all[i]);
+			}
+			return genotype;
+		} else return genotype_all;
+	}
+
 };
 }
 #endif
