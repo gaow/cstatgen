@@ -34,6 +34,10 @@ public:
     }
     return true;
   }
+  bool existHeaderQuiet(const std::string& key) {
+    if (!data.find(key.c_str())) return false;
+    else return true;
+  }  
   bool existHeader(const std::string& key) {
     return existHeader(key.c_str());
   }

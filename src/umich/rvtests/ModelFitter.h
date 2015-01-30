@@ -1031,7 +1031,6 @@ class CMCFisherExactTest: public ModelFitter{
       result.updateValue("PvalueTwoSide", model.getPExactTwoSided());
       result.updateValue("PvalueLess", model.getPExactOneSidedLess());
       result.updateValue("PvalueGreater", model.getPExactOneSidedGreater());
-
     }
     if (fp) result.writeValueLine(fp);
   };
@@ -1206,6 +1205,10 @@ class MadsonBrowningTest: public ModelFitter{
     } else {
       fp -> write("NA\n");
     }
+    } else {
+      this->perm.updateValue();
+      result.addHeader("Pvalue");
+      result.updateValue("Pvalue", this->perm.getPvalue());
     }
   };
  private:
@@ -1268,6 +1271,7 @@ class FpTest: public ModelFitter{
   };
   // write model output
   void writeOutput(FileWriter* fp, const Result& siteInfo) {
+    if (!result.existHeaderQuiet("Pvalue")) result.addHeader("Pvalue");
     if (fp) siteInfo.writeValueTab(fp);
     if (fitOK) {
       if (isBinaryOutcome()) {
@@ -1357,9 +1361,16 @@ class RareCoverTest: public ModelFitter{
         result.updateValue("NumIncludeMarker", (int)this->selected.size());
       }
     }
-    if (fp) result.writeValueTab(fp);
-    if (fp) this->perm.writeOutputLine(fp);
-
+    if (fp) {
+      result.writeValueTab(fp);
+      this->perm.writeOutputLine(fp);
+    } else {
+      this->perm.updateValue();
+      result.addHeader("Stat");
+      result.addHeader("Pvalue");
+      result.updateValue("Stat", this->stat);
+      result.updateValue("Pvalue", this->perm.getPvalue());
+    }
   };
   /**
    * For a given genotype and phenotype, calculate RareCover stats, which markers are selected
@@ -1506,6 +1517,12 @@ class CMATTest:public ModelFitter{
     if (isBinaryOutcome()) {
       this->perm.writeOutputLine(fp);
     }
+    } else {
+      this->perm.updateValue();
+      result.addHeader("Stat");
+      result.addHeader("Pvalue");
+      result.updateValue("Stat", this->stat);
+      result.updateValue("Pvalue", this->perm.getPvalue());
     }
   };
   double calculateStat(Matrix& genotype, Vector& phenotype,
@@ -1688,6 +1705,12 @@ class VariableThresholdPrice: public ModelFitter{
     fp->printf("\t%g\t", this->optimalFreq);
     this->perm.writeOutputLine(fp);
     // fprintf(fp, "\n");
+    } else {
+      this->perm.updateValue();
+      result.addHeader("Stat");
+      result.addHeader("Pvalue");
+      result.updateValue("Stat", this->zmax);
+      result.updateValue("Pvalue", this->perm.getPvalue());
     }
   }
   void reset() {
@@ -2439,7 +2462,17 @@ class SkatTest: public ModelFitter{
       }
       fp->write("\n");
     }
+      } else {
+      result.addHeader("Stat");
+      result.addHeader("Pvalue");
+      result.updateValue("Stat", this->stat);
+      if (usePermutation) {
+        this->perm.updateValue();
+        result.updateValue("Pvalue", this->perm.getPvalue());
+      } else {
+        result.updateValue("Pvalue", this->pValue);
       }
+    }
   };
  private:
   double beta1;
@@ -2555,7 +2588,10 @@ class KBACTest: public ModelFitter{
     } else {
       fp->printf("%f\n", this->pValue);
     }
-      }
+      } else {
+      result.addHeader("Pvalue");
+      result.updateValue("Pvalue", this->pValue);
+    }
   };
   void resize(int numPeople, int numMarker) {
     bool resized = false;

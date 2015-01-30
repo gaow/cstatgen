@@ -25,17 +25,16 @@ public:
 		const std::vector<std::vector<double> > & phenotype,
 		const std::vector<std::vector<double> > & covariates)
 	{
-		// genotype matrix rows are variants, cols are people
-		Matrix mg;
+		// input genotype is like VCF format rows are variants cols are samples
+		// genotype matrix rows are samples, cols are variants
 
 		mg.Dimension(genotype[0].size(), genotype.size());
 		for (int row = 0; row < genotype[0].size(); ++row) {
 			for (int col = 0; col < genotype.size(); ++col) {
-				mg[row][col] = genotype[row][col];
+				mg[row][col] = genotype[col][row];
 			}
 		}
 		// phentype matrix has dimension nx1
-		Matrix mp;
 		mp.Dimension(phenotype[0].size(), phenotype.size());
 		for (int row = 0; row < phenotype[0].size(); ++row) {
 			for (int col = 0; col < phenotype.size(); ++col) {
@@ -43,29 +42,28 @@ public:
 			}
 		}
 		//
-		Matrix mc;
-        if (covariates.size() == 0) mc.Dimension(0, 0);
-        else {
-		mc.Dimension(covariates[0].size(), covariates.size());
-		for (int row = 0; row < covariates[0].size(); ++row) {
-			for (int col = 0; col < covariates.size(); ++col) {
-				mc[row][col] = covariates[col][row];
+		if (covariates.size() == 0) mc.Dimension(0, 0);
+		else {
+			mc.Dimension(covariates[0].size(), covariates.size());
+			for (int row = 0; row < covariates[0].size(); ++row) {
+				for (int col = 0; col < covariates.size(); ++col) {
+					mc[row][col] = covariates[col][row];
+				}
 			}
 		}
-        }
-        m_dc.setStrategy(DataConsolidator::IMPUTE_MEAN);
-		m_dc.consolidate(mp, mc, mg);
+		m_dc.setStrategy(DataConsolidator::IMPUTE_MEAN);
 	}
 
 
 	~RVTester()
 	{
-		delete m_model;
+		if (m_model) delete m_model;
 	};
-  // DataConsolidator does not allow for copying
+	// DataConsolidator does not allow for copying
 	// RVTester * clone() const { return new RVTester(*this); }
-	int fit(const std::string t, bool isBinary = false, int n = 1000, double a = 0.05)
+	int fit(const std::string t, bool is_binary, int n = 1000, double a = 0.05)
 	{
+		m_dc.consolidate(mp, mc, mg);
 		// if (t == "AnalyticVT") m_model = new AnalyticVT();
 		if (t == "CMATTest") m_model = new CMATTest(n, a);
 		else if (t == "CMCFisherExactTest") m_model = new CMCFisherExactTest();
@@ -75,29 +73,35 @@ public:
 		else if (t == "RareCoverTest") m_model = new RareCoverTest(n, a);
 		else if (t == "KBACTest") m_model = new KBACTest(n, a);
 		else if (t == "FpTest") m_model = new FpTest();
-		else if (t == "SkatTest") m_model = new SkatTest(n, a, 1, 25);
+		else if (t == "SkatTest") m_model = new SkatTest(0, a, 1, 25);
 		else if (t == "VariableThresholdPrice") m_model = new VariableThresholdPrice(n, a);
-		else if (t == "VTCMC") m_model = new VTCMC();
+		// else if (t == "VTCMC") m_model = new VTCMC();
 		else if (t == "ZegginiWaldTest") m_model = new ZegginiWaldTest();
 		else if (t == "ZegginiTest") m_model = new ZegginiTest();
 		else m_model = new SingleVariantScoreTest();
-		if (isBinary) m_model->setBinaryOutcome();
+		if (is_binary) m_model->setBinaryOutcome();
 		int status = m_model->fit(&m_dc);
-        m_model -> writeOutput(NULL, m_siteInfo);
-        return status;
+		m_model->writeOutput(NULL, m_siteInfo);
+		return status;
 	}
 
 
 	std::string pvalue()
 	{
+      if (m_model->getResult()["PvalueTwoSide"] != "NA")
+		return m_model->getResult()["PvalueTwoSide"];
+      else
 		return m_model->getResult()["Pvalue"];
 	}
 
 
 private:
+	Matrix mg;
+	Matrix mp;
+	Matrix mc;
 	DataConsolidator m_dc;
 	ModelFitter * m_model;
-  Result m_siteInfo;
+	Result m_siteInfo;
 };
 }
 #endif
