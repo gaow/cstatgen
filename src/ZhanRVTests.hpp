@@ -29,6 +29,9 @@ public:
 		// input genotype is like VCF format rows are variants cols are samples
 		// genotype matrix rows are samples, cols are variants
 		std::vector<std::vector<double> > genotype = m_PruneByMAF(genotype_all, maf_lower, maf_upper);
+		if (genotype.size() <= 1) {
+			throw RuntimeError("Too few variants to analyze after pruning by MAF");
+		}
 		mg.Dimension(genotype[0].size(), genotype.size());
 		for (int row = 0; row < genotype[0].size(); ++row) {
 			for (int col = 0; col < genotype.size(); ++col) {
@@ -81,7 +84,12 @@ public:
 		else if (t == "ZegginiTest") m_model = new ZegginiTest();
 		else m_model = new SingleVariantScoreTest();
 		if (is_binary) m_model->setBinaryOutcome();
-		int status = m_model->fit(&m_dc);
+		int status = 0;
+		try {
+			status = m_model->fit(&m_dc);
+		} catch (...) {
+			return -1;
+		}
 		m_model->writeOutput(NULL, m_siteInfo);
 		return status;
 	}
@@ -120,6 +128,7 @@ private:
 			return genotype;
 		} else return genotype_all;
 	}
+
 
 };
 }
