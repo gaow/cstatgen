@@ -62,15 +62,13 @@ except OSError:
 SWIG_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
              '-w-511', '-w-509', '-outdir', '.']
 SWIG_PYGSL_OPTS = ['-python', '-keyword', '-outdir', '.']
-SWIG_PYBOOSTMATH_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
-                         '-outdir', '.']
+
 
 if sys.version_info.major == 2:
     PYVERSION = 'py2'
 else:
     SWIG_OPTS.append('-py3')
     SWIG_PYGSL_OPTS.append('-py3')
-    SWIG_PYBOOSTMATH_OPTS.append('-py3')
     PYVERSION = 'py3'
 #
 def getfn(fn, prefix = "src/umich"):
@@ -90,6 +88,11 @@ WRAPPER_PYGSL_I = getfn('gsl.i', "src")
 WRAPPER_PYBOOSTMATH_CPP = getfn('boostmath_wrap_{0}.cxx'.format(PYVERSION), "src")
 WRAPPER_PYBOOSTMATH_PY = getfn('boostmath_{0}.py'.format(PYVERSION), "src")
 WRAPPER_PYBOOSTMATH_I = getfn('boostmath.i', "src")
+ASSOC_HEADER = getfn(['assoTests.h','assoData.h','action.h','utils.h','lm.h'], "src/assoTests")
+ASSOC_CPP = getfn(['assoData.cpp','action.cpp','utils.cpp','lm.cpp'], "src/assoTests")
+WRAPPER_ASSOC_CPP = getfn('assoTests_wrap_{0}.cxx'.format(PYVERSION), "src")
+WRAPPER_ASSOC_PY = getfn('assoTests_{0}.py'.format(PYVERSION), "src")
+WRAPPER_ASSOC_I = getfn('assoTests.i', "src/assoTests")
 
 # generate wrapper files
 try:
@@ -111,22 +114,25 @@ try:
            sys.exit('Failed to generate gsl extension.')
         os.rename('gsl.py', WRAPPER_PYGSL_PY)
         #
-        ret = subprocess.call(['swig'] + SWIG_PYBOOSTMATH_OPTS + ['-o', WRAPPER_PYBOOSTMATH_CPP, WRAPPER_PYBOOSTMATH_I], shell=False)
+        ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_PYBOOSTMATH_CPP, WRAPPER_PYBOOSTMATH_I], shell=False)
         if ret != 0:
            sys.exit('Failed to generate boost extension.')
         os.rename('boostmath.py', WRAPPER_PYBOOSTMATH_PY)
-    os.remove('swigpyrun.h')
+    #
+    if (not os.path.isfile(WRAPPER_ASSOC_PY) or not os.path.isfile(WRAPPER_ASSOC_CPP) or \
+      os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in ASSOC_HEADER + ASSOC_CPP])):
+        ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_ASSOC_CPP, WRAPPER_ASSOC_I], shell=False)
+        if ret != 0:
+           sys.exit('Failed to generate assoTests extension.')
+        os.rename('assoTests.py', WRAPPER_ASSOC_PY)
+    os.rename('swigpyrun.h', 'src/assoTests/swigpyrun.h')
 except OSError as e:
     sys.exit('Failed to generate wrapper file: {0}'.format(e))
 
 # Under linux/gcc, lib stdc++ is needed for C++ based extension.
 libs = ['stdc++'] if sys.platform == 'linux2' else []
-compile_args_umich = ["-O3", "-shared", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
-                      # "-static", "-static-libgcc", "-static-libstdc++", "-fPIC"]
 link_args = ["-lm", "-lz"]
 #
-UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp", "regression/*.cpp",
-                     "rvtests/*.cpp", "base/*.cpp", "pdf/*.cpp", "klib/*.c", "general/*.cpp", "vcf/*.cpp"])
 LIB_GSL = [
    'gsl/error.c',
    'gsl/sys/infnan.c',
@@ -402,6 +408,10 @@ PY_GSL = [
     'gsl/cdf/poisson.c',
 ]
 
+compile_args_umich = ["-O3", "-shared", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]
+                      # "-static", "-static-libgcc", "-static-libstdc++", "-fPIC"]
+UMICH_FILES = getfn(["clusters/*.cpp", "libsrc/*.cpp", "merlin/*.cpp", "regression/*.cpp",
+                     "rvtests/*.cpp", "base/*.cpp", "pdf/*.cpp", "klib/*.c", "general/*.cpp", "vcf/*.cpp"])
 os.system("cd src/third/libMvtnorm; make; cd -")
 CSTATGEN_MODULE = [
     Extension('{}._cstatgen'.format(NAME),
@@ -439,14 +449,23 @@ NUM_MODULE = [
               include_dirs = ['src', 'src/third']
               )
 ]
+ASSOTESTS_MODULE = [
+    Extension('{}._assoTests'.format(NAME),
+              sources = [WRAPPER_ASSOC_CPP] + ASSOC_CPP + getfn(LIB_GSL, 'src/third'),
+              extra_compile_args = ["-O3", "-march=native", "-std=c++11"],
+              libraries = libs,
+              library_dirs = [],
+              include_dirs = ["src/assoTests", "src/third", "src/third/gsl"]
+              )
+]
 
 setup(name = NAME,
     version = VERSION,
     description = "Gao Wang's statgen library",
     author = "Gao Wang",
     packages = [NAME, NAME + ".egglib"],
-    package_dir = {NAME:'src', NAME + ".egglib":'src/egglib'},
+    package_dir = {NAME:'src'},
     package_data = {NAME + ".egglib":['apps.conf']},
     cmdclass = {'build_py': build_py},
-    ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE + NUM_MODULE
+    ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE + NUM_MODULE + ASSOTESTS_MODULE
 )
