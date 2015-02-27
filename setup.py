@@ -120,7 +120,7 @@ try:
         os.rename('boostmath.py', WRAPPER_PYBOOSTMATH_PY)
     #
     if (not os.path.isfile(WRAPPER_ASSOC_PY) or not os.path.isfile(WRAPPER_ASSOC_CPP) or \
-      os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in ASSOC_HEADER + ASSOC_CPP])):
+      os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in [WRAPPWER_ASSOC_I] + ASSOC_HEADER + ASSOC_CPP])):
         ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_ASSOC_CPP, WRAPPER_ASSOC_I], shell=False)
         if ret != 0:
            sys.exit('Failed to generate assoTests extension.')
@@ -452,7 +452,7 @@ NUM_MODULE = [
 ASSOTESTS_MODULE = [
     Extension('{}._assoTests'.format(NAME),
               sources = [WRAPPER_ASSOC_CPP] + ASSOC_CPP + getfn(LIB_GSL, 'src/third'),
-              extra_compile_args = ["-O3", "-march=native", "-std=c++11"],
+              extra_compile_args = ["-O3", "-std=c++11"],
               libraries = libs,
               library_dirs = [],
               include_dirs = ["src/assoTests", "src/third", "src/third/gsl"]
