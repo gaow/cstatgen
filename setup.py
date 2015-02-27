@@ -61,11 +61,16 @@ except OSError:
     
 SWIG_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
              '-w-511', '-w-509', '-outdir', '.']
+SWIG_PYGSL_OPTS = ['-python', '-keyword', '-outdir', '.']
+SWIG_PYBOOSTMATH_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
+                         '-outdir', '.']
 
 if sys.version_info.major == 2:
     PYVERSION = 'py2'
 else:
     SWIG_OPTS.append('-py3')
+    SWIG_PYGSL_OPTS.append('-py3')
+    SWIG_PYBOOSTMATH_OPTS.append('-py3')
     PYVERSION = 'py3'
 #
 def getfn(fn, prefix = "src/umich"):
@@ -79,6 +84,12 @@ CPP = getfn("*.cpp", "src")
 WRAPPER_CPP = getfn('cstatgen_{0}.cxx'.format(PYVERSION), "src")
 WRAPPER_PY = getfn('cstatgen_{0}.py'.format(PYVERSION), "src")
 WRAPPER_I = getfn('cstatgen.i', "src")
+WRAPPER_PYGSL_C = getfn('gsl_wrap_{0}.c'.format(PYVERSION), "src")
+WRAPPER_PYGSL_PY = getfn('gsl_{0}.py'.format(PYVERSION), "src")
+WRAPPER_PYGSL_I = getfn('gsl.i', "src")
+WRAPPER_PYBOOSTMATH_CPP = getfn('boostmath_wrap_{0}.cxx'.format(PYVERSION), "src")
+WRAPPER_PYBOOSTMATH_PY = getfn('boostmath_{0}.py'.format(PYVERSION), "src")
+WRAPPER_PYBOOSTMATH_I = getfn('boostmath.i', "src")
 
 # generate wrapper files
 try:
@@ -90,8 +101,20 @@ try:
         os.path.getmtime(WRAPPER_CPP) < max([os.path.getmtime(x) for x in [WRAPPER_I] + HEADER + CPP])):
         ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_CPP, WRAPPER_I], shell=False)
         if ret != 0:
-            sys.exit('Failed to generate C++ extension.')
+            sys.exit('Failed to generate cstatgen C++ extension.')
         os.rename('cstatgen.py', WRAPPER_PY)
+    #
+    if (not os.path.isfile(WRAPPER_PYGSL_PY) or not os.path.isfile(WRAPPER_PYGSL_C) or \
+       not os.path.isfile(WRAPPER_PYBOOSTMATH_PY) or not os.path.isfile(WRAPPER_PYBOOSTMATH_CPP)):
+        ret = subprocess.call(['swig'] + SWIG_PYGSL_OPTS + ['-o', WRAPPER_PYGSL_C, WRAPPER_PYGSL_I], shell=False)
+        if ret != 0:
+           sys.exit('Failed to generate gsl extension.')
+        os.rename('gsl.py', WRAPPER_PYGSL_PY)
+        #
+        ret = subprocess.call(['swig'] + SWIG_PYBOOSTMATH_OPTS + ['-o', WRAPPER_PYBOOSTMATH_CPP, WRAPPER_PYBOOSTMATH_I], shell=False)
+        if ret != 0:
+           sys.exit('Failed to generate boost extension.')
+        os.rename('boostmath.py', WRAPPER_PYBOOSTMATH_PY)
     os.remove('swigpyrun.h')
 except OSError as e:
     sys.exit('Failed to generate wrapper file: {0}'.format(e))
@@ -332,6 +355,53 @@ LIB_GSL = [
    'gsl/min/fsolver.c',
    'gsl/min/convergence.c'
     ]
+
+
+PY_GSL = [
+    'gsl/error.c', 
+    'gsl/sys/infnan.c',
+    'gsl/sys/coerce.c',
+    'gsl/sys/fdiv.c',
+    'gsl/sys/pow_int.c',
+    'gsl/sys/fcmp.c',
+    'gsl/sys/log1p.c',
+    'gsl/sys/invhyp.c',
+    'gsl/sys/expm1.c',
+    'gsl/complex/math.c',
+    'gsl/specfunc/beta.c',
+    'gsl/specfunc/elementary.c',
+    'gsl/specfunc/erfc.c',
+    'gsl/specfunc/exp.c',
+    'gsl/specfunc/expint.c',
+    'gsl/specfunc/log.c',
+    'gsl/specfunc/psi.c',
+    'gsl/specfunc/gamma.c',
+    'gsl/specfunc/gamma_inc.c',
+    'gsl/specfunc/trig.c',
+    'gsl/specfunc/zeta.c',
+    'gsl/cdf/beta.c',
+    'gsl/cdf/betainv.c',
+    'gsl/cdf/binomial.c',
+    'gsl/cdf/gauss.c',
+    'gsl/cdf/gaussinv.c',
+    'gsl/cdf/tdist.c',
+    'gsl/cdf/tdistinv.c',
+    'gsl/cdf/exponential.c',
+    'gsl/cdf/exponentialinv.c',
+    # pdf functions for gamma, binomial, t, poisson and beta distributions are copied to gsl.i
+    # to avoid subsequent inclusion of RNG related functions.
+    #'gsl/randist/gamma.c',
+    #'gsl/randist/tdist.c',
+    #'gsl/randist/binomial.c',
+    #'gsl/randist/beta.c',
+    #'gsl/randist/poisson.c',
+    'gsl/cdf/gamma.c',
+    'gsl/cdf/gammainv.c',
+    'gsl/cdf/chisq.c',
+    'gsl/cdf/chisqinv.c',
+    'gsl/cdf/poisson.c',
+]
+
 os.system("cd src/third/libMvtnorm; make; cd -")
 CSTATGEN_MODULE = [
     Extension('{}._cstatgen'.format(NAME),
@@ -359,6 +429,16 @@ EGGLIB_MODULE = [
               include_dirs = getfn(["egglib/egglib-cpp", "egglib"], prefix = "src")
               )
 ]
+NUM_MODULE = [
+    Extension('{}._gsl'.format(NAME),
+              sources = [WRAPPER_PYGSL_C] + getfn(PY_GSL, 'src/third'),
+              include_dirs = ['src', 'src/third', 'src/third/gsl', 'src/third/gsl/specfunc']
+              ),
+    Extension('{}._boostmath'.format(NAME),
+              sources = [WRAPPER_PYBOOSTMATH_CPP],
+              include_dirs = ['src', 'src/third']
+              )
+]
 
 setup(name = NAME,
     version = VERSION,
@@ -368,5 +448,5 @@ setup(name = NAME,
     package_dir = {NAME:'src', NAME + ".egglib":'src/egglib'},
     package_data = {NAME + ".egglib":['apps.conf']},
     cmdclass = {'build_py': build_py},
-    ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE
+    ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE + NUM_MODULE
 )
