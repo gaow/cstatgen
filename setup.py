@@ -120,7 +120,7 @@ try:
         os.rename('boostmath.py', WRAPPER_PYBOOSTMATH_PY)
     #
     if (not os.path.isfile(WRAPPER_ASSOC_PY) or not os.path.isfile(WRAPPER_ASSOC_CPP) or \
-      os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in [WRAPPWER_ASSOC_I] + ASSOC_HEADER + ASSOC_CPP])):
+      os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in [WRAPPER_ASSOC_I] + ASSOC_HEADER + ASSOC_CPP])):
         ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_ASSOC_CPP, WRAPPER_ASSOC_I], shell=False)
         if ret != 0:
            sys.exit('Failed to generate assoTests extension.')
