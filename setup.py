@@ -48,7 +48,7 @@ import sys, os, subprocess, platform
 from glob import glob
 from src import NAME, VERSION
 if VERSION is None:
-    VERSION = 'REV{}'.format(subprocess.check_output('git rev-list --count HEAD', shell=True).strip())
+    VERSION = 'rev{}'.format(subprocess.check_output('cat src/.revision', shell=True).strip())
 
 if sys.platform != "linux2":
     sys.exit('{} platform is not supported.'.format(sys.platform))
