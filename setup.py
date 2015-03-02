@@ -47,6 +47,8 @@ distutils.ccompiler.CCompiler.compile=compile_parallel
 import sys, os, subprocess, platform
 from glob import glob
 from src import NAME, VERSION
+if VERSION is None:
+    VERSION = 'REV{}'.format(subprocess.check_output('git rev-list --count HEAD', shell=True).strip())
 
 if sys.platform != "linux2":
     sys.exit('{} platform is not supported.'.format(sys.platform))
