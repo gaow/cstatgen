@@ -98,8 +98,9 @@ WRAPPER_ASSOC_I = getfn('assoTests.i', "src/assoTests")
 
 # generate wrapper files
 try:
-    ret = subprocess.call(['swig', '-python', '-external-runtime', 'src/third/swigpyrun.h'], shell=False)
-    if ret != 0:
+    try:
+        ret = subprocess.call(['swig', '-python', '-external-runtime', 'src/third/swigpyrun.h'], shell=False)
+    except:
         SWIG_SUPPORT = False
         sys.stderr.write('\033[1;91mSWIG program is not avaiable. Using existing wrapper code, which might be problematic.\033[0m\n')
     else:
