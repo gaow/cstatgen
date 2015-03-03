@@ -98,18 +98,21 @@ WRAPPER_ASSOC_I = getfn('assoTests.i', "src/assoTests")
 
 # generate wrapper files
 try:
-    ret = subprocess.call(['swig', '-python', '-external-runtime', 'swigpyrun.h'], shell=False)
+    ret = subprocess.call(['swig', '-python', '-external-runtime', 'src/third/swigpyrun.h'], shell=False)
     if ret != 0:
-        sys.exit('Failed to generate swig runtime header file. Is "swig" installed?')
+        SWIG_SUPPORT = False
+        sys.stderr.write('\033[1;91mSWIG program is not avaiable. Using existing wrapper code, which might be problematic.\033[0m\n')
+    else:
+        SWIG_SUPPORT = True
     #
-    if (not os.path.isfile(WRAPPER_PY) or not os.path.isfile(WRAPPER_CPP) or \
+    if SWIG_SUPPORT and (not os.path.isfile(WRAPPER_PY) or not os.path.isfile(WRAPPER_CPP) or \
         os.path.getmtime(WRAPPER_CPP) < max([os.path.getmtime(x) for x in [WRAPPER_I] + HEADER + CPP])):
         ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_CPP, WRAPPER_I], shell=False)
         if ret != 0:
             sys.exit('Failed to generate cstatgen C++ extension.')
         os.rename('cstatgen.py', WRAPPER_PY)
     #
-    if (not os.path.isfile(WRAPPER_PYGSL_PY) or not os.path.isfile(WRAPPER_PYGSL_C) or \
+    if SWIG_SUPPORT and (not os.path.isfile(WRAPPER_PYGSL_PY) or not os.path.isfile(WRAPPER_PYGSL_C) or \
        not os.path.isfile(WRAPPER_PYBOOSTMATH_PY) or not os.path.isfile(WRAPPER_PYBOOSTMATH_CPP)):
         ret = subprocess.call(['swig'] + SWIG_PYGSL_OPTS + ['-o', WRAPPER_PYGSL_C, WRAPPER_PYGSL_I], shell=False)
         if ret != 0:
@@ -121,13 +124,12 @@ try:
            sys.exit('Failed to generate boost extension.')
         os.rename('boostmath.py', WRAPPER_PYBOOSTMATH_PY)
     #
-    if (not os.path.isfile(WRAPPER_ASSOC_PY) or not os.path.isfile(WRAPPER_ASSOC_CPP) or \
+    if SWIG_SUPPORT and (not os.path.isfile(WRAPPER_ASSOC_PY) or not os.path.isfile(WRAPPER_ASSOC_CPP) or \
       os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in [WRAPPER_ASSOC_I] + ASSOC_HEADER + ASSOC_CPP])):
         ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_ASSOC_CPP, WRAPPER_ASSOC_I], shell=False)
         if ret != 0:
            sys.exit('Failed to generate assoTests extension.')
         os.rename('assoTests.py', WRAPPER_ASSOC_PY)
-    os.rename('swigpyrun.h', 'src/assoTests/swigpyrun.h')
 except OSError as e:
     sys.exit('Failed to generate wrapper file: {0}'.format(e))
 
