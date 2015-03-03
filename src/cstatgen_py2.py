@@ -131,7 +131,6 @@ SwigPyIterator.__sub__ = new_instancemethod(_cstatgen.SwigPyIterator___sub__, No
 SwigPyIterator_swigregister = _cstatgen.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
-SHARED_PTR_DISOWN = _cstatgen.SHARED_PTR_DISOWN
 class VecInt(object):
     thisown = _swig_property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr

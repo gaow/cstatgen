@@ -3492,13 +3492,6 @@ SWIG_AsVal_ptrdiff_t (PyObject * obj, ptrdiff_t *val)
 #include <algorithm>
 
 
-SWIGINTERNINLINE PyObject*
-  SWIG_From_int  (int value)
-{
-  return PyInt_FromLong((long) value);
-}
-
-
 namespace swig {  
   template <class Type>
   struct noconst_traits {
@@ -4531,6 +4524,13 @@ SWIG_AsVal_int (PyObject * obj, int *val)
     }
   }  
   return res;
+}
+
+
+SWIGINTERNINLINE PyObject*
+  SWIG_From_int  (int value)
+{
+  return PyInt_FromLong((long) value);
 }
 
 
@@ -38290,7 +38290,6 @@ SWIG_init(void) {
   
   SWIG_InstallConstants(d,swig_const_table);
   
-  SWIG_Python_SetConstant(d, "SHARED_PTR_DISOWN",SWIG_From_int(static_cast< int >(0)));
 #if PY_VERSION_HEX >= 0x03000000
   return m;
 #else
