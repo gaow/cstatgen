@@ -57,6 +57,7 @@ public:
 			}
 		}
 		m_dc.setStrategy(DataConsolidator::IMPUTE_MEAN);
+		m_pvalue = "-9.0";
 	}
 
 
@@ -70,39 +71,43 @@ public:
 	int fit(const std::string t, bool is_binary, int n = 1000, double a = 0.05)
 	{
 		m_dc.consolidate(mp, mc, mg);
-		// if (t == "AnalyticVT") m_model = new AnalyticVT();
-		if (t == "CMATTest") m_model = std::make_shared<CMATTest>(n, a);
-		else if (t == "CMCFisherExactTest") m_model = std::make_shared<CMCFisherExactTest>();
-		else if (t == "CMCTest") m_model = std::make_shared<CMCTest>();
-		else if (t == "CMCWaldTest") m_model = std::make_shared<CMCWaldTest>();
-		else if (t == "MadsonBrowningTest") m_model = std::make_shared<MadsonBrowningTest>(n, a);
-		else if (t == "RareCoverTest") m_model = std::make_shared<RareCoverTest>(n, a);
-		else if (t == "KBACTest") m_model = std::make_shared<KBACTest>(n, a);
-		else if (t == "FpTest") m_model = std::make_shared<FpTest>();
-		else if (t == "SkatTest") m_model = std::make_shared<SkatTest>(0, a, 1, 25);
-		else if (t == "VariableThresholdPrice") m_model = std::make_shared<VariableThresholdPrice>(n, a);
-		// else if (t == "VTCMC") m_model = std::make_shared<VTCMC>();
-		else if (t == "ZegginiWaldTest") m_model = std::make_shared<ZegginiWaldTest>();
-		else if (t == "ZegginiTest") m_model = std::make_shared<ZegginiTest>();
-		else m_model = std::make_shared<SingleVariantScoreTest>();
-		if (is_binary) m_model->setBinaryOutcome();
+		std::shared_ptr<ModelFitter> model;
+		Result siteInfo;
+		// if (t == "AnalyticVT") model = new AnalyticVT();
+		if (t == "CMATTest") model = std::make_shared<CMATTest>(n, a);
+		else if (t == "CMCFisherExactTest") model = std::make_shared<CMCFisherExactTest>();
+		else if (t == "CMCTest") model = std::make_shared<CMCTest>();
+		else if (t == "CMCWaldTest") model = std::make_shared<CMCWaldTest>();
+		else if (t == "MadsonBrowningTest") model = std::make_shared<MadsonBrowningTest>(n, a);
+		else if (t == "RareCoverTest") model = std::make_shared<RareCoverTest>(n, a);
+		else if (t == "KBACTest") model = std::make_shared<KBACTest>(n, a);
+		else if (t == "FpTest") model = std::make_shared<FpTest>();
+		else if (t == "SkatTest") model = std::make_shared<SkatTest>(0, a, 1, 25);
+		else if (t == "VariableThresholdPrice") model = std::make_shared<VariableThresholdPrice>(n, a);
+		// else if (t == "VTCMC") model = std::make_shared<VTCMC>();
+		else if (t == "ZegginiWaldTest") model = std::make_shared<ZegginiWaldTest>();
+		else if (t == "ZegginiTest") model = std::make_shared<ZegginiTest>();
+		else model = std::make_shared<SingleVariantScoreTest>();
+		if (is_binary) model->setBinaryOutcome();
 		int status = 0;
 		try {
-			status = m_model->fit(&m_dc);
+			status = model->fit(&m_dc);
 		} catch (...) {
 			return -1;
 		}
-		m_model->writeOutput(NULL, m_siteInfo);
+		//
+		model->writeOutput(NULL, siteInfo);
+		if (model->getResult()["PvalueTwoSide"] != "NA")
+			m_pvalue = model->getResult()["PvalueTwoSide"];
+		else
+			m_pvalue = model->getResult()["Pvalue"];
 		return status;
 	}
 
 
 	std::string pvalue()
 	{
-		if (m_model->getResult()["PvalueTwoSide"] != "NA")
-			return m_model->getResult()["PvalueTwoSide"];
-		else
-			return m_model->getResult()["Pvalue"];
+		return m_pvalue;
 	}
 
 
@@ -111,8 +116,7 @@ private:
 	Matrix mp;
 	Matrix mc;
 	DataConsolidator m_dc;
-	std::shared_ptr<ModelFitter> m_model;
-	Result m_siteInfo;
+	std::string m_pvalue;
 
 	std::vector<std::vector<double> > m_PruneByMAF(const std::vector<std::vector<double> > & genotype_all,
 	                                               double maf_lower, double maf_upper)
