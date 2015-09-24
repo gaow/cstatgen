@@ -61,8 +61,12 @@ public:
 
 	~RVTester()
 	{
-		if (m_model) delete m_model;
+		// if (m_model) delete m_model;
+		// Have to commit this crime, instead of the line above, because somehow swig cannot properly delete m_model
+		// Thus here there is a memory leak but it should be ok ...
+		if (m_model) m_model->reset();
 	};
+
 	// DataConsolidator does not allow for copying
 	// RVTester * clone() const { return new RVTester(*this); }
 	int fit(const std::string t, bool is_binary, int n = 1000, double a = 0.05)
