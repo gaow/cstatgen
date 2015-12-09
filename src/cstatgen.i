@@ -46,10 +46,11 @@
 
 %newobject *::clone;
 
-%include "stl.i"
-%include "std_vector.i"
-%include "std_string.i"
-%include "std_map.i"
+%include <stl.i>
+%include <std_vector.i>
+%include <std_string.i>
+%include <std_map.i>
+%include <std_shared_ptr.i>
 
 %template(VecInt) std::vector<int>; 
 %template(VecDouble) std::vector<double>;

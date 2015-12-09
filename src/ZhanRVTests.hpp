@@ -15,6 +15,7 @@
 #include <vector>
 #include <string>
 #include <numeric>      // std::accumulate
+#include <memory>
 
 namespace cstatgen {
 
@@ -59,13 +60,7 @@ public:
 	}
 
 
-	~RVTester()
-	{
-		// if (m_model) delete m_model;
-		// Have to commit this crime, instead of the line above, because somehow swig cannot properly delete m_model
-		// Thus here there is a memory leak but it should be ok ...
-		if (m_model) m_model->reset();
-	};
+	~RVTester(){};
 
 	// DataConsolidator does not allow for copying
 	// RVTester * clone() const { return new RVTester(*this); }
@@ -73,20 +68,20 @@ public:
 	{
 		m_dc.consolidate(mp, mc, mg);
 		// if (t == "AnalyticVT") m_model = new AnalyticVT();
-		if (t == "CMATTest") m_model = new CMATTest(n, a);
-		else if (t == "CMCFisherExactTest") m_model = new CMCFisherExactTest();
-		else if (t == "CMCTest") m_model = new CMCTest();
-		else if (t == "CMCWaldTest") m_model = new CMCWaldTest();
-		else if (t == "MadsonBrowningTest") m_model = new MadsonBrowningTest(n, a);
-		else if (t == "RareCoverTest") m_model = new RareCoverTest(n, a);
-		else if (t == "KBACTest") m_model = new KBACTest(n, a);
-		else if (t == "FpTest") m_model = new FpTest();
-		else if (t == "SkatTest") m_model = new SkatTest(0, a, 1, 25);
-		else if (t == "VariableThresholdPrice") m_model = new VariableThresholdPrice(n, a);
-		// else if (t == "VTCMC") m_model = new VTCMC();
-		else if (t == "ZegginiWaldTest") m_model = new ZegginiWaldTest();
-		else if (t == "ZegginiTest") m_model = new ZegginiTest();
-		else m_model = new SingleVariantScoreTest();
+		if (t == "CMATTest") m_model = std::shared_ptr<ModelFitter>(new CMATTest(n, a));
+		else if (t == "CMCFisherExactTest") m_model = std::shared_ptr<ModelFitter>(new CMCFisherExactTest());
+		else if (t == "CMCTest") m_model = std::shared_ptr<ModelFitter>(new CMCTest());
+		else if (t == "CMCWaldTest") m_model = std::shared_ptr<ModelFitter>(new CMCWaldTest());
+		else if (t == "MadsonBrowningTest") m_model = std::shared_ptr<ModelFitter>(new MadsonBrowningTest(n, a));
+		else if (t == "RareCoverTest") m_model = std::shared_ptr<ModelFitter>(new RareCoverTest(n, a));
+		else if (t == "KBACTest") m_model = std::shared_ptr<ModelFitter>(new KBACTest(n, a));
+		else if (t == "FpTest") m_model = std::shared_ptr<ModelFitter>(new FpTest());
+		else if (t == "SkatTest") m_model = std::shared_ptr<ModelFitter>(new SkatTest(0, a, 1, 25));
+		else if (t == "VariableThresholdPrice") m_model = std::shared_ptr<ModelFitter>(new VariableThresholdPrice(n, a));
+		// else if (t == "VTCMC") m_model = std::shared_ptr<ModelFitter>(new VTCMC();
+		else if (t == "ZegginiWaldTest") m_model = std::shared_ptr<ModelFitter>(new ZegginiWaldTest());
+		else if (t == "ZegginiTest") m_model = std::shared_ptr<ModelFitter>(new ZegginiTest());
+		else m_model = std::shared_ptr<ModelFitter>(new SingleVariantScoreTest());
 		if (is_binary) m_model->setBinaryOutcome();
 		int status = 0;
 		try {
@@ -113,7 +108,7 @@ private:
 	Matrix mp;
 	Matrix mc;
 	DataConsolidator m_dc;
-	ModelFitter * m_model;
+	std::shared_ptr<ModelFitter> m_model;
 	Result m_siteInfo;
 
 	std::vector<std::vector<double> > m_PruneByMAF(const std::vector<std::vector<double> > & genotype_all,
