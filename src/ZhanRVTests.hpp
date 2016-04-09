@@ -1,7 +1,7 @@
 // $File: ZhanRVTests.hpp $
 // $LastChangedDate:  $
 // $Rev:  $
-// Copyright (c) 2014, Gao Wang <ewanggao@gmail.com>
+// Copyright (c) 2014, Gao Wang <gaow@uchicago.edu>
 // GNU General Public License (http://www.gnu.org/licenses/gpl.html)
 
 #ifndef _ZHANRV_HPP_
