@@ -1,20 +1,20 @@
-////////////////////////////////////////////////////////////////////// 
-// pdf/PDF.cpp 
+//////////////////////////////////////////////////////////////////////
+// pdf/PDF.cpp
 // (c) 2000-2007 Goncalo Abecasis
-// 
-// This file is distributed as part of the MERLIN source code package   
-// and may not be redistributed in any form, without prior written    
-// permission from the author. Permission is granted for you to       
-// modify this file for your own personal use, but modified versions  
-// must retain this copyright notice and must not be distributed.     
-// 
-// Permission is granted for you to use this file to compile MERLIN.    
-// 
-// All computer programs have bugs. Use this file at your own risk.   
-// 
+//
+// This file is distributed as part of the MERLIN source code package
+// and may not be redistributed in any form, without prior written
+// permission from the author. Permission is granted for you to
+// modify this file for your own personal use, but modified versions
+// must retain this copyright notice and must not be distributed.
+//
+// Permission is granted for you to use this file to compile MERLIN.
+//
+// All computer programs have bugs. Use this file at your own risk.
+//
 // Tuesday December 18, 2007
-// 
- 
+//
+
 #include "PDF.h"
 #include "Error.h"
 
@@ -41,7 +41,7 @@ void PDF::OpenFile(const char * name)
    char signature[] = {'%', '%', (char) ('G' + 128), (char) ('R' + 128), (char) ('A' + 128), '\n', '\n', 0};
 
    fprintf(file, "%%PDF-1.4\n");
-   fprintf(file, signature);
+   fprintf(file, "%s", signature);
    }
 
 void PDF::CloseFile()
@@ -388,7 +388,3 @@ void PDF::LineBreak()
    {
    fprintf(file, "\n");
    }
- 
- 
- 
- 

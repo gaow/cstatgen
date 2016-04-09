@@ -50,7 +50,7 @@ from src import NAME, VERSION
 if VERSION is None:
     VERSION = 'rev{}'.format(subprocess.check_output('cat src/.revision', shell=True).strip())
 
-if sys.platform != "linux":
+if sys.platform != "linux2":
     sys.exit('{} platform is not supported.'.format(sys.platform))
 
 
