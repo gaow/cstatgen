@@ -43,14 +43,14 @@ def compile_parallel(
 
 import distutils.ccompiler
 distutils.ccompiler.CCompiler.compile=compile_parallel
-   
+
 import sys, os, subprocess, platform
 from glob import glob
 from src import NAME, VERSION
 if VERSION is None:
     VERSION = 'rev{}'.format(subprocess.check_output('cat src/.revision', shell=True).strip())
 
-if sys.platform != "linux2":
+if sys.platform != "linux":
     sys.exit('{} platform is not supported.'.format(sys.platform))
 
 
@@ -60,7 +60,7 @@ try:
         os.environ['CC'] = 'ccache clang -Qunused-arguments' if platform.system() == 'Darwin' else 'ccache gcc'
 except OSError:
     pass
-    
+
 SWIG_OPTS = ['-c++', '-python', '-O', '-shadow', '-keyword',
              '-w-511', '-w-509', '-outdir', '.']
 SWIG_PYGSL_OPTS = ['-python', '-keyword', '-outdir', '.']
@@ -369,7 +369,7 @@ LIB_GSL = [
 
 
 PY_GSL = [
-    'gsl/error.c', 
+    'gsl/error.c',
     'gsl/sys/infnan.c',
     'gsl/sys/coerce.c',
     'gsl/sys/fdiv.c',
