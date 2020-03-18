@@ -1,9 +1,10 @@
 // $File: HaplotypingUtils.cpp $
 // $LastChangedDate:  $
 // $Rev:  $
-// Copyright (c) 2014, Gao Wang <gaow@uchicago.edu>
+// Copyright (c) 2014, Gao Wang <ewanggao@gmail.com>
 // GNU General Public License (http://www.gnu.org/licenses/gpl.html)
 #include "HaplotypingUtils.hpp"
+#include "MerlinCluster.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -67,31 +68,62 @@ void DataLoader::__AddPerson(Pedigree * & ped, const VecString & fam_info,
 	for (unsigned i = 0; i < names.size(); ++i) {
 		int markerID = ped->GetMarkerID(names[i].c_str());
 		// convert char's face value to int
-		ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].one = (int)genotypes[i][0] - 48;
-		ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].two = (int)genotypes[i][1] - 48;
-		// String c1(genotypes[i][0]);
-		// String c2(genotypes[i][1]);
-		// Alleles new_genotype;
-		// new_genotype[0] = ped.LoadAllele(ped.GetMarkerInfo(markerID), c1);
-		// new_genotype[1] = ped.LoadAllele(ped.GetMarkerInfo(markerID), c2);
-		// if (new_genotype.isKnown())
-		// ped.FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID] = new_genotype;
+		//ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].one = (int)genotypes[i][0] - 48;
+		//ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID].two = (int)genotypes[i][1] - 48;
+		String c1(genotypes[i][0]);
+		String c2(genotypes[i][1]);
+		Alleles new_genotype;
+		new_genotype[0] = ped->LoadAllele(ped->GetMarkerInfo(markerID), c1);
+		new_genotype[1] = ped->LoadAllele(ped->GetMarkerInfo(markerID), c2);
+		if (new_genotype.isKnown())
+			ped->FindPerson(fam_info[0].c_str(), fam_info[1].c_str())->markers[markerID] = new_genotype;
+
 	}
 }
 
 
-void GeneticHaplotyper::Apply(Pedigree * & ped)
+void GeneticHaplotyper::Apply(Pedigree * & ped, double Rsq, const char * logname, bool reorder)
 {
 	data.resize(0);
 
 	if (__chrom == "X") ped->chromosomeX = true;
+	std::string a_freq_output = "-allele-freqs.log";
+	a_freq_output = logname+a_freq_output;
+	const char *a_freq_out = a_freq_output.c_str();
+	MarkerCluster::EstimateAlleleFrequencies(*ped,a_freq_out,reorder);
+	for (int i = 0; i < ped->markerCount; i++)
+	{
+		MarkerInfo * info = ped->GetMarkerInfo(i);
+		std::cout<<ped->markerNames[i]<<": ";
+		for (int j=0; j<info->freq.Length(); j++)
+			std::cout<<info->freq[j]<<" ";
+		std::cout<<"\ntotal familyCount:"<<ped->familyCount<<std::endl;
+	}
 	//
-	ped->EstimateFrequencies(0, true);
+	//ped->EstimateFrequencies(0, true);
 	// recode alleles so more frequent alleles have lower allele numbers internally
-	ped->LumpAlleles(0.0);
+	//ped->LumpAlleles(0.0);
 	// remove uninformative family or individuals
 	// !! Do not trim here, because if a family is uninformative we can report as is
 	// ped.Trim(true);
+
+	// cluster markers in LD by Linhai
+	if (Rsq>0){
+		MarkerClusters clusters;
+		printf("ClusterByRsquared\n");
+		clusters.ClusterByRsquared(*ped, Rsq);
+		printf("EstimateFrequencies\n");
+		std::string freq_output = "-freqs.log";
+		std::string cluster_output = "-cluster.log";
+		freq_output = logname+freq_output;
+		cluster_output = logname+cluster_output;
+		const char *freq_out = freq_output.c_str();
+		const char *cluster_out = cluster_output.c_str();
+		clusters.EstimateFrequencies(*ped,freq_out);
+		printf("FinishOutput\n");
+		clusters.FinishOutput();
+		int count = clusters.SaveToFile(cluster_out);
+	}
 	FamilyAnalysis engine(*ped);
 	// activate haplotyping options
 	engine.bestHaplotype = true;
@@ -389,7 +421,8 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 			for (unsigned i = 2; i < haploVecs[f][p].size(); i++) {
 				// recombination event detected
 				if (!hasEnding(haploVecs[f][p][i], ":") &&
-				    !hasEnding(haploVecs[f][p][i], "|")) {
+				    !hasEnding(haploVecs[f][p][i], "|") &&
+					i != 2) {
 					__recombCount += 1;
 					if (std::find(recombPositions.begin(), recombPositions.end(), i) == recombPositions.end()) {
 						recombPositions.push_back(i);
@@ -407,13 +440,16 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 		//
 		VecVecString haploStrs(haploVecs[f].size());
 		VecVecString patterns(recombPositions.size() + 1);
+		VecVecString found_patterns(haploVecs[f].size());
 		for (unsigned p = 0; p < haploVecs[f].size(); p++) {
 			for (unsigned r = 0; r <= recombPositions.size(); r++) {
 				std::string haplotype = collapse(haploVecs[f][p],
 					(r > 0) ? recombPositions[r - 1] : 2,
 					(r == recombPositions.size()) ? haploVecs[f][p].size() : recombPositions[r],
 					__size, markerIdxClusters[f]);
-				if (haplotype != "?" &&
+				//std::clog<<p<<'\t'<<r<<'\t'<<"hap:"<<haplotype<<std::endl;
+				//if (haplotype != "?" &&
+				if (haplotype.find("?") == std::string::npos &&
 				    std::find(patterns[r].begin(), patterns[r].end(), haplotype) == patterns[r].end()) {
 					patterns[r].push_back(haplotype);
 				}
@@ -426,10 +462,14 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 		for (unsigned p = 0; p < haploVecs[f].size(); p++) {
 			// convert one haplotype's all recomb segments to a single super marker
 			for (unsigned r = 0; r <= recombPositions.size(); r++) {
-				std::sort(patterns[r].begin(), patterns[r].end());
-				if (haploStrs[p][r].find("?") != std::string::npos) haploStrs[p][r] = "0";
-				else haploStrs[p][r] = std::to_string(std::find(patterns[r].begin(), patterns[r].end(),
-							haploStrs[p][r]) - patterns[r].begin() + 1);
+				//std::clog << p<<'\t'<<r<<'\t'<<haploStrs[p][r]<< std::endl;
+				std::sort(patterns[r].begin(), patterns[r].end(),[](std::string a, std::string b){return std::count(a.begin(), a.end(), '2') < std::count(b.begin(), b.end(), '2');});
+				if (haploStrs[p][r].find("?") != std::string::npos) {haploStrs[p][r] = "0"; found_patterns[p].push_back("NULL");}
+				else {
+					int pattern_idx=std::find(patterns[r].begin(), patterns[r].end(),haploStrs[p][r])-patterns[r].begin();
+					haploStrs[p][r] = std::to_string(pattern_idx + 1);
+				        found_patterns[p].push_back(patterns[r][pattern_idx]);
+					}
 			}
 			// push combined haplotype to data
 			if (!__data.size() || (__data.back()[0] != haploVecs[f][p][0] ||
@@ -438,6 +478,7 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 				__data.push_back(newperson);
 			}
 			__data[__data.size() - 1].push_back(join(haploStrs[p], ","));
+			__data[__data.size() - 1].push_back(join(found_patterns[p], ","));
 		}
 		//
 		// calculate haplotype pattern frequency

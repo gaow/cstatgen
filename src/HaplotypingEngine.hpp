@@ -1,7 +1,7 @@
 // $File: HaplotypingEngine.hpp $
 // $LastChangedDate:  $
 // $Rev:  $
-// Copyright (c) 2014, Gao Wang <gaow@uchicago.edu>
+// Copyright (c) 2014, Gao Wang <ewanggao@gmail.com>
 // GNU General Public License (http://www.gnu.org/licenses/gpl.html)
 #ifndef _HPE_HPP_
 #define _HPE_HPP_
@@ -70,6 +70,7 @@ public:
 	// positionAdjustment: adjust physical distance to map distance, 1 / 100 million
 	VecVecVecString Execute(const std::string & chrom, const VecString & marker_names,
 	                        const VecInt & marker_positions, const VecVecString & samples,
+							double Rsq, const char* logname, bool reorder=true,
 	                        double positionAdjustment = 1E-8)
 	{
 		reset_ped(*__ped);
@@ -81,7 +82,7 @@ public:
 			mc.Apply(__ped);
 			__mendelianErrorCount += mc.CountMendelianErrors();
 			GeneticHaplotyper gh(chrom);
-			gh.Apply(__ped);
+			gh.Apply(__ped,Rsq,logname,reorder);
 			if (__verbose) gh.Print();
 			return gh.data;
 			// } catch (...) {

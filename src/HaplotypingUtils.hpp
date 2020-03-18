@@ -1,7 +1,7 @@
 // $File: HaplotypingUtils.hpp $
 // $LastChangedDate:  $
 // $Rev:  $
-// Copyright (c) 2014, Gao Wang <gaow@uchicago.edu>
+// Copyright (c) 2014, Gao Wang <ewanggao@gmail.com>
 // GNU General Public License (http://www.gnu.org/licenses/gpl.html)
 
 #ifndef _HTPU_HPP_
@@ -80,7 +80,7 @@ public:
 	// [family][sample][haplotypes]
 	VecVecVecString data;
 	// Apply haplotyping. Missing data are imputed as possible
-	void Apply(Pedigree * & ped);
+	void Apply(Pedigree * & ped, double Rsq, const char * logname, bool reorder=true);
 
 	void Print();
 
