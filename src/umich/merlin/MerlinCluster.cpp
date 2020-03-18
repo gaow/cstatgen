@@ -1,20 +1,20 @@
-////////////////////////////////////////////////////////////////////// 
-// merlin/MerlinCluster.cpp 
+//////////////////////////////////////////////////////////////////////
+// merlin/MerlinCluster.cpp
 // (c) 2000-2007 Goncalo Abecasis
-// 
-// This file is distributed as part of the MERLIN source code package   
-// and may not be redistributed in any form, without prior written    
-// permission from the author. Permission is granted for you to       
-// modify this file for your own personal use, but modified versions  
-// must retain this copyright notice and must not be distributed.     
-// 
-// Permission is granted for you to use this file to compile MERLIN.    
-// 
-// All computer programs have bugs. Use this file at your own risk.   
-// 
+//
+// This file is distributed as part of the MERLIN source code package
+// and may not be redistributed in any form, without prior written
+// permission from the author. Permission is granted for you to
+// modify this file for your own personal use, but modified versions
+// must retain this copyright notice and must not be distributed.
+//
+// Permission is granted for you to use this file to compile MERLIN.
+//
+// All computer programs have bugs. Use this file at your own risk.
+//
 // Tuesday December 18, 2007
-// 
- 
+//
+
 #include "MerlinCluster.h"
 #include "MerlinCore.h"
 #include "MathConstant.h"
@@ -117,9 +117,7 @@ bool MarkerCluster::EstimateFrequencies(Pedigree & ped, String * messages)
    // Keep user specified frequencies, if these are available
    if (freqs.Length() != 0)
       return false;
-
    UpdateAlleleCounts();
-
    FamilyHaplos engine;
    HaplotypeSets  sets;
 
@@ -148,7 +146,6 @@ bool MarkerCluster::EstimateFrequencies(Pedigree & ped, String * messages)
          sets.discarded.Last().printf("%s -  SKIPPED: >%d megabytes needed",
                        (const char *) ped.families[f]->famid, problem.memory_request);
          }
-
    // Don't try to estimate frequencies if there are no informative families
    if (sets.Length() == 0)
       error("All families have an obligate recombinant or Mendelian inconsistency\n"
@@ -207,7 +204,7 @@ bool MarkerCluster::EstimateFrequencies(Pedigree & ped, String * messages)
       SparseLikelihood likelihood;
 
       likelihood.Initialize(alleleCounts);
-      likelihood.EM(&sets, true /* quiet */);
+      likelihood.EM(&sets);//, true /* quiet */);
       likelihood.RetrieveHaplotypes(alleles, freqs, 1e-8);
 
       #ifdef __DEBUG__
@@ -868,7 +865,7 @@ void MarkerClusters::ClusterByRsquared(Pedigree & ped, double threshold)
             #ifdef __DEBUG__
                likelihood.Print(1e-5);
             #endif
-
+            // std::cout<<clusterStart<<"-"<<Pedigree::GetMarkerInfo(markers[clusterStart])->position<<","<<clusterEnd<<"-"<<Pedigree::GetMarkerInfo(markers[clusterEnd])->position<<":"<<rsq<<std::endl;
             if (rsq >= threshold)
                {
                // When we identify a potential cluster, check the number of
@@ -940,7 +937,7 @@ void MarkerClusters::AdjustPositions(IntArray & markers)
    for (int j = 0; j < markers.Length(); j++)
       {
       MarkerInfo * info = Pedigree::GetMarkerInfo(markers[j]);
-      
+
       // Assign each marker to the cluster midpoint position
       info->position = clusterPosition;
       info->positionMale = clusterPosMale;
@@ -948,14 +945,14 @@ void MarkerClusters::AdjustPositions(IntArray & markers)
 
       info->UpdateSerial();
       }
-   }   
+   }
 
 void MarkerClusters::CreateCluster(IntArray & markers, int clusterStart, int clusterEnd)
    {
    // Allocate a new cluster
    head = new MarkerClusterList(head);
    count++;
-   
+
    // Calculate the midpoint for the cluster of markers
    MarkerInfo * first = Pedigree::GetMarkerInfo(markers[clusterStart]);
    MarkerInfo * last  = Pedigree::GetMarkerInfo(markers[clusterEnd]);
@@ -970,7 +967,7 @@ void MarkerClusters::CreateCluster(IntArray & markers, int clusterStart, int clu
       int marker = markers[j];
 
       MarkerInfo * info = Pedigree::GetMarkerInfo(markers[j]);
-      
+
       // Assign each marker to the cluster midpoint position
       info->position = clusterPosition;
       info->positionMale = clusterPosMale;
@@ -991,13 +988,13 @@ void MarkerClusters::FinishOutput()
    haveOutput = false;
    }
 
-void MarkerCluster::EstimateAlleleFrequencies(Pedigree & ped, const char * logname)
+void MarkerCluster::EstimateAlleleFrequencies(Pedigree & ped, const char * logname, bool reorder)
    {
    // Catch error and warning messages during frequency estimation
    String messages;
 
    // List alleles in the pedigree
-   ped.LumpAlleles(0.0);
+   ped.LumpAlleles(0.0,reorder);
 
    // Variables used for pretty output
    bool estimated = false;
@@ -1009,7 +1006,7 @@ void MarkerCluster::EstimateAlleleFrequencies(Pedigree & ped, const char * logna
    for (int i = 0; i < Pedigree::markerCount; i++)
       {
       if (!estimated)
-         printf("Estimating allele frequencies... [using maximum likelihood]\n   "),
+         printf("Estimating allele frequencies... [using maximum likelihood]%d\n   ",i),
          estimated = true;
 
       // If there are no alleles, create a dummy allele
@@ -1030,6 +1027,8 @@ void MarkerCluster::EstimateAlleleFrequencies(Pedigree & ped, const char * logna
       marker.EstimateFrequencies(ped, &messages);
       marker.UpdateAlleleFrequencies();
 
+	  //std::cout<<info->freq[0]<<" "<<info->freq[1]<<" "<<info->freq[2]<<std::endl;
+	  //std::cout<<"founders: "<<ped.families[0]->founders<<std::endl;
       if (!condensed)
          {
          if ( line + Pedigree::markerNames[marker.markerIds[0]].Length() + 1 > 79)
@@ -1065,4 +1064,4 @@ void MarkerCluster::EstimateAlleleFrequencies(Pedigree & ped, const char * logna
       printf(condensed ? "\nDone estimating frequencies for %d markers\n\n" : "\n\n",
              Pedigree::markerCount);
    }
- 
+

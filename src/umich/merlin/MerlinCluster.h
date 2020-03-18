@@ -1,20 +1,20 @@
-////////////////////////////////////////////////////////////////////// 
-// merlin/MerlinCluster.h 
+//////////////////////////////////////////////////////////////////////
+// merlin/MerlinCluster.h
 // (c) 2000-2007 Goncalo Abecasis
-// 
-// This file is distributed as part of the MERLIN source code package   
-// and may not be redistributed in any form, without prior written    
-// permission from the author. Permission is granted for you to       
-// modify this file for your own personal use, but modified versions  
-// must retain this copyright notice and must not be distributed.     
-// 
-// Permission is granted for you to use this file to compile MERLIN.    
-// 
-// All computer programs have bugs. Use this file at your own risk.   
-// 
+//
+// This file is distributed as part of the MERLIN source code package
+// and may not be redistributed in any form, without prior written
+// permission from the author. Permission is granted for you to
+// modify this file for your own personal use, but modified versions
+// must retain this copyright notice and must not be distributed.
+//
+// Permission is granted for you to use this file to compile MERLIN.
+//
+// All computer programs have bugs. Use this file at your own risk.
+//
 // Tuesday December 18, 2007
-// 
- 
+//
+
 #ifndef __MERLINCLUSTER_H__
 #define __MERLINCLUSTER_H__
 
@@ -57,7 +57,7 @@ class MarkerCluster
       // Estimate allele frequencies this cluster
       bool EstimateFrequencies(Pedigree & ped, String * messages);
       void UpdateAlleleFrequencies();
-      static void EstimateAlleleFrequencies(Pedigree & ped, const char * logname);
+      static void EstimateAlleleFrequencies(Pedigree & ped, const char * logname, bool reorder=true);
 
       // Score likelihoods of observed genotypes for a particular cluster
       // using the current set of haplotype frequency estimates
@@ -139,4 +139,4 @@ extern MarkerClusters clusters;
 
 #endif
 
- 
+
