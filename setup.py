@@ -50,10 +50,6 @@ from src import NAME, VERSION
 if VERSION is None:
     VERSION = 'rev{}'.format(subprocess.check_output('cat src/.revision', shell=True).strip())
 
-#if sys.platform != "linux2":
-#    sys.exit('{} platform is not supported.'.format(sys.platform))
-
-
 # use ccache to speed up build
 try:
     if subprocess.call(['ccache'], stderr = open(os.devnull, "w")):
@@ -451,6 +447,9 @@ ASSOTESTS_MODULE = [
               )
 ]
 
+packages = [NAME]
+package_data = {}
+ext_modules = CSTATGEN_MODULE + NUM_MODULE + ASSOTESTS_MODULE
 if sys.version_info.major == 2:
     compile_args_egglib = ["-O3", "-std=c++11", "-UHAVE_LIBBPP_SEQ", "-UHAVE_LIBBPP_CORE", "-UHAVE_LIBGSLCBLAS"]
     # exclude two modules due to lack of gsl and bio++; egglib should have used macro to control for it, though
@@ -465,25 +464,17 @@ if sys.version_info.major == 2:
                   include_dirs = getfn(["egglib/egglib-cpp", "egglib"], prefix = "src")
                   )
     ]
-    setup(name = NAME,
-        version = VERSION,
-        description = "Gao Wang's statgen library",
-        author = "Gao Wang",
-        packages = [NAME],NAME + ".egglib"],
-        package_dir = {NAME:'src'},
-        package_data = {NAME + ".egglib":['apps.conf']},
-        cmdclass = {'build_py': build_py},
-        ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE + NUM_MODULE + ASSOTESTS_MODULE
-    )
-else:
-    setup(name = NAME,
-        version = VERSION,
-        description = "Gao Wang's statgen library",
-        author = "Gao Wang",
-        packages = [NAME],# NAME + ".egglib"],
-        package_dir = {NAME:'src'},
-        #package_data = {NAME + ".egglib":['apps.conf']},
-        cmdclass = {'build_py': build_py},
-        #ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE + NUM_MODULE + ASSOTESTS_MODULE
-        ext_modules = CSTATGEN_MODULE + NUM_MODULE + ASSOTESTS_MODULE
-    )
+    packages += [NAME + ".egglib"]
+    package_data[NAME + ".egglib"]=['apps.conf']
+    ext_modules += EGGLIB_MODULE
+
+setup(name = NAME,
+    version = VERSION,
+    description = "Gao Wang's statgen library",
+    author = "Gao Wang",
+    package_dir = {NAME:'src'},
+    cmdclass = {'build_py': build_py},
+    packages = packages,
+    package_data = package_data,
+    ext_modules = ext_modules
+)
