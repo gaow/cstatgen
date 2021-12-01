@@ -80,7 +80,7 @@ public:
     /// Any previous values in the buffer will be deleted.
     /// \param bufferSize number of bytes to read/buffer at a time,
     /// turn off read buffering by setting bufferSize = 1;
-    inline void bufferReads(unsigned int bufferSize = DEFAULT_BUFFER_SIZE)
+    inline void bufferReads(int bufferSize = DEFAULT_BUFFER_SIZE)
     {
         // If the buffer size is the same, do nothing.
         if(bufferSize == myAllocatedBufferSize)
@@ -150,14 +150,14 @@ public:
     /// \return number of bytes read, if it is not equal to size,
     /// there was either an error or the end of the file was reached, use
     /// ifeof to determine which case it was.
-    inline int ifread(void * buffer, unsigned int size)
+    inline int ifread(void * buffer, int size)
     {
         // There are 2 cases:
         //  1) There are already size available bytes in buffer.
         //  2) There are not size bytes in buffer.
 
         // Determine the number of available bytes in the buffer.
-        unsigned int availableBytes = myCurrentBufferSize - myBufferIndex;
+        int availableBytes = myCurrentBufferSize - myBufferIndex;
         int returnSize = 0;
 
         // Case 1: There are already size available bytes in buffer.
@@ -184,7 +184,7 @@ public:
             // Increment myBufferIndex  by what was read.
             myBufferIndex += availableBytes;
 
-            unsigned int remainingSize = size - availableBytes;
+            int remainingSize = size - availableBytes;
 
             // Check if the remaining size is more or less than the
             // max buffer size.
@@ -408,7 +408,7 @@ public:
     /// \param size number of bytes to write
     /// \return number of bytes written
     /// We do not buffer the write call, so just leave this as normal.
-    inline unsigned int ifwrite(const void * buffer, unsigned int size)
+    inline int ifwrite(const void * buffer, int size)
     {
         if (myFileTypePtr == NULL)
         {
@@ -502,7 +502,7 @@ protected:
     // Read into a buffer from the file.  Since the buffer is passed in and
     // this would bypass the myFileBuffer used by this class, this method must
     // be protected.
-    inline int readFromFile(void * buffer, unsigned int size)
+    inline int readFromFile(void * buffer, int size)
     {
         // If no myFileTypePtr, return 0 - nothing read.
         if (myFileTypePtr == NULL)
@@ -523,12 +523,12 @@ protected:
 #endif
 
     // The size of the buffer used by this class.
-    static const unsigned int DEFAULT_BUFFER_SIZE = 65536;
+    static const int DEFAULT_BUFFER_SIZE = 65536;
 
     // Pointer to a class that interfaces with different file types.
     FileType* myFileTypePtr;
 
-    unsigned int myAllocatedBufferSize;
+    int myAllocatedBufferSize;
 
     // Buffer used to do large reads rather than 1 by 1 character reads
     // from the file.  The class is then managed to iterate through the buffer.
@@ -597,7 +597,7 @@ inline int ifclose(IFILE &file)
 /// data into.
 /// \param size number of bytes to be read
 /// \return number of bytes read
-inline unsigned int ifread(IFILE file, void * buffer, unsigned int size)
+inline int ifread(IFILE file, void * buffer, int size)
 {
     if(file == NULL)
     {
@@ -666,7 +666,7 @@ inline int ifeof(IFILE file)
 /// \param buffer buffer containing size bytes to write to the file.
 /// \param size number of bytes to write
 /// \return number of bytes written
-inline unsigned int ifwrite(IFILE file, const void * buffer, unsigned int size)
+inline int ifwrite(IFILE file, const void * buffer, int size)
 {
     if(file == NULL)
     {
@@ -731,8 +731,8 @@ inline IFILE operator >> (IFILE stream, std::string &str)
 /// \param str string containing what should be written to the file.
 inline InputFile& operator << (InputFile& stream, const std::string& str)
 {
-    unsigned int numExpected = str.length();
-    unsigned int numWritten = 
+    int numExpected = str.length();
+    int numWritten = 
         stream.ifwrite(str.c_str(), numExpected);
     if(numExpected != numWritten)
     {
@@ -748,8 +748,8 @@ inline InputFile& operator << (InputFile& stream, const std::string& str)
 /// \param str string containing what should be written to the file.
 inline InputFile& operator << (InputFile& stream, const char* str)
 {
-    unsigned int numExpected = strlen(str);
-    unsigned int numWritten = 
+    int numExpected = strlen(str);
+    int numWritten = 
         stream.ifwrite(str, numExpected);
     if(numExpected != numWritten)
     {
@@ -774,14 +774,14 @@ InputFile& operator << (InputFile& stream, int num);
 /// Write to a file using streaming.
 /// \param stream file to write to - IFILE is a pointer to an InputFile object
 /// \param num number that should be written to the file.
-InputFile& operator << (InputFile& stream, unsigned int num);
+InputFile& operator << (InputFile& stream, int num);
 
 /// Write to a file using streaming.
 /// \param stream file to write to - IFILE is a pointer to an InputFile object
 /// \param ch character that should be written to the file.
 inline InputFile& operator << (InputFile& stream, char ch)
 {
-    unsigned int numWritten = 
+    int numWritten = 
         stream.ifwrite(&ch, 1);
     if(1 != numWritten)
     {

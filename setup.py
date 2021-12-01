@@ -7,9 +7,9 @@
 from distutils.core import setup, Extension
 # from distutils.dep_util import newer
 try:
-   from distutils.command.build_py import build_py_2to3 as build_py
+    from distutils.command.build_py import build_py_2to3 as build_py
 except ImportError:
-   from distutils.command.build_py import build_py
+    from distutils.command.build_py import build_py
 
 # monkey-patch for parallel compilation
 import multiprocessing, multiprocessing.pool
@@ -49,10 +49,6 @@ from glob import glob
 from src import NAME, VERSION
 if VERSION is None:
     VERSION = 'rev{}'.format(subprocess.check_output('cat src/.revision', shell=True).strip())
-
-if sys.platform != "linux2":
-    sys.exit('{} platform is not supported.'.format(sys.platform))
-
 
 # use ccache to speed up build
 try:
@@ -430,20 +426,7 @@ CSTATGEN_MODULE = [
                                     ["src", "src/third"]
               )
 ]
-#
-compile_args_egglib = ["-O3", "-std=c++11", "-UHAVE_LIBBPP_SEQ", "-UHAVE_LIBBPP_CORE", "-UHAVE_LIBGSLCBLAS"]
-# exclude two modules due to lack of gsl and bio++; egglib should have used macro to control for it, though
-EGGLIB_FILES = [x for x in getfn("egglib-cpp/*.cpp", prefix = "src/egglib") if not (x.endswith("ABC.cpp") or x.endswith("BppDiversity.cpp"))]
-EGGLIB_MODULE = [
-    Extension('_egglib_binding',
-              sources = ["src/egglib/egglib_binding.cpp"] + EGGLIB_FILES,
-              extra_compile_args = compile_args_egglib,
-    	      extra_link_args = link_args,
-              libraries = libs,
-              library_dirs = [],
-              include_dirs = getfn(["egglib/egglib-cpp", "egglib"], prefix = "src")
-              )
-]
+#    
 NUM_MODULE = [
     Extension('{}._gsl'.format(NAME),
               sources = [WRAPPER_PYGSL_C] + getfn(PY_GSL, 'src/third'),
@@ -464,13 +447,34 @@ ASSOTESTS_MODULE = [
               )
 ]
 
+packages = [NAME]
+package_data = {}
+ext_modules = CSTATGEN_MODULE + NUM_MODULE + ASSOTESTS_MODULE
+if sys.version_info.major == 2:
+    compile_args_egglib = ["-O3", "-std=c++11", "-UHAVE_LIBBPP_SEQ", "-UHAVE_LIBBPP_CORE", "-UHAVE_LIBGSLCBLAS"]
+    # exclude two modules due to lack of gsl and bio++; egglib should have used macro to control for it, though
+    EGGLIB_FILES = [x for x in getfn("egglib-cpp/*.cpp", prefix = "src/egglib") if not (x.endswith("ABC.cpp") or x.endswith("BppDiversity.cpp"))]
+    EGGLIB_MODULE = [
+        Extension('_egglib_binding',
+                  sources = ["src/egglib/egglib_binding.cpp"] + EGGLIB_FILES,
+                  extra_compile_args = compile_args_egglib,
+                  extra_link_args = link_args,
+                  libraries = libs,
+                  library_dirs = [],
+                  include_dirs = getfn(["egglib/egglib-cpp", "egglib"], prefix = "src")
+                  )
+    ]
+    packages += [NAME + ".egglib"]
+    package_data[NAME + ".egglib"]=['apps.conf']
+    ext_modules += EGGLIB_MODULE
+
 setup(name = NAME,
     version = VERSION,
     description = "Gao Wang's statgen library",
     author = "Gao Wang",
-    packages = [NAME, NAME + ".egglib"],
     package_dir = {NAME:'src'},
-    package_data = {NAME + ".egglib":['apps.conf']},
     cmdclass = {'build_py': build_py},
-    ext_modules = CSTATGEN_MODULE + EGGLIB_MODULE + NUM_MODULE + ASSOTESTS_MODULE
+    packages = packages,
+    package_data = package_data,
+    ext_modules = ext_modules
 )

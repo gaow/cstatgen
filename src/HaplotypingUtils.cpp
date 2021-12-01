@@ -239,7 +239,7 @@ inline unsigned adjustSize(unsigned n, unsigned a)
 {
 	if (a == 0) return n;
 	if (a == 1) return a;
-	div_t divresult = div(n, a);
+	div_t divresult = div((int) n, a);
 	// reduce size by x such that rem + res * x = a - x
 	return (divresult.rem > 0) ? (unsigned)(a - ((a - divresult.rem) / (divresult.quot + 1))) : a;
 }
