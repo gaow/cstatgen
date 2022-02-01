@@ -87,22 +87,22 @@ void GeneticHaplotyper::Apply(Pedigree * & ped, double Rsq, const char * logname
 	data.resize(0);
 
 	if (__chrom == "X") ped->chromosomeX = true;
-	std::string a_freq_output = "-allele-freqs.log";
-	a_freq_output = logname+a_freq_output;
-	const char *a_freq_out = a_freq_output.c_str();
-	MarkerCluster::EstimateAlleleFrequencies(*ped,a_freq_out,reorder);
-	for (int i = 0; i < ped->markerCount; i++)
-	{
-		MarkerInfo * info = ped->GetMarkerInfo(i);
-		std::cout<<ped->markerNames[i]<<": ";
-		for (int j=0; j<info->freq.Length(); j++)
-			std::cout<<info->freq[j]<<" ";
-		std::cout<<"\ntotal familyCount:"<<ped->familyCount<<std::endl;
-	}
+	//std::string a_freq_output = "-allele-freqs.log";
+	//a_freq_output = logname+a_freq_output;
+	//const char *a_freq_out = a_freq_output.c_str();
+	//MarkerCluster::EstimateAlleleFrequencies(*ped,a_freq_out,reorder);
+	//for (int i = 0; i < ped->markerCount; i++)
+	//{
+	//	MarkerInfo * info = ped->GetMarkerInfo(i);
+	//	std::cout<<ped->markerNames[i]<<": ";
+	//	for (int j=0; j<info->freq.Length(); j++)
+	//		std::cout<<info->freq[j]<<" ";
+	//	std::cout<<"\ntotal familyCount:"<<ped->familyCount<<std::endl;
+	//}
 	//
-	//ped->EstimateFrequencies(0, true);
+	ped->EstimateFrequencies(0, true);
 	// recode alleles so more frequent alleles have lower allele numbers internally
-	//ped->LumpAlleles(0.0);
+	ped->LumpAlleles(0.0);
 	// remove uninformative family or individuals
 	// !! Do not trim here, because if a family is uninformative we can report as is
 	// ped.Trim(true);
