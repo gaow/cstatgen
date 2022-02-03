@@ -80,17 +80,6 @@ CPP = getfn("*.cpp", "src")
 WRAPPER_CPP = getfn('cstatgen_{0}.cxx'.format(PYVERSION), "src")
 WRAPPER_PY = getfn('cstatgen_{0}.py'.format(PYVERSION), "src")
 WRAPPER_I = getfn('cstatgen.i', "src")
-#WRAPPER_PYGSL_C = getfn('gsl_wrap_{0}.c'.format(PYVERSION), "src")
-#WRAPPER_PYGSL_PY = getfn('gsl_{0}.py'.format(PYVERSION), "src")
-#WRAPPER_PYGSL_I = getfn('gsl.i', "src")
-#WRAPPER_PYBOOSTMATH_CPP = getfn('boostmath_wrap_{0}.cxx'.format(PYVERSION), "src")
-#WRAPPER_PYBOOSTMATH_PY = getfn('boostmath_{0}.py'.format(PYVERSION), "src")
-#WRAPPER_PYBOOSTMATH_I = getfn('boostmath.i', "src")
-#ASSOC_HEADER = getfn(['assoTests.h','assoData.h','action.h','utils.h','lm.h'], "src/assoTests")
-#ASSOC_CPP = getfn(['assoData.cpp','action.cpp','utils.cpp','lm.cpp'], "src/assoTests")
-#WRAPPER_ASSOC_CPP = getfn('assoTests_wrap_{0}.cxx'.format(PYVERSION), "src")
-#WRAPPER_ASSOC_PY = getfn('assoTests_{0}.py'.format(PYVERSION), "src")
-#WRAPPER_ASSOC_I = getfn('assoTests.i', "src/assoTests")
 
 # generate wrapper files
 try:
@@ -108,25 +97,6 @@ try:
         if ret != 0:
             sys.exit('Failed to generate cstatgen C++ extension.')
         os.rename('cstatgen.py', WRAPPER_PY)
-    #
- #   if SWIG_SUPPORT and (not os.path.isfile(WRAPPER_PYGSL_PY) or not os.path.isfile(WRAPPER_PYGSL_C) or \
- #      not os.path.isfile(WRAPPER_PYBOOSTMATH_PY) or not os.path.isfile(WRAPPER_PYBOOSTMATH_CPP)):
- #       ret = subprocess.call(['swig'] + SWIG_PYGSL_OPTS + ['-o', WRAPPER_PYGSL_C, WRAPPER_PYGSL_I], shell=False)
- #       if ret != 0:
- #          sys.exit('Failed to generate gsl extension.')
- #       os.rename('gsl.py', WRAPPER_PYGSL_PY)
- #       #
- #       ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_PYBOOSTMATH_CPP, WRAPPER_PYBOOSTMATH_I], shell=False)
- #       if ret != 0:
- #          sys.exit('Failed to generate boost extension.')
- #       os.rename('boostmath.py', WRAPPER_PYBOOSTMATH_PY)
-    #
- #   if SWIG_SUPPORT and (not os.path.isfile(WRAPPER_ASSOC_PY) or not os.path.isfile(WRAPPER_ASSOC_CPP) or \
- #     os.path.getmtime(WRAPPER_ASSOC_CPP) < max([os.path.getmtime(x) for x in [WRAPPER_ASSOC_I] + ASSOC_HEADER + ASSOC_CPP])):
- #       ret = subprocess.call(['swig'] + SWIG_OPTS + ['-o', WRAPPER_ASSOC_CPP, WRAPPER_ASSOC_I], shell=False)
- #       if ret != 0:
- #          sys.exit('Failed to generate assoTests extension.')
- #       os.rename('assoTests.py', WRAPPER_ASSOC_PY)
 except OSError as e:
     sys.exit('Failed to generate wrapper file: {0}'.format(e))
 
@@ -152,30 +122,9 @@ CSTATGEN_MODULE = [
                                     ["src", "src/third"]
               )
 ]
-#    
-#NUM_MODULE = [
-#    Extension('{}._gsl'.format(NAME),
-#              sources = [WRAPPER_PYGSL_C] + getfn(PY_GSL, 'src/third'),
-#              include_dirs = ['src', 'src/third', 'src/third/gsl', 'src/third/gsl/specfunc']
-#              ),
-#    Extension('{}._boostmath'.format(NAME),
-#              sources = [WRAPPER_PYBOOSTMATH_CPP],
-#              include_dirs = ['src', 'src/third']
-#              )
-#]
-#ASSOTESTS_MODULE = [
-#    Extension('{}._assoTests'.format(NAME),
-#              sources = [WRAPPER_ASSOC_CPP] + ASSOC_CPP + getfn(LIB_GSL, 'src/third'),
-#              extra_compile_args = ["-O3", "-std=c++11"],
-#              libraries = libs,
-#              library_dirs = [],
-#              include_dirs = ["src/assoTests", "src/third", "src/third/gsl"]
-#              )
-#]
 
 packages = [NAME]
 package_data = {}
-#ext_modules = CSTATGEN_MODULE + NUM_MODULE + ASSOTESTS_MODULE
 ext_modules = CSTATGEN_MODULE
 if sys.version_info.major == 2:
     compile_args_egglib = ["-O3", "-std=c++11", "-UHAVE_LIBBPP_SEQ", "-UHAVE_LIBBPP_CORE", "-UHAVE_LIBGSLCBLAS"]
