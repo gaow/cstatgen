@@ -406,7 +406,7 @@ inline VecVecDouble calculate_cmaf(const std::vector<double> & maf, std::vector<
 
 
 void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst,
-                             const VecVecVecInt & markerIdxClusters)
+                             const VecVecVecInt & markerIdxClusters, bool recomb)
 {
 	__data.resize(0);
 	__freqs.clear();
@@ -420,14 +420,16 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 		for (unsigned p = 0; p < haploVecs[f].size(); p++) {
 			for (unsigned i = 2; i < haploVecs[f][p].size(); i++) {
 				// recombination event detected
-				if (!hasEnding(haploVecs[f][p][i], ":") &&
-				    !hasEnding(haploVecs[f][p][i], "|") &&
-					i != 2) {
-					__recombCount += 1;
-					if (std::find(recombPositions.begin(), recombPositions.end(), i) == recombPositions.end()) {
-						recombPositions.push_back(i);
-					}
-				}
+                if (recomb){
+                    if (!hasEnding(haploVecs[f][p][i], ":") &&
+                        !hasEnding(haploVecs[f][p][i], "|") &&
+                        i != 2) {
+                        __recombCount += 1;
+                        if (std::find(recombPositions.begin(), recombPositions.end(), i) == recombPositions.end()) {
+                            recombPositions.push_back(i);
+                        }
+                    }
+                }
 				// use one of the likely haplotype configuration
 				// http://www.sph.umich.edu/csg/abecasis/merlin/tour/haplotyping.html
 				haploVecs[f][p][i] = (isupper(haploVecs[f][p][i][0]))
