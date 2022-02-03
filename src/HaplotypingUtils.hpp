@@ -101,7 +101,7 @@ public:
 	// each element of maf is a family's data
 	// each element of maf[i] is founder population MAF of the corresponding variant
 	void Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst,
-		const VecVecVecInt & markerIdxClusters);
+		const VecVecVecInt & markerIdxClusters, bool recomb=true);
 
 	void Print();
 
