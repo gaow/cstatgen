@@ -87,22 +87,22 @@ void GeneticHaplotyper::Apply(Pedigree * & ped, double Rsq, const char * logname
 	data.resize(0);
 
 	if (__chrom == "X") ped->chromosomeX = true;
-	std::string a_freq_output = "-allele-freqs.log";
-	a_freq_output = logname+a_freq_output;
-	const char *a_freq_out = a_freq_output.c_str();
-	MarkerCluster::EstimateAlleleFrequencies(*ped,a_freq_out,reorder);
-	for (int i = 0; i < ped->markerCount; i++)
-	{
-		MarkerInfo * info = ped->GetMarkerInfo(i);
-		std::cout<<ped->markerNames[i]<<": ";
-		for (int j=0; j<info->freq.Length(); j++)
-			std::cout<<info->freq[j]<<" ";
-		std::cout<<"\ntotal familyCount:"<<ped->familyCount<<std::endl;
-	}
+	//std::string a_freq_output = "-allele-freqs.log";
+	//a_freq_output = logname+a_freq_output;
+	//const char *a_freq_out = a_freq_output.c_str();
+	//MarkerCluster::EstimateAlleleFrequencies(*ped,a_freq_out,reorder);
+	//for (int i = 0; i < ped->markerCount; i++)
+	//{
+	//	MarkerInfo * info = ped->GetMarkerInfo(i);
+	//	std::cout<<ped->markerNames[i]<<": ";
+	//	for (int j=0; j<info->freq.Length(); j++)
+	//		std::cout<<info->freq[j]<<" ";
+	//	std::cout<<"\ntotal familyCount:"<<ped->familyCount<<std::endl;
+	//}
 	//
-	//ped->EstimateFrequencies(0, true);
+	ped->EstimateFrequencies(0, true);
 	// recode alleles so more frequent alleles have lower allele numbers internally
-	//ped->LumpAlleles(0.0);
+	ped->LumpAlleles(0.0);
 	// remove uninformative family or individuals
 	// !! Do not trim here, because if a family is uninformative we can report as is
 	// ped.Trim(true);
@@ -406,7 +406,7 @@ inline VecVecDouble calculate_cmaf(const std::vector<double> & maf, std::vector<
 
 
 void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVecDouble & mafVecsConst,
-                             const VecVecVecInt & markerIdxClusters)
+                             const VecVecVecInt & markerIdxClusters, bool recomb)
 {
 	__data.resize(0);
 	__freqs.clear();
@@ -420,14 +420,16 @@ void HaplotypeCoder::Execute(const VecVecVecString & haploVecsConst, const VecVe
 		for (unsigned p = 0; p < haploVecs[f].size(); p++) {
 			for (unsigned i = 2; i < haploVecs[f][p].size(); i++) {
 				// recombination event detected
-				if (!hasEnding(haploVecs[f][p][i], ":") &&
-				    !hasEnding(haploVecs[f][p][i], "|") &&
-					i != 2) {
-					__recombCount += 1;
-					if (std::find(recombPositions.begin(), recombPositions.end(), i) == recombPositions.end()) {
-						recombPositions.push_back(i);
-					}
-				}
+                if (recomb){
+                    if (!hasEnding(haploVecs[f][p][i], ":") &&
+                        !hasEnding(haploVecs[f][p][i], "|") &&
+                        i != 2) {
+                        __recombCount += 1;
+                        if (std::find(recombPositions.begin(), recombPositions.end(), i) == recombPositions.end()) {
+                            recombPositions.push_back(i);
+                        }
+                    }
+                }
 				// use one of the likely haplotype configuration
 				// http://www.sph.umich.edu/csg/abecasis/merlin/tour/haplotyping.html
 				haploVecs[f][p][i] = (isupper(haploVecs[f][p][i][0]))
