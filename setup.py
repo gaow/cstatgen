@@ -102,7 +102,7 @@ except OSError as e:
 
 # Under linux/gcc, lib stdc++ is needed for C++ based extension.
 libs = ['stdc++'] if sys.platform == 'linux2' else []
-link_args = ["-lm", "-lz"]
+link_args = ["-lm", "-lz", "-lgsl"]
 #
 
 compile_args_umich = ["-O3", "-shared", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]#, "-o","umichlib.so","-fPIC"]
@@ -115,7 +115,7 @@ CSTATGEN_MODULE = [
               sources = [WRAPPER_CPP] + CPP + UMICH_FILES, # + getfn(LIB_GSL),
               extra_compile_args = compile_args_umich,
     	      extra_link_args = link_args,
-              libraries = libs + ["Mvtnorm","gsl"],
+              libraries = libs + ["Mvtnorm"],
               library_dirs = ["src/third/libMvtnorm"],
               include_dirs = getfn([".", "general", "klib", "vcf", "clusters", "libsrc", "base",
                                     "merlin", "regression", "rvtests", "pdf","eigen"]) + \
