@@ -102,7 +102,7 @@ except OSError as e:
 
 # Under linux/gcc, lib stdc++ is needed for C++ based extension.
 libs = ['stdc++'] if sys.platform == 'linux2' else []
-link_args = ["-lm", "-lz", "-lgsl"]
+link_args = ["-lm", "-lz", "-lgsl","-lgslcblas"]
 #
 
 compile_args_umich = ["-O3", "-shared", "-std=c++11", "-D_FILE_OFFSET_BITS=64", "-D__ZLIB_AVAILABLE__"]#, "-o","umichlib.so","-fPIC"]
