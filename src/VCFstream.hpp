@@ -123,6 +123,11 @@ public:
 	{
 		return __line.get1BasedPosition();
 	}
+    
+    std::string GetVariantID()
+	{
+		return __line.getIDStr();
+	}
 
 
 	std::string GetInfo(const std::string & key)

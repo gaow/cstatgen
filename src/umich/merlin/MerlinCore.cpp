@@ -31,7 +31,7 @@
 #include <ctype.h>
 
 // Limits to stop Merlin from attempting problems that are too tough
-int MerlinCore::maxBits = 36; //24;
+int MerlinCore::maxBits = 30; // 24;
 int MerlinCore::maxMinutes = 0;
 
 // Positions to analyse
