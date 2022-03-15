@@ -80,7 +80,7 @@ public:
 	// [family][sample][haplotypes]
 	VecVecVecString data;
 	// Apply haplotyping. Missing data are imputed as possible
-	void Apply(Pedigree * & ped, double Rsq, const char * logname, bool reorder=true);
+	void Apply(Pedigree * & ped);
 
 	void Print();
 
