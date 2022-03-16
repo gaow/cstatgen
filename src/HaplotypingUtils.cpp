@@ -82,24 +82,11 @@ void DataLoader::__AddPerson(Pedigree * & ped, const VecString & fam_info,
 }
 
 
-void GeneticHaplotyper::Apply(Pedigree * & ped, double Rsq, const char * logname, bool reorder)
+void GeneticHaplotyper::Apply(Pedigree * & ped)
 {
 	data.resize(0);
 
 	if (__chrom == "X") ped->chromosomeX = true;
-	//std::string a_freq_output = "-allele-freqs.log";
-	//a_freq_output = logname+a_freq_output;
-	//const char *a_freq_out = a_freq_output.c_str();
-	//MarkerCluster::EstimateAlleleFrequencies(*ped,a_freq_out,reorder);
-	//for (int i = 0; i < ped->markerCount; i++)
-	//{
-	//	MarkerInfo * info = ped->GetMarkerInfo(i);
-	//	std::cout<<ped->markerNames[i]<<": ";
-	//	for (int j=0; j<info->freq.Length(); j++)
-	//		std::cout<<info->freq[j]<<" ";
-	//	std::cout<<"\ntotal familyCount:"<<ped->familyCount<<std::endl;
-	//}
-	//
 	ped->EstimateFrequencies(0, true);
 	// recode alleles so more frequent alleles have lower allele numbers internally
 	ped->LumpAlleles(0.0);
@@ -107,23 +94,6 @@ void GeneticHaplotyper::Apply(Pedigree * & ped, double Rsq, const char * logname
 	// !! Do not trim here, because if a family is uninformative we can report as is
 	// ped.Trim(true);
 
-	// cluster markers in LD by Linhai
-	if (Rsq>0){
-		MarkerClusters clusters;
-		printf("ClusterByRsquared\n");
-		clusters.ClusterByRsquared(*ped, Rsq);
-		printf("EstimateFrequencies\n");
-		std::string freq_output = "-freqs.log";
-		std::string cluster_output = "-cluster.log";
-		freq_output = logname+freq_output;
-		cluster_output = logname+cluster_output;
-		const char *freq_out = freq_output.c_str();
-		const char *cluster_out = cluster_output.c_str();
-		clusters.EstimateFrequencies(*ped,freq_out);
-		printf("FinishOutput\n");
-		clusters.FinishOutput();
-		int count = clusters.SaveToFile(cluster_out);
-	}
 	FamilyAnalysis engine(*ped);
 	// activate haplotyping options
 	engine.bestHaplotype = true;

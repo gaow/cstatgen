@@ -10,6 +10,8 @@
 #include <stdexcept>
 #include "Exception.hpp"
 #include "HaplotypingUtils.hpp"
+#include <iostream>
+using namespace std;
 
 namespace cstatgen {
 inline void reset_ped(Pedigree & ped)
@@ -70,7 +72,6 @@ public:
 	// positionAdjustment: adjust physical distance to map distance, 1 / 100 million
 	VecVecVecString Execute(const std::string & chrom, const VecString & marker_names,
 	                        const VecInt & marker_positions, const VecVecString & samples,
-							double Rsq, const char* logname, bool reorder=true,
 	                        double positionAdjustment = 1E-8)
 	{
 		reset_ped(*__ped);
@@ -82,12 +83,13 @@ public:
 			mc.Apply(__ped);
 			__mendelianErrorCount += mc.CountMendelianErrors();
 			GeneticHaplotyper gh(chrom);
-			gh.Apply(__ped,Rsq,logname,reorder);
+			gh.Apply(__ped);
 			if (__verbose) gh.Print();
 			return gh.data;
 			// } catch (...) {
 		} catch (std::exception e) {
 			// std::clog << e.what() << std::endl;
+            cout << "Error in Running HaplotypingEngine" << endl;
 			const VecVecVecString nulldata(0);
 			return nulldata;
 		}
